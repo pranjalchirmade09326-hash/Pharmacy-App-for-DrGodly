@@ -1,0 +1,25 @@
+{
+  "expo": {
+    "name": "DrGodly Pharmacy",
+    "slug": "drgodly-pharmacy",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": false,
+    "splash": {
+      "backgroundColor": "#185ADB"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#185ADB"
+      },
+      "package": "com.drgodlypharmacy"
+    },
+    "web": {
+      "bundler": "metro"
+    }
+  }
+}
