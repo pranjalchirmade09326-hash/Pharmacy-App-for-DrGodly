@@ -1,0 +1,95 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PharmacyIntakeTriage",
+  "type": "object",
+  "required": [
+    "intakeId",
+    "timestamp",
+    "patient",
+    "triageLevel",
+    "chiefComplaint",
+    "sbarSummary",
+    "differentialDiagnoses",
+    "investigationsRecommended",
+    "cdscoFormularyOptions",
+    "redFlagsDetected",
+    "status"
+  ],
+  "properties": {
+    "intakeId": { "type": "string" },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "patient": {
+      "type": "object",
+      "required": ["name", "age", "gender", "phone"],
+      "properties": {
+        "name": { "type": "string" },
+        "age": { "type": "integer" },
+        "gender": { "type": "string", "enum": ["MALE", "FEMALE", "OTHER"] },
+        "phone": { "type": "string" },
+        "preferredLanguage": { "type": "string" }
+      }
+    },
+    "triageLevel": {
+      "type": "string",
+      "enum": ["RED", "ORANGE", "YELLOW", "GREEN"]
+    },
+    "chiefComplaint": { "type": "string" },
+    "sbarSummary": {
+      "type": "object",
+      "required": ["situation", "background", "assessment", "recommendation"],
+      "properties": {
+        "situation": { "type": "string" },
+        "background": { "type": "string" },
+        "assessment": { "type": "string" },
+        "recommendation": { "type": "string" }
+      }
+    },
+    "differentialDiagnoses": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["condition", "icd10", "probability"],
+        "properties": {
+          "condition": { "type": "string" },
+          "icd10": { "type": "string" },
+          "probability": { "type": "string", "enum": ["HIGH", "MODERATE", "LOW"] },
+          "rationale": { "type": "string" }
+        }
+      }
+    },
+    "investigationsRecommended": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["testName", "urgency", "rationale"],
+        "properties": {
+          "testName": { "type": "string" },
+          "urgency": { "type": "string", "enum": ["ROUTINE", "URGENT", "STAT"] },
+          "rationale": { "type": "string" }
+        }
+      }
+    },
+    "cdscoFormularyOptions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["genericName", "indication", "schedule", "dosage", "warnings"],
+        "properties": {
+          "genericName": { "type": "string" },
+          "indication": { "type": "string" },
+          "schedule": { "type": "string", "enum": ["OTC", "SCHEDULE_H", "SCHEDULE_H1"] },
+          "dosage": { "type": "string" },
+          "warnings": { "type": "string" }
+        }
+      }
+    },
+    "redFlagsDetected": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "status": {
+      "type": "string",
+      "enum": ["PENDING_REVIEW", "PHARMACIST_DISPENSED", "REFERRED_TO_DOCTOR", "ESCALATED_EMERGENCY"]
+    }
+  }
+}

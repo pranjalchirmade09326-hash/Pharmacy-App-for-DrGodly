@@ -1,0 +1,45 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CatalogProduct",
+  "type": "object",
+  "required": [
+    "id",
+    "brandName",
+    "genericComposition",
+    "cdscoCategory",
+    "prescriptionRequired",
+    "packSize",
+    "mrpINR",
+    "sellingPriceINR",
+    "inStock",
+    "stockCount",
+    "dosageInstructions",
+    "safetyWarnings",
+    "category"
+  ],
+  "properties": {
+    "id": { "type": "string" },
+    "brandName": { "type": "string" },
+    "genericComposition": { "type": "string" },
+    "cdscoCategory": {
+      "type": "string",
+      "enum": ["OTC", "SCHEDULE_H_RESTRICTED", "SUPPLEMENT", "AYUSH"]
+    },
+    "prescriptionRequired": { "type": "boolean" },
+    "packSize": { "type": "string" },
+    "mrpINR": { "type": "number", "minimum": 0 },
+    "sellingPriceINR": { "type": "number", "minimum": 0 },
+    "inStock": { "type": "boolean" },
+    "stockCount": { "type": "integer", "minimum": 0 },
+    "dosageInstructions": { "type": "string" },
+    "safetyWarnings": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "category": {
+      "type": "string",
+      "enum": ["digestive", "respiratory", "pain_fever", "supplements", "first_aid"]
+    },
+    "imageUrl": { "type": "string" }
+  }
+}
