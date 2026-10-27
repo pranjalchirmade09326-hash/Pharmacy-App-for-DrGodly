@@ -12,11 +12,18 @@ import { colors } from "../theme/colors";
 import { Button } from "../components/Button";
 
 interface SymptomIntakeScreenProps {
-  onSubmit: (data: any) => void;
+  onSubmit?: (data: any) => void;
   onBack?: () => void;
+  navigation?: any;
+  route?: any;
 }
 
-export function SymptomIntakeScreen({ onSubmit, onBack }: SymptomIntakeScreenProps) {
+export function SymptomIntakeScreen({
+  onSubmit,
+  onBack,
+  navigation,
+  route,
+}: SymptomIntakeScreenProps) {
   const [patientName, setPatientName] = useState("Rajesh Kumar");
   const [age, setAge] = useState("42");
   const [gender, setGender] = useState<"Male" | "Female" | "Other">("Male");
@@ -26,7 +33,7 @@ export function SymptomIntakeScreen({ onSubmit, onBack }: SymptomIntakeScreenPro
   const [severity, setSeverity] = useState(5);
   const [knownAllergies, setKnownAllergies] = useState("No Known Drug Allergies (NKDA)");
   const [hasChestPain, setHasChestPain] = useState(false);
-  const [hasGI意Blood, setHasGIBlood] = useState(false);
+  const [hasGIBlood, setHasGIBlood] = useState(false);
 
   const complaints = [
     "Fever & Chills",
@@ -63,7 +70,7 @@ export function SymptomIntakeScreen({ onSubmit, onBack }: SymptomIntakeScreenPro
       return;
     }
 
-    onSubmit({
+    const submissionData = {
       patientName,
       age: parsedAge,
       gender,
@@ -77,14 +84,25 @@ export function SymptomIntakeScreen({ onSubmit, onBack }: SymptomIntakeScreenPro
         hasGIBlood,
       },
       triageLevel: hasChestPain || hasGIBlood ? "RED" : isPediatric ? "ORANGE" : "YELLOW",
-    });
+    };
+
+    if (onSubmit) {
+      onSubmit(submissionData);
+    } else if (navigation?.navigate) {
+      navigation.navigate("IntakeCompleted", submissionData);
+    }
+  };
+
+  const handleBack = () => {
+    if (onBack) onBack();
+    else if (navigation?.goBack) navigation.goBack();
   };
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <View style={styles.header}>
-        {onBack && (
-          <TouchableOpacity onPress={onBack} style={styles.backBtn}>
+        {(onBack || navigation?.goBack) && (
+          <TouchableOpacity onPress={handleBack} style={styles.backBtn}>
             <Text style={styles.backBtnText}>‹ Back</Text>
           </TouchableOpacity>
         )}

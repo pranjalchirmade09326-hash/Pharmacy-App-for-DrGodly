@@ -11,11 +11,18 @@ import { colors } from "../theme/colors";
 import { Button } from "../components/Button";
 
 interface LanguageConsentScreenProps {
-  onProceed: (selectedLanguage: string) => void;
+  onProceed?: (selectedLanguage: string) => void;
   onBack?: () => void;
+  navigation?: any;
+  route?: any;
 }
 
-export function LanguageConsentScreen({ onProceed, onBack }: LanguageConsentScreenProps) {
+export function LanguageConsentScreen({
+  onProceed,
+  onBack,
+  navigation,
+  route,
+}: LanguageConsentScreenProps) {
   const [selectedLang, setSelectedLang] = useState<string>("hi");
   const [consentChecked, setConsentChecked] = useState<boolean>(false);
   const [showConsentDetails, setShowConsentDetails] = useState<boolean>(false);
@@ -38,14 +45,23 @@ export function LanguageConsentScreen({ onProceed, onBack }: LanguageConsentScre
       );
       return;
     }
-    onProceed(selectedLang);
+    if (onProceed) {
+      onProceed(selectedLang);
+    } else if (navigation?.navigate) {
+      navigation.navigate("VoiceCallActive", { language: selectedLang });
+    }
+  };
+
+  const handleBack = () => {
+    if (onBack) onBack();
+    else if (navigation?.goBack) navigation.goBack();
   };
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <View style={styles.header}>
-        {onBack && (
-          <TouchableOpacity onPress={onBack} style={styles.backButton}>
+        {(onBack || navigation?.goBack) && (
+          <TouchableOpacity onPress={handleBack} style={styles.backButton}>
             <Text style={styles.backButtonText}>‹ Back</Text>
           </TouchableOpacity>
         )}

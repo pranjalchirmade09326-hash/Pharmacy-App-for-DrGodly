@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Modal,
   Image,
+  Alert,
 } from "react-native";
 import { useCart } from "../context/CartContext";
 import { colors } from "../theme/colors";
@@ -44,7 +45,10 @@ export function CheckoutScreen({ navigation }: CheckoutScreenProps) {
 
   const handlePlaceOrder = () => {
     if (hasPrescriptionRestrictedItem && !prescriptionAttached) {
-      alert("Please attach a valid doctor prescription for Schedule H medicines before dispensing.");
+      Alert.alert(
+        "Prescription Required",
+        "Please attach a valid doctor prescription for Schedule H medicines before dispensing."
+      );
       return;
     }
     setIsSuccessModalOpen(true);

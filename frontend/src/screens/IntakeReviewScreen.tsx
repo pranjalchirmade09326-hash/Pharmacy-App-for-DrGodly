@@ -158,7 +158,7 @@ export function IntakeReviewScreen({ route, navigation }: IntakeReviewScreenProp
           ) : (
             <View style={styles.safeFlagsBox}>
               <Text style={styles.safeFlagsText}>
-                ✅ All 8 Emergency Red Flags Cleared (No chest pain, dyspnea, hematemesis, high fever >103°F, altered sensorium)
+                ✅ All 8 Emergency Red Flags Cleared (No chest pain, dyspnea, hematemesis, high fever above 103°F, altered sensorium)
               </Text>
             </View>
           )}

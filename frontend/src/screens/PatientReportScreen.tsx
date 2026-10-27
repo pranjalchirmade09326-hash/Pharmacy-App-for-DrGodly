@@ -16,20 +16,40 @@ interface PatientReportScreenProps {
   onBack?: () => void;
   onConsultDoctor?: () => void;
   onFindLabs?: () => void;
+  navigation?: any;
+  route?: { params?: any };
 }
 
 export function PatientReportScreen({
-  intakeData,
+  intakeData: propData,
   onBack,
   onConsultDoctor,
   onFindLabs,
+  navigation,
+  route,
 }: PatientReportScreenProps) {
+  const intakeData = propData || route?.params?.intakeData || route?.params;
   const patientName = intakeData?.patientName || "Rajesh Kumar";
   const age = intakeData?.age || 42;
   const gender = intakeData?.gender || "Male";
   const complaint = intakeData?.chiefComplaint || "Epigastric burning & dyspepsia";
   const duration = intakeData?.duration || "2 Days";
   const severity = intakeData?.severity || 5;
+
+  const handleBack = () => {
+    if (onBack) onBack();
+    else if (navigation?.goBack) navigation.goBack();
+  };
+
+  const handleConsultDoctor = () => {
+    if (onConsultDoctor) onConsultDoctor();
+    else if (navigation?.navigate) navigation.navigate("DoctorsTab");
+  };
+
+  const handleFindLabs = () => {
+    if (onFindLabs) onFindLabs();
+    else if (navigation?.navigate) navigation.navigate("LabsTab");
+  };
 
   const handleShare = async () => {
     try {
@@ -41,8 +61,8 @@ export function PatientReportScreen({
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      {onBack && (
-        <TouchableOpacity onPress={onBack} style={styles.backBtn}>
+      {(onBack || navigation?.goBack) && (
+        <TouchableOpacity onPress={handleBack} style={styles.backBtn}>
           <Text style={styles.backBtnText}>‹ Back</Text>
         </TouchableOpacity>
       )}
@@ -54,7 +74,7 @@ export function PatientReportScreen({
             <Text style={styles.reportTitle}>Clinical Intake Summary</Text>
             <Text style={styles.intakeId}>#DRG-2026-8812 • Verified Intake</Text>
           </View>
-          <Badge label="🟡 YELLOW TRIAGE" variant="warning" />
+          <Badge label="🟡 YELLOW TRIAGE" variant="yellow" />
         </View>
 
         <View style={styles.patientMetaRow}>
@@ -151,22 +171,18 @@ export function PatientReportScreen({
           onPress={handleShare}
           style={styles.btn}
         />
-        {onConsultDoctor && (
-          <Button
-            title="Consult Telemedicine Doctor Now 👨‍⚕️"
-            variant="secondary"
-            onPress={onConsultDoctor}
-            style={styles.btn}
-          />
-        )}
-        {onFindLabs && (
-          <Button
-            title="Book Diagnostic Lab Tests Nearby 🧪"
-            variant="outline"
-            onPress={onFindLabs}
-            style={styles.btn}
-          />
-        )}
+        <Button
+          title="Consult Telemedicine Doctor Now 👨‍⚕️"
+          variant="secondary"
+          onPress={handleConsultDoctor}
+          style={styles.btn}
+        />
+        <Button
+          title="Book Diagnostic Lab Tests Nearby 🧪"
+          variant="outline"
+          onPress={handleFindLabs}
+          style={styles.btn}
+        />
       </View>
     </ScrollView>
   );

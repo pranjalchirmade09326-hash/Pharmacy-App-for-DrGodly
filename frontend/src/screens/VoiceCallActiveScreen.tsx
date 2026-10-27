@@ -10,16 +10,21 @@ import {
 import { colors } from "../theme/colors";
 
 interface VoiceCallActiveScreenProps {
-  onComplete: (intakeData: any) => void;
-  onCancel: () => void;
+  onComplete?: (intakeData: any) => void;
+  onCancel?: () => void;
   language?: string;
+  navigation?: any;
+  route?: { params?: { language?: string } };
 }
 
 export function VoiceCallActiveScreen({
   onComplete,
   onCancel,
-  language = "Hindi",
+  language: propLang,
+  navigation,
+  route,
 }: VoiceCallActiveScreenProps) {
+  const language = propLang || route?.params?.language || "Hindi";
   const [secondsElapsed, setSecondsElapsed] = useState<number>(0);
   const [isMuted, setIsMuted] = useState<boolean>(false);
   const [currentTurn, setCurrentTurn] = useState<number>(0);
@@ -65,12 +70,12 @@ export function VoiceCallActiveScreen({
       setCurrentTurn((prev) => prev + 1);
     } else {
       // Intake complete
-      onComplete({
+      const intakeData = {
         patientName: "Rajesh Kumar",
         age: 42,
         gender: "Male",
-        complaint: "Epigastric burning & dyspepsia",
-        durationDays: 2,
+        chiefComplaint: "Epigastric burning & dyspepsia",
+        duration: "2 Days",
         severity: 5,
         redFlagsCleared: [
           "No radiating chest/arm pain (ACS Rule-Out)",
@@ -78,7 +83,12 @@ export function VoiceCallActiveScreen({
           "No persistent vomiting",
         ],
         triageLevel: "YELLOW",
-      });
+      };
+      if (onComplete) {
+        onComplete(intakeData);
+      } else if (navigation?.navigate) {
+        navigation.navigate("IntakeCompleted", intakeData);
+      }
     }
   };
 
@@ -172,7 +182,7 @@ export function VoiceCallActiveScreen({
 
           <TouchableOpacity
             style={[styles.controlBtn, styles.endCallBtn]}
-            onPress={onCancel}
+            onPress={() => (onCancel ? onCancel() : navigation?.goBack ? navigation.goBack() : null)}
           >
             <Text style={styles.controlIcon}>📞</Text>
             <Text style={[styles.controlLabel, { color: "#FFFFFF" }]}>

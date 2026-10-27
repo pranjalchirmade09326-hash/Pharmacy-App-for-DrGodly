@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { colors } from "../theme/colors";
 import { MOCK_INTAKES, PharmacyIntakeRecord } from "../data/intakes";
-import { DOCTORS } from "../data/doctors";
+import { MOCK_DOCTORS, Doctor } from "../data/doctors";
 
 interface ReferralWorkflowScreenProps {
   route?: { params?: { intakeId?: string } };
@@ -31,7 +31,7 @@ export function ReferralWorkflowScreen({ route, navigation }: ReferralWorkflowSc
   const intake: PharmacyIntakeRecord =
     MOCK_INTAKES.find((item) => item.intakeId === intakeId) || MOCK_INTAKES[1] || MOCK_INTAKES[0];
 
-  const [selectedDoctorId, setSelectedDoctorId] = useState(DOCTORS[0]?.id || "doc_1");
+  const [selectedDoctorId, setSelectedDoctorId] = useState(MOCK_DOCTORS[0]?.id || "doc-del-001");
   const [selectedReason, setSelectedReason] = useState(REFERRAL_REASONS[0]);
   const [pharmacistNotes, setPharmacistNotes] = useState(
     "Patient presented at retail counter with persistent productive cough and nocturnal fever spikes. Vitals stable. Cleared red flags. Requesting tele-OPD evaluation for Schedule H antibiotic/bronchodilator assessment."
@@ -50,7 +50,7 @@ export function ReferralWorkflowScreen({ route, navigation }: ReferralWorkflowSc
     }, 700);
   };
 
-  const selectedDoctor = DOCTORS.find((d) => d.id === selectedDoctorId) || DOCTORS[0];
+  const selectedDoctor = MOCK_DOCTORS.find((d: Doctor) => d.id === selectedDoctorId) || MOCK_DOCTORS[0];
 
   if (referralSent) {
     return (
@@ -64,7 +64,7 @@ export function ReferralWorkflowScreen({ route, navigation }: ReferralWorkflowSc
 
           <View style={styles.successCard}>
             <Text style={styles.successCardRow}>
-              <Text style={styles.bold}>Assigned Doctor:</Text> {selectedDoctor.name} ({selectedDoctor.specialization})
+              <Text style={styles.bold}>Assigned Doctor:</Text> {selectedDoctor.fullName} ({selectedDoctor.specialization})
             </Text>
             <Text style={styles.successCardRow}>
               <Text style={styles.bold}>Patient:</Text> {intake.patient.name} ({intake.patient.phone})
@@ -124,7 +124,7 @@ export function ReferralWorkflowScreen({ route, navigation }: ReferralWorkflowSc
           <Text style={styles.cardTitle}>Select On-Duty RMP Doctor</Text>
           <Text style={styles.cardSub}>NMC Registered Physicians available for immediate teleconsultation</Text>
           
-          {DOCTORS.map((doctor) => {
+          {MOCK_DOCTORS.map((doctor: Doctor) => {
             const isSelected = selectedDoctorId === doctor.id;
             return (
               <TouchableOpacity
@@ -137,12 +137,14 @@ export function ReferralWorkflowScreen({ route, navigation }: ReferralWorkflowSc
                 </View>
                 <View style={styles.doctorDetails}>
                   <Text style={[styles.doctorName, isSelected && { color: colors.primary }]}>
-                    {doctor.name}
+                    {doctor.fullName}
                   </Text>
                   <Text style={styles.doctorSpecialty}>
-                    {doctor.specialization} • {doctor.degrees}
+                    {doctor.specialization} • {doctor.degrees.join(", ")}
                   </Text>
-                  <Text style={styles.doctorReg}>Reg: {doctor.nmcRegNo} • Fee: ₹{doctor.consultationFee}</Text>
+                  <Text style={styles.doctorReg}>
+                    Reg: {doctor.nmcRegistrationNumber} • Fee: ₹{doctor.consultationFeeINR}
+                  </Text>
                 </View>
                 <View style={styles.onlineBadge}>
                   <Text style={styles.onlineText}>🟢 Live</Text>

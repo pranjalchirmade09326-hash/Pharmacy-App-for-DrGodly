@@ -6,21 +6,41 @@ import { Badge } from "../components/Badge";
 
 interface IntakeCompletedScreenProps {
   intakeData?: any;
-  onViewReport: () => void;
-  onConsultDoctor: () => void;
-  onHome: () => void;
+  onViewReport?: () => void;
+  onConsultDoctor?: () => void;
+  onHome?: () => void;
+  navigation?: any;
+  route?: { params?: any };
 }
 
 export function IntakeCompletedScreen({
-  intakeData,
+  intakeData: propData,
   onViewReport,
   onConsultDoctor,
   onHome,
+  navigation,
+  route,
 }: IntakeCompletedScreenProps) {
+  const intakeData = propData || route?.params;
   const patientName = intakeData?.patientName || "Rajesh Kumar";
   const complaint = intakeData?.chiefComplaint || "Epigastric burning & acidity";
   const duration = intakeData?.duration || "2 Days";
   const triage = intakeData?.triageLevel || "YELLOW";
+
+  const handleViewReport = () => {
+    if (onViewReport) onViewReport();
+    else if (navigation?.navigate) navigation.navigate("PatientReport", { intakeData });
+  };
+
+  const handleConsultDoctor = () => {
+    if (onConsultDoctor) onConsultDoctor();
+    else if (navigation?.navigate) navigation.navigate("DoctorsTab");
+  };
+
+  const handleHome = () => {
+    if (onHome) onHome();
+    else if (navigation?.navigate) navigation.navigate("HomeTab");
+  };
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
@@ -56,7 +76,7 @@ export function IntakeCompletedScreen({
           <Text style={styles.refLabel}>Clinical Triage Status</Text>
           <Badge
             label={triage === "RED" ? "EMERGENCY ALERT" : "PHARMACIST CARE REVIEW"}
-            variant={triage === "RED" ? "danger" : "warning"}
+            variant={triage === "RED" ? "red" : "yellow"}
           />
         </View>
       </View>
@@ -92,19 +112,19 @@ export function IntakeCompletedScreen({
       {/* Action Buttons */}
       <Button
         title="View Full SBAR Health Report 📄"
-        onPress={onViewReport}
+        onPress={handleViewReport}
         style={styles.actionBtn}
       />
       <Button
         title="Connect to Doctor Consultation 👨‍⚕️"
         variant="secondary"
-        onPress={onConsultDoctor}
+        onPress={handleConsultDoctor}
         style={styles.actionBtn}
       />
       <Button
         title="Back to Pharmacy Counter Home"
         variant="outline"
-        onPress={onHome}
+        onPress={handleHome}
         style={styles.actionBtn}
       />
     </ScrollView>
