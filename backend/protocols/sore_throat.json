@@ -1,0 +1,120 @@
+{
+  "protocol_id": "PROTO_SORE_THROAT_001",
+  "version": "1.0.0",
+  "title": "Acute Sore Throat & Pharyngitis",
+  "domain": "SORE_THROAT",
+  "status": "APPROVED",
+  "population": {
+    "min_age_years": 3,
+    "max_age_years": 120,
+    "gender_restriction": "ANY",
+    "pregnancy_applicable": true
+  },
+  "red_flags": [
+    {
+      "flag_id": "RF_THROAT_01",
+      "clinical_concept": "Airway Obstruction / Stridor / Drooling (Epiglottitis / Peritonsillar Abscess)",
+      "spoken_prompt": {
+        "en-IN": "Are you unable to swallow your own saliva, having difficulty opening your mouth, or struggling to breathe?",
+        "hi-IN": "क्या आप थूक भी नहीं निगल पा रहे, मुंह खोलने में असमर्थ हैं, या सांस लेने में भारी तकलीफ है?",
+        "ta-IN": "எச்சில் கூட விழுங்க முடியவில்லையா, வாய் திறக்க முடியவில்லையா, அல்லது மூச்சு விட சிரமப்படுகிறீர்களா?"
+      },
+      "severity_weight": 10,
+      "triage_action": "RED",
+      "immediate_escalation_message": "Immediate emergency evaluation required for potential deep neck space infection or airway compromise."
+    },
+    {
+      "flag_id": "RF_THROAT_02",
+      "clinical_concept": "Severe Trismus / Asymmetric Peritonsillar Bulge (Quinsy)",
+      "spoken_prompt": {
+        "en-IN": "Is the throat pain severely on one side with inability to open your jaw or a muffled 'hot potato' voice?",
+        "hi-IN": "क्या गले में सिर्फ एक तरफ बहुत तेज दर्द है, जबड़ा नहीं खुल रहा या आवाज दब गई है?",
+        "ta-IN": "தொண்டையில் ஒரு பக்கத்தில் மட்டும் கடுமையான வலி உள்ளதா, தாடை திறக்க முடியவில்லையா?"
+      },
+      "severity_weight": 9,
+      "triage_action": "ORANGE",
+      "immediate_escalation_message": "Urgent ENT or clinician evaluation required for suspected peritonsillar abscess."
+    }
+  ],
+  "questions": [
+    {
+      "question_id": "Q_THROAT_DURATION",
+      "slot_target": "symptom.duration_days",
+      "question_type": "DURATION_DAYS",
+      "prompt_text": {
+        "en-IN": "How many days have you had this sore or painful throat?",
+        "hi-IN": "गले में खराश या दर्द कितने दिनों से है?",
+        "ta-IN": "தொண்டை வலி எத்தனை நாட்களாக உள்ளது?"
+      },
+      "clinical_priority": "CRITICAL"
+    },
+    {
+      "question_id": "Q_THROAT_FEVER_PRESENT",
+      "slot_target": "symptom.associated",
+      "question_type": "BOOLEAN",
+      "prompt_text": {
+        "en-IN": "Do you also have a fever over 100°F (38°C)?",
+        "hi-IN": "क्या आपको बुखार भी आ रहा है?",
+        "ta-IN": "உங்களுக்கு காய்ச்சலும் உள்ளதா?"
+      },
+      "clinical_priority": "HIGH"
+    },
+    {
+      "question_id": "Q_THROAT_COUGH_PRESENT",
+      "slot_target": "symptom.associated",
+      "question_type": "BOOLEAN",
+      "prompt_text": {
+        "en-IN": "Do you also have a cough or runny nose, or is it only throat pain?",
+        "hi-IN": "क्या खांसी या जुकाम भी है, या सिर्फ गले में दर्द है?",
+        "ta-IN": "இருமல் அல்லது சளி உள்ளதா, அல்லது தொண்டை வலி மட்டுமா?"
+      },
+      "clinical_priority": "HIGH"
+    }
+  ],
+  "differentials": [
+    {
+      "condition_name": "Viral Pharyngitis",
+      "icd10_code": "J02.9",
+      "mandatory_supporting_findings": ["Sore scratchy throat", "Associated rhinorrhea or mild cough", "Absence of severe tonsillar exudate"],
+      "contraindicating_findings": ["Severe unilateral swelling", "Inability to swallow saliva"],
+      "clinical_rationale": "Most common etiology of acute pharyngitis, self-limiting within 5-7 days."
+    },
+    {
+      "condition_name": "Group A Streptococcal (GAS) Pharyngitis / Bacterial Tonsillitis",
+      "icd10_code": "J03.0",
+      "mandatory_supporting_findings": ["High fever", "Tonsillar exudates", "Tender anterior cervical lymphadenopathy", "Absence of cough (Centor criteria)"],
+      "contraindicating_findings": ["Prominent rhinorrhea", "Viral conjunctivitis"],
+      "clinical_rationale": "Requires doctor teleconsultation for Schedule H antibiotic prescription to prevent rheumatic fever sequelae."
+    }
+  ],
+  "investigations": [
+    {
+      "test_name": "Rapid Strep A Antigen Test / Throat Swab Culture",
+      "loinc_code": "6556-5",
+      "urgency": "CONDITIONAL",
+      "condition_trigger": "Centor score >= 3 (Fever, exudate, tender glands, no cough)",
+      "rationale_for_patient": "Confirms presence of bacterial streptococcal infection requiring antibiotic treatment."
+    }
+  ],
+  "medication_pathway": {
+    "otc_candidates_allowed": true,
+    "requires_pharmacist_verification": true,
+    "max_self_care_days": 3,
+    "cdsco_schedule_filter": "STRICT_OTC_ONLY"
+  },
+  "escalation_matrix": {
+    "RED": "IMMEDIATE_EMERGENCY_AMBULANCE_HOSPITAL",
+    "ORANGE": "SAME_DAY_TELEMED_OR_CLINICIAN_EVAL",
+    "YELLOW": "PHARMACIST_EVALUATION_AND_REVIEW",
+    "GREEN": "SYMPTOMATIC_SELF_CARE_PATHWAY",
+    "UNABLE_TO_ASSESS": "MANDATORY_IN_PERSON_DOCTOR_CONSULT"
+  },
+  "governance": {
+    "author_name": "Dr. Vikas Sharma, MS (ENT)",
+    "author_nmc_reg": "NMC-ENT-2012-65821",
+    "reviewer_name": "Dr. Sunita Deshmukh, MD (Internal Medicine)",
+    "reviewer_nmc_reg": "NMC-MED-2015-44910",
+    "approval_date": "2026-01-20",
+    "review_due_date": "2026-07-20"
+  }
+}

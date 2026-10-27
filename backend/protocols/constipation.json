@@ -1,0 +1,110 @@
+{
+  "protocol_id": "PROTO_CONSTIPATION_001",
+  "version": "1.0.0",
+  "title": "Acute Constipation & Bowel Irregularity",
+  "domain": "CONSTIPATION",
+  "status": "APPROVED",
+  "population": {
+    "min_age_years": 2,
+    "max_age_years": 120,
+    "gender_restriction": "ANY",
+    "pregnancy_applicable": true
+  },
+  "red_flags": [
+    {
+      "flag_id": "RF_CONST_01",
+      "clinical_concept": "Complete Intestinal Obstruction / Feculent Vomiting",
+      "spoken_prompt": {
+        "en-IN": "Are you completely unable to pass gas or stool, with a severely swollen distended abdomen and vomiting?",
+        "hi-IN": "क्या गैस और मल पूरी तरह बंद हो गया है, पेट बहुत ज्यादा फूल गया है और उल्टी हो रही है?",
+        "ta-IN": "வாயு அல்லது மலம் முற்றிலும் போகவில்லையா, வயிறு பெருமளவு வீங்கி வாந்தி வருகிறதா?"
+      },
+      "severity_weight": 10,
+      "triage_action": "RED",
+      "immediate_escalation_message": "Immediate emergency surgical transfer required for suspected intestinal bowel obstruction."
+    },
+    {
+      "flag_id": "RF_CONST_02",
+      "clinical_concept": "Gross Rectal Bleeding / Unexplained Weight Loss",
+      "spoken_prompt": {
+        "en-IN": "Have you noticed significant blood in your stool, thin pencil-like stools, or unintentional weight loss?",
+        "hi-IN": "क्या मल में बहुत ज्यादा खून आ रहा है, या बिना वजह वजन घट रहा है?",
+        "ta-IN": "மலத்தில் ரத்தம் வருகிறதா, அல்லது எதிர்பாராத உடல் எடை இழப்பு உள்ளதா?"
+      },
+      "severity_weight": 9,
+      "triage_action": "ORANGE",
+      "immediate_escalation_message": "Urgent doctor evaluation required to rule out colorectal pathology."
+    }
+  ],
+  "questions": [
+    {
+      "question_id": "Q_CONST_DURATION",
+      "slot_target": "symptom.duration_days",
+      "question_type": "DURATION_DAYS",
+      "prompt_text": {
+        "en-IN": "For how many days has it been since you had a normal, soft bowel movement?",
+        "hi-IN": "कितने दिनों से पेट खुलकर साफ नहीं हुआ है?",
+        "ta-IN": "வயிறு சீராக மலம் கழித்து எத்தனை நாட்கள் ஆகின்றன?"
+      },
+      "clinical_priority": "CRITICAL"
+    },
+    {
+      "question_id": "Q_CONST_STOOL_CONSISTENCY",
+      "slot_target": "symptom.character",
+      "question_type": "SINGLE_CHOICE",
+      "options": ["Hard dry pellets (Bristol Type 1-2)", "Difficulty straining with normal shape", "Painful defecation with anal burning"],
+      "prompt_text": {
+        "en-IN": "Is the stool hard and pellet-like, and do you feel straining or burning pain while passing stool?",
+        "hi-IN": "क्या मल बहुत कड़ा और गांठ जैसा है, और शौच के समय अत्यधिक ज़ोर या जलन होती है?",
+        "ta-IN": "மலம் மிகவும் கடினமாக உள்ளதா, மலம் கழிக்கும் போது எரிச்சல் அல்லது வலி உள்ளதா?"
+      },
+      "clinical_priority": "HIGH"
+    }
+  ],
+  "differentials": [
+    {
+      "condition_name": "Functional / Dietary Constipation",
+      "icd10_code": "K59.0",
+      "mandatory_supporting_findings": ["Infrequent defecation (< 3 times/week)", "Hard lumpy stools", "Low dietary fiber and water intake"],
+      "contraindicating_findings": ["Severe abdominal rigidity", "Continuous vomiting"],
+      "clinical_rationale": "Common benign functional bowel sluggishness responsive to dietary fiber, hydration, and gentle osmotic laxatives."
+    },
+    {
+      "condition_name": "Acute Anal Fissure with Secondary Withholding",
+      "icd10_code": "K60.2",
+      "mandatory_supporting_findings": ["Sharp knife-like tear pain during defecation", "Streak of bright red blood on toilet paper"],
+      "contraindicating_findings": ["Dark melena stool", "Fever"],
+      "clinical_rationale": "Mucosal tear causing sphincter spasm; treated with stool softeners and local soothing ointments."
+    }
+  ],
+  "investigations": [
+    {
+      "test_name": "Abdominal Ultrasound / Plain X-Ray Abdomen Erect",
+      "loinc_code": "24648-8",
+      "urgency": "CONDITIONAL",
+      "condition_trigger": "Constipation with severe colicky abdominal cramping",
+      "rationale_for_patient": "Assesses fecal impaction and excludes bowel distension or obstruction."
+    }
+  ],
+  "medication_pathway": {
+    "otc_candidates_allowed": true,
+    "requires_pharmacist_verification": true,
+    "max_self_care_days": 3,
+    "cdsco_schedule_filter": "STRICT_OTC_ONLY"
+  },
+  "escalation_matrix": {
+    "RED": "IMMEDIATE_EMERGENCY_AMBULANCE_HOSPITAL",
+    "ORANGE": "SAME_DAY_TELEMED_OR_CLINICIAN_EVAL",
+    "YELLOW": "PHARMACIST_EVALUATION_AND_REVIEW",
+    "GREEN": "SYMPTOMATIC_SELF_CARE_PATHWAY",
+    "UNABLE_TO_ASSESS": "MANDATORY_IN_PERSON_DOCTOR_CONSULT"
+  },
+  "governance": {
+    "author_name": "Dr. Anand Kulkarni, MD, DNB (Gastroenterology)",
+    "author_nmc_reg": "NMC-GAS-2009-77142",
+    "reviewer_name": "Dr. Sunita Deshmukh, MD (Internal Medicine)",
+    "reviewer_nmc_reg": "NMC-MED-2015-44910",
+    "approval_date": "2026-01-25",
+    "review_due_date": "2026-07-25"
+  }
+}

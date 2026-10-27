@@ -1,0 +1,166 @@
+{
+  "protocol_id": "PROTO_FEVER_001",
+  "version": "1.0.0",
+  "title": "Acute Fever & Pyrexia (Adult and Pediatric)",
+  "domain": "FEVER",
+  "status": "APPROVED",
+  "population": {
+    "min_age_years": 0,
+    "max_age_years": 120,
+    "gender_restriction": "ANY",
+    "pregnancy_applicable": true
+  },
+  "red_flags": [
+    {
+      "flag_id": "RF_FEV_01",
+      "clinical_concept": "Hyperpyrexia or Neonatal/Infant Fever (< 3 Months)",
+      "spoken_prompt": {
+        "en-IN": "Is the fever over 104°F (40°C), or is the child under 3 months of age?",
+        "hi-IN": "क्या बुखार 104°F से ज्यादा है, या बच्चा 3 महीने से छोटा है?",
+        "ta-IN": "காய்ச்சல் 104°F-க்கு மேல் உள்ளதா, அல்லது குழந்தை 3 மாதங்களுக்கும் குறைவானதா?"
+      },
+      "severity_weight": 10,
+      "triage_action": "RED",
+      "immediate_escalation_message": "Immediate emergency room care required for high-risk neonatal fever or severe hyperpyrexia."
+    },
+    {
+      "flag_id": "RF_FEV_02",
+      "clinical_concept": "Meningism / Altered Sensorium / Febrile Seizures",
+      "spoken_prompt": {
+        "en-IN": "Is there severe neck stiffness, drowsiness, confusion, or fits/convulsions?",
+        "hi-IN": "क्या गर्दन में तेज अकड़न, अत्यधिक बेहोशी, भटकाव या दौरे पड़े हैं?",
+        "ta-IN": "கழுத்து விரைப்பு, மயக்கம், குழப்பம் அல்லது வலிப்பு ஏற்பட்டுள்ளதா?"
+      },
+      "severity_weight": 10,
+      "triage_action": "RED",
+      "immediate_escalation_message": "Urgent hospital transfer needed to evaluate for central nervous system infection."
+    },
+    {
+      "flag_id": "RF_FEV_03",
+      "clinical_concept": "Hemorrhagic Signs / Suspected Severe Dengue",
+      "spoken_prompt": {
+        "en-IN": "Are there any red skin spots, bleeding from gums or nose, or black stools?",
+        "hi-IN": "क्या त्वचा पर लाल चकत्ते, मसूड़ों/नाक से खून बहना, या काला मल आ रहा है?",
+        "ta-IN": "தோலில் சிவப்பு புள்ளிகள், ஈறுகள் அல்லது மூக்கிலிருந்து ரத்தம், அல்லது கறுப்பு மலம் உள்ளதா?"
+      },
+      "severity_weight": 10,
+      "triage_action": "RED",
+      "immediate_escalation_message": "Immediate clinical emergency for dengue hemorrhagic manifestations."
+    },
+    {
+      "flag_id": "RF_FEV_04_PED_FDC",
+      "clinical_concept": "CDSCO 2026 Pediatric Anti-Cold FDC Restriction Guardrail",
+      "spoken_prompt": {
+        "en-IN": "Is the child younger than 4 years of age?",
+        "hi-IN": "क्या बच्चे की उम्र 4 साल से कम है?",
+        "ta-IN": "குழந்தையின் வயது 4-க்கும் குறைவாக உள்ளதா?"
+      },
+      "severity_weight": 8,
+      "triage_action": "ORANGE",
+      "immediate_escalation_message": "CDSCO 2026 mandates no Chlorpheniramine + Phenylephrine combination syrups under 4 years. Single paracetamol formulation only under pediatrician supervision."
+    }
+  ],
+  "questions": [
+    {
+      "question_id": "Q_FEV_DURATION",
+      "slot_target": "symptom.duration_days",
+      "question_type": "DURATION_DAYS",
+      "prompt_text": {
+        "en-IN": "For how many days have you had this fever?",
+        "hi-IN": "आपको यह बुखार कितने दिनों से है?",
+        "ta-IN": "உங்களுக்கு இந்த காய்ச்சல் எத்தனை நாட்களாக உள்ளது?"
+      },
+      "clinical_priority": "CRITICAL"
+    },
+    {
+      "question_id": "Q_FEV_TEMP_MEASURED",
+      "slot_target": "symptom.severity_score",
+      "question_type": "SCALE_1_10",
+      "prompt_text": {
+        "en-IN": "Did you measure the temperature with a thermometer, and how high does it feel?",
+        "hi-IN": "क्या आपने थर्मामीटर से नापा, और बुखार कितना तेज़ लग रहा है?",
+        "ta-IN": "வெப்பமானி கொண்டு அளவிட்டீர்களா, காய்ச்சல் எவ்வளவு தீவிரமாக உள்ளது?"
+      },
+      "clinical_priority": "HIGH"
+    },
+    {
+      "question_id": "Q_FEV_CHILLS_RIGORS",
+      "slot_target": "symptom.character",
+      "question_type": "SINGLE_CHOICE",
+      "options": ["Continuous fever", "Intermittent fever with chills/shivering", "Low grade evening fever"],
+      "prompt_text": {
+        "en-IN": "Is the fever continuous, or does it come in spikes with shivering and chills?",
+        "hi-IN": "क्या बुखार लगातार है, या कंपकंपी और ठंड लगकर आता है?",
+        "ta-IN": "காய்ச்சல் தொடர்ந்து உள்ளதா, அல்லது நடுக்கம் மற்றும் குளிருடன் விட்டு விட்டு வருகிறதா?"
+      },
+      "clinical_priority": "HIGH"
+    }
+  ],
+  "differentials": [
+    {
+      "condition_name": "Acute Viral Pyrexia / Viral Syndrome",
+      "icd10_code": "R50.9",
+      "mandatory_supporting_findings": ["Fever <= 3 days", "Generalized body ache", "Absence of focal infection"],
+      "contraindicating_findings": ["Neck stiffness", "Persistent vomiting", "Hypotension"],
+      "clinical_rationale": "Common self-limiting seasonal viral infection managed with antipyretics and rest."
+    },
+    {
+      "condition_name": "Suspected Dengue Fever (Non-Severe)",
+      "icd10_code": "A90",
+      "mandatory_supporting_findings": ["High fever with retro-orbital pain", "Severe myalgia (breakbone fever)", "Flushed skin"],
+      "contraindicating_findings": ["Active bleeding", "Circulatory collapse"],
+      "clinical_rationale": "Endemic arboviral illness requiring platelet monitoring, hydration, and strict avoidance of NSAIDs."
+    },
+    {
+      "condition_name": "Suspected Malaria",
+      "icd10_code": "B54",
+      "mandatory_supporting_findings": ["Paroxysmal fever with intense rigors and sweating", "History of mosquito exposure"],
+      "contraindicating_findings": ["Continuous localized skin rash"],
+      "clinical_rationale": "Protozoal infection confirmed by rapid diagnostic test or peripheral smear."
+    }
+  ],
+  "investigations": [
+    {
+      "test_name": "Complete Blood Count (CBC) with Platelet Count",
+      "loinc_code": "58410-2",
+      "urgency": "URGENT",
+      "condition_trigger": "Fever >= 2 days or suspected dengue/vector-borne",
+      "rationale_for_patient": "Checks for infection markers, white cell response, and blood platelet counts."
+    },
+    {
+      "test_name": "Dengue NS1 Antigen & IgM/IgG Antibody Duo",
+      "loinc_code": "68994-3",
+      "urgency": "URGENT",
+      "condition_trigger": "High fever with severe retro-orbital or body aches in endemic area",
+      "rationale_for_patient": "Identifies active dengue viral infection in early days."
+    },
+    {
+      "test_name": "Malarial Parasite Rapid Test / Smear",
+      "loinc_code": "50556-0",
+      "urgency": "URGENT",
+      "condition_trigger": "Fever with shaking chills and rigors",
+      "rationale_for_patient": "Detects presence of malarial parasites in bloodstream."
+    }
+  ],
+  "medication_pathway": {
+    "otc_candidates_allowed": true,
+    "requires_pharmacist_verification": true,
+    "max_self_care_days": 3,
+    "cdsco_schedule_filter": "STRICT_OTC_ONLY"
+  },
+  "escalation_matrix": {
+    "RED": "IMMEDIATE_EMERGENCY_AMBULANCE_HOSPITAL",
+    "ORANGE": "SAME_DAY_TELEMED_OR_CLINICIAN_EVAL",
+    "YELLOW": "PHARMACIST_EVALUATION_AND_REVIEW",
+    "GREEN": "SYMPTOMATIC_SELF_CARE_PATHWAY",
+    "UNABLE_TO_ASSESS": "MANDATORY_IN_PERSON_DOCTOR_CONSULT"
+  },
+  "governance": {
+    "author_name": "Dr. Rajeshwar Rao, MD (Internal Medicine)",
+    "author_nmc_reg": "NMC-MED-2011-88421",
+    "reviewer_name": "Dr. Sunita Deshmukh, MD, DCH (Pediatrics)",
+    "reviewer_nmc_reg": "NMC-PED-2015-44910",
+    "approval_date": "2026-01-15",
+    "review_due_date": "2026-07-15"
+  }
+}

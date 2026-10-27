@@ -1,0 +1,129 @@
+{
+  "protocol_id": "PROTO_URINARY_001",
+  "version": "1.0.0",
+  "title": "Dysuria & Lower Urinary Tract Symptoms",
+  "domain": "URINARY",
+  "status": "APPROVED",
+  "population": {
+    "min_age_years": 16,
+    "max_age_years": 120,
+    "gender_restriction": "ANY",
+    "pregnancy_applicable": true
+  },
+  "red_flags": [
+    {
+      "flag_id": "RF_UTI_01",
+      "clinical_concept": "Upper Tract Infection / Acute Pyelonephritis (Costovertebral Flank Pain with High Chills)",
+      "spoken_prompt": {
+        "en-IN": "Do you have severe pain on one side of your lower back or ribcage along with high shivering fever and vomiting?",
+        "hi-IN": "क्या कमर के एक तरफ (पसली के नीचे) बहुत तेज दर्द है, साथ में तेज कंपकंपी वाला बुखार और उल्टी आ रही है?",
+        "ta-IN": "இடுப்பின் ஒரு பக்கத்தில் கடுமையான வலியுடன் கடுமையான நடுக்கக் காய்ச்சல் மற்றும் வாந்தி உள்ளதா?"
+      },
+      "severity_weight": 10,
+      "triage_action": "RED",
+      "immediate_escalation_message": "Immediate emergency room hospital transfer required for suspected acute pyelonephritis / renal sepsis risk."
+    },
+    {
+      "flag_id": "RF_UTI_02",
+      "clinical_concept": "Gross Frank Hematuria (Painless Blood in Urine)",
+      "spoken_prompt": {
+        "en-IN": "Have you noticed red, pink, or cola-colored blood clots in your urine?",
+        "hi-IN": "क्या पेशाब में साफ लाल खून या खून के थक्के आ रहे हैं?",
+        "ta-IN": "சிறுநீரில் தெளிவான ரத்தம் அல்லது ரத்தக் கட்டிகள் போகிறதா?"
+      },
+      "severity_weight": 9,
+      "triage_action": "ORANGE",
+      "immediate_escalation_message": "Urgent in-person doctor / urology evaluation needed for macroscopic hematuria."
+    },
+    {
+      "flag_id": "RF_UTI_03",
+      "clinical_concept": "Urinary Symptoms in Pregnancy",
+      "spoken_prompt": {
+        "en-IN": "Are you currently pregnant?",
+        "hi-IN": "क्या आप गर्भवती हैं?",
+        "ta-IN": "நீங்கள் தற்போது கர்ப்பமாக உள்ளீர்களா?"
+      },
+      "severity_weight": 8,
+      "triage_action": "ORANGE",
+      "immediate_escalation_message": "Any UTI symptom in pregnancy requires mandatory direct RMP consultation due to preterm labor and pyelonephritis risks."
+    }
+  ],
+  "questions": [
+    {
+      "question_id": "Q_UTI_BURNING_CHARACTER",
+      "slot_target": "symptom.character",
+      "question_type": "SINGLE_CHOICE",
+      "options": ["Sharp burning sensation during urination", "Constant urge to urinate every few minutes with tiny drops", "Lower pelvic aching discomfort"],
+      "prompt_text": {
+        "en-IN": "Do you feel a sharp burning sensation while passing urine, or a constant urge to go every few minutes?",
+        "hi-IN": "क्या पेशाब करते समय तेज जलन होती है, या बार-बार थोड़ी-थोड़ी देर में पेशाब की हाजत महसूस होती है?",
+        "ta-IN": "சிறுநீர் கழிக்கும் போது கடுமையான எரிச்சல் உள்ளதா, அல்லது அடிக்கடி சிறுநீர் கழிக்கும் உணர்வு உள்ளதா?"
+      },
+      "clinical_priority": "CRITICAL"
+    },
+    {
+      "question_id": "Q_UTI_DURATION",
+      "slot_target": "symptom.duration_days",
+      "question_type": "DURATION_DAYS",
+      "prompt_text": {
+        "en-IN": "For how many days have you experienced this burning or frequency?",
+        "hi-IN": "यह पेशाब में जलन कितने दिनों से हो रही है?",
+        "ta-IN": "இந்த சிறுநீர் எரிச்சல் எத்தனை நாட்களாக உள்ளது?"
+      },
+      "clinical_priority": "HIGH"
+    }
+  ],
+  "differentials": [
+    {
+      "condition_name": "Acute Uncomplicated Lower Cystitis",
+      "icd10_code": "N30.0",
+      "mandatory_supporting_findings": ["Dysuria (painful urination)", "Urinary urgency and frequency", "Suprapubic tenderness", "Absence of fever/flank pain"],
+      "contraindicating_findings": ["High fever with rigors", "Costovertebral angle tenderness"],
+      "clinical_rationale": "Superficial bladder mucosal infection; requires doctor teleconsultation for Schedule H antibiotic prescription."
+    },
+    {
+      "condition_name": "Urethral Irritation / Crystalluria",
+      "icd10_code": "R82.9",
+      "mandatory_supporting_findings": ["Mild burning after concentrated urine / inadequate hydration", "Absence of significant pyuria"],
+      "contraindicating_findings": ["Foul smelling cloudy urine", "High fever"],
+      "clinical_rationale": "Non-infectious urinary passage irritation alleviated by urinary alkalizers and increased water intake."
+    }
+  ],
+  "investigations": [
+    {
+      "test_name": "Urine Routine and Microscopy (R/M)",
+      "loinc_code": "24357-6",
+      "urgency": "URGENT",
+      "condition_trigger": "Burning micturition or frequency",
+      "rationale_for_patient": "Detects white blood cells (pus cells), red blood cells, bacteria, and urinary crystals."
+    },
+    {
+      "test_name": "Urine Culture & Antimicrobial Sensitivity",
+      "loinc_code": "630-4",
+      "urgency": "CONDITIONAL",
+      "condition_trigger": "Recurrent UTI or persistence after empiric therapy",
+      "rationale_for_patient": "Identifies exact bacterial species and determines which antibiotics will cure the infection."
+    }
+  ],
+  "medication_pathway": {
+    "otc_candidates_allowed": true,
+    "requires_pharmacist_verification": true,
+    "max_self_care_days": 1,
+    "cdsco_schedule_filter": "STRICT_OTC_ONLY"
+  },
+  "escalation_matrix": {
+    "RED": "IMMEDIATE_EMERGENCY_AMBULANCE_HOSPITAL",
+    "ORANGE": "SAME_DAY_TELEMED_OR_CLINICIAN_EVAL",
+    "YELLOW": "PHARMACIST_EVALUATION_AND_REVIEW",
+    "GREEN": "SYMPTOMATIC_SELF_CARE_PATHWAY",
+    "UNABLE_TO_ASSESS": "MANDATORY_IN_PERSON_DOCTOR_CONSULT"
+  },
+  "governance": {
+    "author_name": "Dr. Prateek Sen, MD (Internal Medicine)",
+    "author_nmc_reg": "NMC-MED-2010-91244",
+    "reviewer_name": "Dr. Rajeshwar Rao, MD (Internal Medicine)",
+    "reviewer_nmc_reg": "NMC-MED-2011-88421",
+    "approval_date": "2026-01-26",
+    "review_due_date": "2026-07-26"
+  }
+}

@@ -1,7 +1,7 @@
 # DrGodly Pharmacy Assist — User Stories & Acceptance Criteria
 **Document ID:** DRG-US-2026-V2  
 **Product:** DrGodly Pharmacy Assist  
-**Ecosystem Integration:** [`Yazhnimalan/bezs-hms`](https://github.com/Yazhnimalan/bezs-hms) (Frontend), [`naveenraj-g/fhir`](https://github.com/naveenraj-g/fhir.git) (Backend), [`Yazhnimalan/bezs-agent`](https://github.com/Yazhnimalan/bezs-agent) (Voice AI)  
+**Ecosystem Integration:** **DrGodly HMS Frontend Hub** (Frontend), **DrGodly FHIR R4 Interoperability Server** (Backend), **DrGodly Voice AI Agent** (Voice AI)  
 **Format:** Agile User Stories with Gherkin Acceptance Criteria (Given-When-Then)  
 **Status:** Approved for Engineering Implementation  
 
@@ -10,8 +10,8 @@
 ## Persona Directory
 
 1. **Patient (Rajesh, 42M):** Everyday pharmacy walk-in customer with acute episodic discomfort.
-2. **Pharmacist (Ramesh, R.Ph):** Licensed retail chemist using `bezs-hms` Pharmacy Workspace.
-3. **Doctor (Dr. Radhakrishnan, MBBS, MD):** Telemedicine doctor using `bezs-hms` + LiveKit.
+2. **Pharmacist (Ramesh, R.Ph):** Licensed retail chemist using `drgodly-hms` Pharmacy Workspace.
+3. **Doctor (Dr. Radhakrishnan, MBBS, MD):** Telemedicine doctor using `drgodly-hms` + LiveKit.
 4. **Lab Partner (Apollo Diagnostics Manager):** Operational manager receiving diagnostic pathology referrals.
 5. **Chain Administrator (Regional Retail Head):** Oversees 50+ retail pharmacy branches.
 6. **Clinical Governance Lead (Medical Director):** Authorizes and audits versioned clinical protocols.
@@ -36,7 +36,7 @@
 
 ### US-P02: Statutory AI Disclosure & Multilingual Selection
 * **As a** patient calling the DrGodly hotline,
-* **I want** the voice agent (powered by Vapi / bezs-agent) to state clearly that it is an AI assistant and let me choose my language,
+* **I want** the voice agent (powered by Vapi / drgodly-agent) to state clearly that it is an AI assistant and let me choose my language,
 * **So that** I understand that I am not talking to a human physician and can converse in the language I am most comfortable with.
 * **Acceptance Criteria:**
   ```gherkin
@@ -81,7 +81,7 @@
 
 ### US-P05: Mobile-Optimized Dynamic Web-Report Viewer
 * **As a** patient tapping "[View Report]" in WhatsApp,
-* **I want** to see an interactive, mobile-optimized breakdown of my clinical intake hosted on `bezs-hms`,
+* **I want** to see an interactive, mobile-optimized breakdown of my clinical intake hosted on `drgodly-hms`,
 * **So that** I can read possible clinical explanations, red-flag clearance status, and recommended next steps.
 * **Acceptance Criteria:**
   ```gherkin
@@ -94,17 +94,17 @@
 
 ---
 
-## Epic 3: Pharmacist Workspace & Clinical Oversight (`bezs-hms`)
+## Epic 3: Pharmacist Workspace & Clinical Oversight (`drgodly-hms`)
 
 ### US-PH01: Real-Time Prioritized Intake Queue
 * **As a** licensed retail pharmacist on duty,
-* **I want** a live-updating web queue inside `bezs-hms` ordering patient intakes by clinical triage urgency,
+* **I want** a live-updating web queue inside `drgodly-hms` ordering patient intakes by clinical triage urgency,
 * **So that** I can immediately attend to patients with potential complications before routine cases.
 * **Acceptance Criteria:**
   ```gherkin
   Scenario: Prioritization of patient queue
     Given four finished encounters in the pharmacy queue (RED, ORANGE, YELLOW, GREEN)
-    When the pharmacist opens "/[locale]/(apps)/bezs/pharmacy"
+    When the pharmacist opens "/[locale]/(apps)/drgodly/pharmacy"
     Then the queue is sorted in strict descending order of urgency: RED, ORANGE, YELLOW, GREEN
     And emergency RED cases trigger an audible alert and pulsing red badge.
   ```
@@ -136,7 +136,7 @@
     Then any compound containing Acetaminophen/Paracetamol is disabled and flagged with an allergy warning
     And the pharmacist CANNOT click "Confirm Dispense" until checking:
     "☑ I have verified allergies and counseled the patient on dosage and red flags."
-    And the dispense event generates a FHIR MedicationRequest in naveenraj-g/fhir.
+    And the dispense event generates a FHIR MedicationRequest in FHIR R4 Server.
   ```
 
 ### US-PH04: One-Tap Telemedicine Doctor Escalation (LiveKit)
@@ -155,7 +155,7 @@
 
 ---
 
-## Epic 4: Doctor Telemedicine & FHIR Synchronization (`naveenraj-g/fhir`)
+## Epic 4: Doctor Telemedicine & FHIR Synchronization (`FHIR R4 Server`)
 
 ### US-D01: SBAR Pre-Consultation Structured Handoff
 * **As a** Registered Medical Practitioner (RMP) accepting a teleconsultation,
@@ -165,21 +165,21 @@
   ```gherkin
   Scenario: Doctor reviews pre-consultation summary
     Given a doctor accepts a pending pharmacy referral
-    When the doctor consultation screen opens in bezs-hms
+    When the doctor consultation screen opens in drgodly-hms
     Then the left panel displays SBAR summary (Situation, Background, Assessment, Vitals)
     And the doctor can launch the LiveKit video stream with one tap.
   ```
 
 ### US-D02: Automatic FHIR R4 Synchronization
 * **As a** clinical systems engineer,
-* **I want** every completed pharmacy intake, diagnosis, and prescription to automatically synchronize with `naveenraj-g/fhir`,
+* **I want** every completed pharmacy intake, diagnosis, and prescription to automatically synchronize with `FHIR R4 Server`,
 * **So that** the patient has a unified, interoperable health record across the DrGodly ecosystem.
 * **Acceptance Criteria:**
   ```gherkin
   Scenario: Complete intake synchronization to FHIR server
     Given a completed pharmacy intake session
     When the encounter closes
-    Then FhirSyncService posts to naveenraj-g/fhir:
+    Then FhirSyncService posts to FHIR R4 Server:
       * POST /api/fhir/v1/Patient (creates/finds patient)
       * POST /api/fhir/v1/Encounter (creates AMB encounter)
       * POST /api/fhir/v1/Observation (records symptoms)

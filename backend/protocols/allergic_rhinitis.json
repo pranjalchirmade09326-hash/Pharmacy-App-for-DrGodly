@@ -1,0 +1,110 @@
+{
+  "protocol_id": "PROTO_ALLERGY_001",
+  "version": "1.0.0",
+  "title": "Allergic Rhinitis & Seasonal Allergy Flare",
+  "domain": "ALLERGY",
+  "status": "APPROVED",
+  "population": {
+    "min_age_years": 4,
+    "max_age_years": 120,
+    "gender_restriction": "ANY",
+    "pregnancy_applicable": true
+  },
+  "red_flags": [
+    {
+      "flag_id": "RF_ALG_01",
+      "clinical_concept": "Anaphylaxis / Angioedema / Laryngeal Spasm",
+      "spoken_prompt": {
+        "en-IN": "Are your lips, tongue, or throat swelling up rapidly, or are you feeling tightness in your chest and dizziness?",
+        "hi-IN": "क्या आपके होंठ, जीभ या गला तेजी से सूज रहे हैं, या छाती में भारीपन और चक्कर आ रहे हैं?",
+        "ta-IN": "உதடுகள், நாக்கு அல்லது தொண்டை விரைவாக வீங்குகிறதா, மார்பு இறுக்கம் மற்றும் மயக்கம் உள்ளதா?"
+      },
+      "severity_weight": 10,
+      "triage_action": "RED",
+      "immediate_escalation_message": "Immediate emergency 108 activation and intramuscular epinephrine administration protocol for systemic anaphylaxis."
+    },
+    {
+      "flag_id": "RF_ALG_02",
+      "clinical_concept": "Acute Severe Bronchospasm / Audible Wheeze",
+      "spoken_prompt": {
+        "en-IN": "Can you hear loud wheezing when you breathe out, and are you struggling to finish full sentences?",
+        "hi-IN": "क्या सांस छोड़ते समय सीटी की आवाज आ रही है, और आप एक सांस में पूरी बात नहीं बोल पा रहे?",
+        "ta-IN": "மூச்சை வெளிவிடும் போது விசில் சத்தம் கேட்கிறதா, முழு வாக்கியங்களை பேச முடியவில்லையா?"
+      },
+      "severity_weight": 9,
+      "triage_action": "ORANGE",
+      "immediate_escalation_message": "Urgent medical nebulization and doctor assessment for acute asthma exacerbation."
+    }
+  ],
+  "questions": [
+    {
+      "question_id": "Q_ALG_PAROXYSMAL_SNEEZING",
+      "slot_target": "symptom.character",
+      "question_type": "SINGLE_CHOICE",
+      "options": ["Bouts of 5-10 sneezes in morning", "Continuous watery nasal dripping", "Itchy watery eyes and roof of mouth"],
+      "prompt_text": {
+        "en-IN": "Do you get bouts of multiple sneezes especially in the morning or when exposed to dust?",
+        "hi-IN": "क्या सुबह उठने पर या धूल-मिट्टी में जाने पर लगातार कई छींकें आती हैं?",
+        "ta-IN": "காலையில் அல்லது தூசி படும் போது தொடர்ந்து பல தும்மல்கள் ஏற்படுகின்றனவா?"
+      },
+      "clinical_priority": "CRITICAL"
+    },
+    {
+      "question_id": "Q_ALG_DURATION",
+      "slot_target": "symptom.duration_days",
+      "question_type": "DURATION_DAYS",
+      "prompt_text": {
+        "en-IN": "How many weeks or months have you been suffering from these nasal allergy symptoms?",
+        "hi-IN": "यह एलर्जी की परेशानी कितने हफ्तों या महीनों से चल रही है?",
+        "ta-IN": "இந்த ஒவ்வாமை பிரச்சனை எத்தனை வாரங்களாக அல்லது மாதங்களாக உள்ளது?"
+      },
+      "clinical_priority": "HIGH"
+    }
+  ],
+  "differentials": [
+    {
+      "condition_name": "Allergic Rhinitis (Seasonal / Perennial)",
+      "icd10_code": "J30.9",
+      "mandatory_supporting_findings": ["Paroxysmal sneezing", "Clear watery rhinorrhea", "Nasal pruritus and eye itching"],
+      "contraindicating_findings": ["Purulent green mucus", "High fever"],
+      "clinical_rationale": "IgE mediated nasal inflammation responsive to non-sedating antihistamines and saline nasal rinses."
+    },
+    {
+      "condition_name": "Vasomotor / Non-Allergic Rhinitis",
+      "icd10_code": "J30.0",
+      "mandatory_supporting_findings": ["Nasal congestion triggered by temperature changes, spicy food, or strong perfumes", "Negative allergen history"],
+      "contraindicating_findings": ["Ocular itching"],
+      "clinical_rationale": "Autonomic dysregulation of nasal vasculature without specific allergic IgE triggers."
+    }
+  ],
+  "investigations": [
+    {
+      "test_name": "Serum Total IgE & Absolute Eosinophil Count",
+      "loinc_code": "19113-0",
+      "urgency": "ROUTINE",
+      "condition_trigger": "Chronic recurrent allergic rhinitis symptoms > 4 weeks",
+      "rationale_for_patient": "Measures allergy antibodies and immune cell sensitivity in blood."
+    }
+  ],
+  "medication_pathway": {
+    "otc_candidates_allowed": true,
+    "requires_pharmacist_verification": true,
+    "max_self_care_days": 5,
+    "cdsco_schedule_filter": "STRICT_OTC_ONLY"
+  },
+  "escalation_matrix": {
+    "RED": "IMMEDIATE_EMERGENCY_AMBULANCE_HOSPITAL",
+    "ORANGE": "SAME_DAY_TELEMED_OR_CLINICIAN_EVAL",
+    "YELLOW": "PHARMACIST_EVALUATION_AND_REVIEW",
+    "GREEN": "SYMPTOMATIC_SELF_CARE_PATHWAY",
+    "UNABLE_TO_ASSESS": "MANDATORY_IN_PERSON_DOCTOR_CONSULT"
+  },
+  "governance": {
+    "author_name": "Dr. Vikas Sharma, MS (ENT)",
+    "author_nmc_reg": "NMC-ENT-2012-65821",
+    "reviewer_name": "Dr. Sunita Deshmukh, MD (Internal Medicine)",
+    "reviewer_nmc_reg": "NMC-MED-2015-44910",
+    "approval_date": "2026-01-26",
+    "review_due_date": "2026-07-26"
+  }
+}

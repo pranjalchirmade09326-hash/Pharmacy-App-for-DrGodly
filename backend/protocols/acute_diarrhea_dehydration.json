@@ -1,0 +1,128 @@
+{
+  "protocol_id": "PROTO_DIARRHEA_001",
+  "version": "1.0.0",
+  "title": "Acute Diarrhea & Dehydration Triage",
+  "domain": "DIARRHEA",
+  "status": "APPROVED",
+  "population": {
+    "min_age_years": 0,
+    "max_age_years": 120,
+    "gender_restriction": "ANY",
+    "pregnancy_applicable": true
+  },
+  "red_flags": [
+    {
+      "flag_id": "RF_DIA_01",
+      "clinical_concept": "Severe Dehydration / Hypovolemic Shock",
+      "spoken_prompt": {
+        "en-IN": "Is the person extremely lethargic, unable to drink fluids, or has sunken eyes and no urine output?",
+        "hi-IN": "क्या मरीज बहुत सुस्त या बेहोश है, पानी नहीं पी पा रहा, या पेशाब बिल्कुल बंद हो गया है?",
+        "ta-IN": "நோயாளி அதிக சோர்வாக உள்ளாரா, தண்ணீர் குடிக்க முடியவில்லையா, அல்லது சிறுநீர் வெளியேறவே இல்லையா?"
+      },
+      "severity_weight": 10,
+      "triage_action": "RED",
+      "immediate_escalation_message": "Immediate emergency transfer required for intravenous rehydration and hemodynamic stabilization."
+    },
+    {
+      "flag_id": "RF_DIA_02",
+      "clinical_concept": "Gross Visible Blood in Stool / Acute Dysentery with High Fever",
+      "spoken_prompt": {
+        "en-IN": "Is there visible blood or mucus in the stool along with high fever or severe cramping?",
+        "hi-IN": "क्या दस्त में खून या आंव आ रहा है, साथ में तेज बुखार या पेट में ऐंठन है?",
+        "ta-IN": "மலத்தில் ரத்தம் அல்லது சீழ் உள்ளதா, அத்துடன் அதிக காய்ச்சல் உள்ளதா?"
+      },
+      "severity_weight": 9,
+      "triage_action": "ORANGE",
+      "immediate_escalation_message": "Urgent doctor evaluation required for invasive enteric infection and targeted antimicrobial therapy."
+    }
+  ],
+  "questions": [
+    {
+      "question_id": "Q_DIA_FREQUENCY",
+      "slot_target": "symptom.frequency",
+      "question_type": "SINGLE_CHOICE",
+      "options": ["3 to 5 times/day", "6 to 10 times/day", "More than 10 times/day"],
+      "prompt_text": {
+        "en-IN": "How many times have you passed loose or watery stool today?",
+        "hi-IN": "आज आपको कितनी बार पतले दस्त हुए हैं?",
+        "ta-IN": "இன்று எத்தனை முறை மலம் தளர்வாக அல்லது நீராக வெளியேறியது?"
+      },
+      "clinical_priority": "CRITICAL"
+    },
+    {
+      "question_id": "Q_DIA_DURATION",
+      "slot_target": "symptom.duration_days",
+      "question_type": "DURATION_DAYS",
+      "prompt_text": {
+        "en-IN": "For how many days has the diarrhea been going on?",
+        "hi-IN": "दस्त कितने दिनों से चल रहे हैं?",
+        "ta-IN": "இந்த வயிற்றுப்போக்கு எத்தனை நாட்களாக நீடிக்கிறது?"
+      },
+      "clinical_priority": "HIGH"
+    },
+    {
+      "question_id": "Q_DIA_VOMITING_ASSOCIATED",
+      "slot_target": "symptom.associated",
+      "question_type": "BOOLEAN",
+      "prompt_text": {
+        "en-IN": "Are you also vomiting or unable to keep fluids down?",
+        "hi-IN": "क्या उल्टी भी हो रही है या पानी भी नहीं पच रहा?",
+        "ta-IN": "வாந்தியும் வருகிறதா அல்லது திரவங்களை உட்கொள்ள முடியவில்லையா?"
+      },
+      "clinical_priority": "HIGH"
+    }
+  ],
+  "differentials": [
+    {
+      "condition_name": "Acute Viral Gastroenteritis",
+      "icd10_code": "A08.4",
+      "mandatory_supporting_findings": ["Watery diarrhea without blood", "Mild crampy abdominal pain", "Nausea"],
+      "contraindicating_findings": ["Gross bloody stool", "Severe toxic appearance"],
+      "clinical_rationale": "Self-limiting viral bowel infection primarily requiring oral rehydration and zinc therapy."
+    },
+    {
+      "condition_name": "Food Poisoning / Bacterial Enterotoxin",
+      "icd10_code": "A05.9",
+      "mandatory_supporting_findings": ["Sudden acute onset 2-12 hours after eating outside", "Cramping", "Diarrhea"],
+      "contraindicating_findings": ["Prolonged diarrhea > 14 days"],
+      "clinical_rationale": "Toxin-mediated acute enteric disturbance typically self-resolving within 24-48 hours."
+    }
+  ],
+  "investigations": [
+    {
+      "test_name": "Serum Electrolytes (Sodium, Potassium, Chloride, Bicarbonate)",
+      "loinc_code": "2951-2",
+      "urgency": "URGENT",
+      "condition_trigger": "High-frequency diarrhea >= 6 stools/day or signs of moderate dehydration",
+      "rationale_for_patient": "Checks for electrolyte imbalance and dehydration severity."
+    },
+    {
+      "test_name": "Stool Routine & Microscopy",
+      "loinc_code": "10701-1",
+      "urgency": "ROUTINE",
+      "condition_trigger": "Diarrhea persisting > 3 days or presence of mucus",
+      "rationale_for_patient": "Screens for protozoa, amoeba, and inflammatory cells."
+    }
+  ],
+  "medication_pathway": {
+    "otc_candidates_allowed": true,
+    "requires_pharmacist_verification": true,
+    "max_self_care_days": 3,
+    "cdsco_schedule_filter": "STRICT_OTC_ONLY"
+  },
+  "escalation_matrix": {
+    "RED": "IMMEDIATE_EMERGENCY_AMBULANCE_HOSPITAL",
+    "ORANGE": "SAME_DAY_TELEMED_OR_CLINICIAN_EVAL",
+    "YELLOW": "PHARMACIST_EVALUATION_AND_REVIEW",
+    "GREEN": "SYMPTOMATIC_SELF_CARE_PATHWAY",
+    "UNABLE_TO_ASSESS": "MANDATORY_IN_PERSON_DOCTOR_CONSULT"
+  },
+  "governance": {
+    "author_name": "Dr. Anand Kulkarni, MD, DNB (Gastroenterology)",
+    "author_nmc_reg": "NMC-GAS-2009-77142",
+    "reviewer_name": "Dr. Meenakshi Raman, MD (Internal Medicine)",
+    "reviewer_nmc_reg": "NMC-MED-2014-31589",
+    "approval_date": "2026-01-18",
+    "review_due_date": "2026-07-18"
+  }
+}

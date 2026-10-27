@@ -345,6 +345,52 @@ To ensure absolute safety before deployment, every build runs through an automat
 }
 ```
 
+---
+
+## 7. Decoupled 4-Prompt AI Voice Orchestration Architecture
+
+To strictly separate conversational dialog, clinical extraction, deterministic safety screening, and report generation, DrGodly implements a 4-prompt decoupled architecture:
+
+### Prompt 1: Conversation Controller
+* **Task:** Manages spoken dialogue flow, turn pacing, language selection, empathy, and DPDP consent.
+* **Strict Constraint:** Never attempts to diagnose, provide clinical advice, or discuss medication names.
+* **Turn Rule:** Asks exactly ONE question at a time. If the caller answers multiple fields, acknowledges and transitions cleanly.
+
+### Prompt 2: Clinical Entity Extractor
+* **Task:** Ingests the cumulative turn transcript and transforms colloquial speech into structured clinical JSON.
+* **Extracts:** Chief complaint, duration in days, severity score (1-10), anatomical body site, associated symptoms, relevant negatives, chronic comorbidities, past medications, and drug allergies.
+
+### Prompt 3: Safety Classifier (Deterministic Clinical Guardrails)
+* **Task:** Evaluates extracted concepts against the 13 versioned clinical protocol JSON schemas.
+* **Outputs:** Deterministic Triage Tier (`RED`, `ORANGE`, `YELLOW`, `GREEN`), flagged red flags, and CDSCO 2026 pediatric guardrails.
+* **Strict Constraint:** Deterministic rules always override LLM output; safety is non-negotiable.
+
+### Prompt 4: Clinical Report & WhatsApp Generator
+* **Task:** Formats the structured clinical assessment into two specialized outputs:
+  1. Professional SBAR clinical note for Pharmacist Workspace and Doctor Telemedicine Console.
+  2. Friendly, non-technical WhatsApp summary payload with interactive action buttons and mandatory CDSCO statutory disclaimer.
+
+---
+
+## 8. Catalog of 13 Validated Clinical Protocols (`protocols/`)
+
+| # | Domain | File | Red Flags Screened | Standard Differentials |
+| :-: | :--- | :--- | :--- | :--- |
+| **1** | `FEVER` | `protocols/fever_adult_pediatric.json` | Temp > 104°F, Infant < 3m, Meningism, Dengue shock | Acute Viral Fever, Dengue (non-severe), Malaria |
+| **2** | `RESPIRATORY` | `protocols/respiratory_cough_cold.json` | Resting dyspnea, Stridor, Hemoptysis, Under-4 FDC ban | Common Cold, Allergic Rhinitis, Acute Bronchitis |
+| **3** | `SORE_THROAT` | `protocols/sore_throat.json` | Drooling, Inability to swallow saliva, Trismus/Quinsy | Viral Pharyngitis, GAS Bacterial Tonsillitis |
+| **4** | `DIARRHEA` | `protocols/acute_diarrhea_dehydration.json` | Severe dehydration, Hypovolemic shock, Bloody dysentery | Viral Gastroenteritis, Food Poisoning Enterotoxin |
+| **5** | `CONSTIPATION`| `protocols/constipation.json` | Complete obstruction, Feculent vomiting, Gross bleeding | Functional Constipation, Acute Anal Fissure |
+| **6** | `NAUSEA_VOMITING`| `protocols/vomiting_nausea.json` | Hematemesis, Intractable > 12h, Projectile head trauma | Acute Gastritis, Motion Sickness |
+| **7** | `ACIDITY_GERD`| `protocols/gi_dyspepsia_adult.json` | Radiating cardiac pain, Melena/hematemesis, Peritonitis | GERD, Non-Ulcer Dyspepsia, Peptic Ulcer |
+| **8** | `HEADACHE` | `protocols/acute_headache.json` | Thunderclap onset, Focal neurological deficit, Stiff neck | Tension-type Headache, Migraine without Aura |
+| **9** | `MUSCULOSKELETAL`| `protocols/musculoskeletal_pain.json` | Cauda equina (incontinence), Foot drop | Mechanical Lumbar Strain, Lumbar Radiculopathy |
+| **10**| `SKIN_RASH` | `protocols/skin_rashes.json` | SJS/TEN mucosal peeling, Non-blanching petechiae | Contact Dermatitis, Acute Urticaria |
+| **11**| `ALLERGY` | `protocols/allergic_rhinitis.json` | Anaphylaxis / Angioedema, Severe bronchospasm | Allergic Rhinitis, Vasomotor Rhinitis |
+| **12**| `URINARY` | `protocols/urinary_tract.json` | Flank pain with rigors (Pyelonephritis), Frank hematuria | Acute Cystitis, Urethral Crystalluria |
+| **13**| `GENERAL` | `protocols/general_fatigue.json` | Exertional syncope, Unexplained weight loss + night sweats | Nutritional Anemia, Post-Viral Convalescence |
+
+
 ### 6.2 Sample Test Fixture: Adversarial Prescription Coercion
 ```json
 {
@@ -364,3 +410,49 @@ To ensure absolute safety before deployment, every build runs through an automat
   }
 }
 ```
+
+---
+
+## 7. Decoupled 4-Prompt AI Voice Orchestration Architecture
+
+To strictly separate conversational dialog, clinical extraction, deterministic safety screening, and report generation, DrGodly implements a 4-prompt decoupled architecture:
+
+### Prompt 1: Conversation Controller
+* **Task:** Manages spoken dialogue flow, turn pacing, language selection, empathy, and DPDP consent.
+* **Strict Constraint:** Never attempts to diagnose, provide clinical advice, or discuss medication names.
+* **Turn Rule:** Asks exactly ONE question at a time. If the caller answers multiple fields, acknowledges and transitions cleanly.
+
+### Prompt 2: Clinical Entity Extractor
+* **Task:** Ingests the cumulative turn transcript and transforms colloquial speech into structured clinical JSON.
+* **Extracts:** Chief complaint, duration in days, severity score (1-10), anatomical body site, associated symptoms, relevant negatives, chronic comorbidities, past medications, and drug allergies.
+
+### Prompt 3: Safety Classifier (Deterministic Clinical Guardrails)
+* **Task:** Evaluates extracted concepts against the 13 versioned clinical protocol JSON schemas.
+* **Outputs:** Deterministic Triage Tier (`RED`, `ORANGE`, `YELLOW`, `GREEN`), flagged red flags, and CDSCO 2026 pediatric guardrails.
+* **Strict Constraint:** Deterministic rules always override LLM output; safety is non-negotiable.
+
+### Prompt 4: Clinical Report & WhatsApp Generator
+* **Task:** Formats the structured clinical assessment into two specialized outputs:
+  1. Professional SBAR clinical note for Pharmacist Workspace and Doctor Telemedicine Console.
+  2. Friendly, non-technical WhatsApp summary payload with interactive action buttons and mandatory CDSCO statutory disclaimer.
+
+---
+
+## 8. Catalog of 13 Validated Clinical Protocols (`protocols/`)
+
+| # | Domain | File | Red Flags Screened | Standard Differentials |
+| :-: | :--- | :--- | :--- | :--- |
+| **1** | `FEVER` | `protocols/fever_adult_pediatric.json` | Temp > 104°F, Infant < 3m, Meningism, Dengue shock | Acute Viral Fever, Dengue (non-severe), Malaria |
+| **2** | `RESPIRATORY` | `protocols/respiratory_cough_cold.json` | Resting dyspnea, Stridor, Hemoptysis, Under-4 FDC ban | Common Cold, Allergic Rhinitis, Acute Bronchitis |
+| **3** | `SORE_THROAT` | `protocols/sore_throat.json` | Drooling, Inability to swallow saliva, Trismus/Quinsy | Viral Pharyngitis, GAS Bacterial Tonsillitis |
+| **4** | `DIARRHEA` | `protocols/acute_diarrhea_dehydration.json` | Severe dehydration, Hypovolemic shock, Bloody dysentery | Viral Gastroenteritis, Food Poisoning Enterotoxin |
+| **5** | `CONSTIPATION`| `protocols/constipation.json` | Complete obstruction, Feculent vomiting, Gross bleeding | Functional Constipation, Acute Anal Fissure |
+| **6** | `NAUSEA_VOMITING`| `protocols/vomiting_nausea.json` | Hematemesis, Intractable > 12h, Projectile head trauma | Acute Gastritis, Motion Sickness |
+| **7** | `ACIDITY_GERD`| `protocols/gi_dyspepsia_adult.json` | Radiating cardiac pain, Melena/hematemesis, Peritonitis | GERD, Non-Ulcer Dyspepsia, Peptic Ulcer |
+| **8** | `HEADACHE` | `protocols/acute_headache.json` | Thunderclap onset, Focal neurological deficit, Stiff neck | Tension-type Headache, Migraine without Aura |
+| **9** | `MUSCULOSKELETAL`| `protocols/musculoskeletal_pain.json` | Cauda equina (incontinence), Foot drop | Mechanical Lumbar Strain, Lumbar Radiculopathy |
+| **10**| `SKIN_RASH` | `protocols/skin_rashes.json` | SJS/TEN mucosal peeling, Non-blanching petechiae | Contact Dermatitis, Acute Urticaria |
+| **11**| `ALLERGY` | `protocols/allergic_rhinitis.json` | Anaphylaxis / Angioedema, Severe bronchospasm | Allergic Rhinitis, Vasomotor Rhinitis |
+| **12**| `URINARY` | `protocols/urinary_tract.json` | Flank pain with rigors (Pyelonephritis), Frank hematuria | Acute Cystitis, Urethral Crystalluria |
+| **13**| `GENERAL` | `protocols/general_fatigue.json` | Exertional syncope, Unexplained weight loss + night sweats | Nutritional Anemia, Post-Viral Convalescence |
+
