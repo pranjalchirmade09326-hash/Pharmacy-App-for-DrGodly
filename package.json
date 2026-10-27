@@ -1,0 +1,23 @@
+{
+  "name": "drgodly-pharmacy",
+  "version": "1.0.0",
+  "private": true,
+  "description": "DrGodly Pharmacy Assist - Production Monorepo for AI-Powered Clinical Intake, Triage & Care Navigation for Indian Pharmacies",
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "test:clinical": "vitest run tests/clinical-evaluation",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down"
+  },
+  "devDependencies": {
+    "turbo": "^2.0.0",
+    "typescript": "^5.5.0",
+    "prettier": "^3.3.0",
+    "eslint": "^9.0.0",
+    "vitest": "^2.0.0"
+  },
+  "packageManager": "pnpm@9.5.0"
+}

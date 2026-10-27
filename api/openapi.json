@@ -1,0 +1,316 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "DrGodly Pharmacy Assist API",
+    "version": "1.0.0",
+    "description": "Production REST API for AI-Powered Clinical Intake, Deterministic Triage, Pharmacist Review, and Doctor Telemedicine Bridge for Indian Pharmacies."
+  },
+  "servers": [
+    {
+      "url": "https://api.drgodly.com/v1",
+      "description": "Production Gateway (AWS Mumbai ap-south-1)"
+    },
+    {
+      "url": "http://localhost:8000/v1",
+      "description": "Local Development Server"
+    }
+  ],
+  "paths": {
+    "/telephony/inbound": {
+      "post": {
+        "summary": "Inbound telephony webhook from Exotel/Twilio",
+        "description": "Triggered when patient scans counter QR code and dials the telephony gateway DID.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["CallSid", "From", "To"],
+                "properties": {
+                  "CallSid": { "type": "string", "example": "EXO_call_98129381" },
+                  "From": { "type": "string", "example": "+919876543210" },
+                  "To": { "type": "string", "example": "+918047361899" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Call Control XML/JSON connecting call to WebSocket stream",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "action": { "type": "string", "example": "connect_media_stream" },
+                    "stream_url": { "type": "string", "example": "wss://voice.drgodly.com/media" },
+                    "encounter_id": { "type": "string", "format": "uuid" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/encounters": {
+      "post": {
+        "summary": "Create or initialize clinical intake encounter",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["pharmacy_code", "phone_number"],
+                "properties": {
+                  "pharmacy_code": { "type": "string", "example": "DRG-BLR-001" },
+                  "phone_number": { "type": "string", "example": "+919876543210" },
+                  "call_session_id": { "type": "string", "format": "uuid" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Encounter created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "encounter_id": { "type": "string", "format": "uuid" },
+                    "encounter_number": { "type": "string", "example": "ENC-20261027-0091" },
+                    "status": { "type": "string", "example": "CALL_INITIATED" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/encounters/{id}/answers": {
+      "post": {
+        "summary": "Record clinical question answer and update state",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["question_id", "raw_transcript"],
+                "properties": {
+                  "question_id": { "type": "string", "example": "Q_DYS_FOOD_RELATION" },
+                  "raw_transcript": { "type": "string", "example": "Khane ke baad jalan bohot badh jati hai" },
+                  "language_code": { "type": "string", "example": "hi-IN" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Answer recorded and next question returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "string", "example": "PROCESSED" },
+                    "slots_extracted": { "type": "object" },
+                    "next_action": { "type": "string", "example": "ASK_NEXT_QUESTION" },
+                    "next_question_prompt": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/encounters/{id}/triage": {
+      "post": {
+        "summary": "Run deterministic safety screening & differential triage",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Clinical assessment and triage level computed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "encounter_id": { "type": "string", "format": "uuid" },
+                    "triage_level": { "type": "string", "enum": ["RED", "ORANGE", "YELLOW", "GREEN", "UNABLE_TO_ASSESS"] },
+                    "red_flags_identified": { "type": "array", "items": { "type": "string" } },
+                    "differential_diagnoses": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "condition": { "type": "string" },
+                          "icd10": { "type": "string" },
+                          "confidence": { "type": "string" }
+                        }
+                      }
+                    },
+                    "recommended_next_step": { "type": "string", "example": "PHARMACIST_EVALUATION_AND_REVIEW" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/encounters/{id}/pharmacist-action": {
+      "post": {
+        "summary": "Record auditable pharmacist review decision and action",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["pharmacist_id", "action_taken", "allergies_verified"],
+                "properties": {
+                  "pharmacist_id": { "type": "string", "format": "uuid" },
+                  "action_taken": {
+                    "type": "string",
+                    "enum": ["DISPENSED_OTC", "ESCALATED_DOCTOR", "REFERRED_EMERGENCY", "COUNSELED_ONLY"]
+                  },
+                  "allergies_verified": { "type": "boolean" },
+                  "dispensed_items": { "type": "array", "items": { "type": "object" } },
+                  "notes": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Pharmacist review action saved and encounter updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "encounter_id": { "type": "string", "format": "uuid" },
+                    "status": { "type": "string", "example": "DISPENSED_BY_PHARMACIST" },
+                    "audit_event_id": { "type": "string", "format": "uuid" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reports/{id}/whatsapp": {
+      "post": {
+        "summary": "Dispatch interactive DrGodly Pharmacy report via WhatsApp",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "WhatsApp notification successfully enqueued",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta_message_id": { "type": "string" },
+                    "delivery_status": { "type": "string", "example": "QUEUED" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/doctor/referrals": {
+      "post": {
+        "summary": "Initiate on-demand doctor teleconsultation referral",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["encounter_id", "pharmacy_id"],
+                "properties": {
+                  "encounter_id": { "type": "string", "format": "uuid" },
+                  "pharmacy_id": { "type": "string", "format": "uuid" },
+                  "clinical_priority": { "type": "string", "example": "NORMAL" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Doctor referral created and placed in available doctor pool",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "consultation_id": { "type": "string", "format": "uuid" },
+                    "status": { "type": "string", "example": "REQUESTED" },
+                    "webrtc_room_url": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/labs/nearby": {
+      "get": {
+        "summary": "Discover nearby accredited testing laboratories",
+        "parameters": [
+          { "name": "lat", "in": "query", "required": true, "schema": { "type": "number" } },
+          { "name": "lng", "in": "query", "required": true, "schema": { "type": "number" } },
+          { "name": "test_name", "in": "query", "required": false, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of nearby accredited diagnostic labs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "lab_id": { "type": "string", "format": "uuid" },
+                      "name": { "type": "string" },
+                      "distance_km": { "type": "number" },
+                      "offers_home_collection": { "type": "boolean" },
+                      "test_price_inr": { "type": "number" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

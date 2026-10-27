@@ -1,0 +1,190 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.drgodly.com/clinical-protocol.v1.json",
+  "title": "DrGodly Clinical Protocol Schema",
+  "description": "Deterministic Clinical Protocol Definition Schema for Indian Pharmacy Clinical Triage",
+  "type": "object",
+  "required": [
+    "protocol_id",
+    "version",
+    "title",
+    "domain",
+    "status",
+    "population",
+    "red_flags",
+    "questions",
+    "differentials",
+    "investigations",
+    "medication_pathway",
+    "escalation_matrix",
+    "governance"
+  ],
+  "properties": {
+    "protocol_id": {
+      "type": "string",
+      "pattern": "^[A-Z0-9_]+$"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 5
+    },
+    "domain": {
+      "type": "string",
+      "enum": [
+        "FEVER",
+        "RESPIRATORY",
+        "SORE_THROAT",
+        "HEADACHE",
+        "MUSCULOSKELETAL",
+        "ACIDITY_GERD",
+        "ABDOMINAL_PAIN",
+        "DIARRHEA",
+        "CONSTIPATION",
+        "NAUSEA_VOMITING",
+        "SKIN_RASH",
+        "ALLERGY",
+        "URINARY",
+        "GENERAL"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": ["DRAFT", "CLINICAL_REVIEW", "APPROVED", "PUBLISHED", "DEPRECATED"]
+    },
+    "population": {
+      "type": "object",
+      "required": ["min_age_years", "max_age_years"],
+      "properties": {
+        "min_age_years": { "type": "integer", "minimum": 0 },
+        "max_age_years": { "type": "integer", "maximum": 125 },
+        "gender_restriction": { "type": "string", "enum": ["ANY", "MALE_ONLY", "FEMALE_ONLY"] },
+        "pregnancy_applicable": { "type": "boolean" }
+      }
+    },
+    "red_flags": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["flag_id", "clinical_concept", "spoken_prompt", "triage_action"],
+        "properties": {
+          "flag_id": { "type": "string" },
+          "clinical_concept": { "type": "string" },
+          "spoken_prompt": {
+            "type": "object",
+            "required": ["en-IN", "hi-IN"],
+            "properties": {
+              "en-IN": { "type": "string" },
+              "hi-IN": { "type": "string" },
+              "ta-IN": { "type": "string" },
+              "te-IN": { "type": "string" }
+            }
+          },
+          "severity_weight": { "type": "integer", "minimum": 1, "maximum": 10 },
+          "triage_action": { "type": "string", "enum": ["RED", "ORANGE"] },
+          "immediate_escalation_message": { "type": "string" }
+        }
+      }
+    },
+    "questions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["question_id", "slot_target", "prompt_text", "question_type", "clinical_priority"],
+        "properties": {
+          "question_id": { "type": "string" },
+          "slot_target": { "type": "string" },
+          "question_type": {
+            "type": "string",
+            "enum": ["BOOLEAN", "SCALE_1_10", "DURATION_DAYS", "SINGLE_CHOICE", "MULTI_CHOICE", "BODY_LOCATION"]
+          },
+          "prompt_text": {
+            "type": "object",
+            "required": ["en-IN", "hi-IN"],
+            "properties": {
+              "en-IN": { "type": "string" },
+              "hi-IN": { "type": "string" },
+              "ta-IN": { "type": "string" },
+              "te-IN": { "type": "string" }
+            }
+          },
+          "options": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "clinical_priority": { "type": "string", "enum": ["CRITICAL", "HIGH", "MODERATE", "OPTIONAL"] }
+        }
+      }
+    },
+    "differentials": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["condition_name", "icd10_code", "mandatory_supporting_findings", "clinical_rationale"],
+        "properties": {
+          "condition_name": { "type": "string" },
+          "icd10_code": { "type": "string" },
+          "mandatory_supporting_findings": { "type": "array", "items": { "type": "string" } },
+          "contraindicating_findings": { "type": "array", "items": { "type": "string" } },
+          "clinical_rationale": { "type": "string" }
+        }
+      }
+    },
+    "investigations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["test_name", "loinc_code", "urgency", "rationale_for_patient"],
+        "properties": {
+          "test_name": { "type": "string" },
+          "loinc_code": { "type": "string" },
+          "urgency": { "type": "string", "enum": ["EMERGENCY", "URGENT", "ROUTINE", "CONDITIONAL"] },
+          "condition_trigger": { "type": "string" },
+          "rationale_for_patient": { "type": "string" }
+        }
+      }
+    },
+    "medication_pathway": {
+      "type": "object",
+      "required": ["otc_candidates_allowed", "requires_pharmacist_verification"],
+      "properties": {
+        "otc_candidates_allowed": { "type": "boolean" },
+        "requires_pharmacist_verification": { "type": "boolean" },
+        "max_self_care_days": { "type": "integer", "maximum": 5 },
+        "cdsco_schedule_filter": {
+          "type": "string",
+          "enum": ["STRICT_OTC_ONLY", "SCHEDULE_G_WITH_CAUTION", "NO_MEDICATIONS_ALLOWED"]
+        }
+      }
+    },
+    "escalation_matrix": {
+      "type": "object",
+      "required": ["RED", "ORANGE", "YELLOW", "GREEN", "UNABLE_TO_ASSESS"],
+      "properties": {
+        "RED": { "type": "string", "enum": ["IMMEDIATE_EMERGENCY_AMBULANCE_HOSPITAL"] },
+        "ORANGE": { "type": "string", "enum": ["SAME_DAY_TELEMED_OR_CLINICIAN_EVAL"] },
+        "YELLOW": { "type": "string", "enum": ["PHARMACIST_EVALUATION_AND_REVIEW"] },
+        "GREEN": { "type": "string", "enum": ["SYMPTOMATIC_SELF_CARE_PATHWAY"] },
+        "UNABLE_TO_ASSESS": { "type": "string", "enum": ["MANDATORY_IN_PERSON_DOCTOR_CONSULT"] }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "required": ["author_nmc_reg", "reviewer_nmc_reg", "approval_date", "review_due_date"],
+      "properties": {
+        "author_name": { "type": "string" },
+        "author_nmc_reg": { "type": "string" },
+        "reviewer_name": { "type": "string" },
+        "reviewer_nmc_reg": { "type": "string" },
+        "approval_date": { "type": "string", "format": "date" },
+        "review_due_date": { "type": "string", "format": "date" }
+      }
+    }
+  }
+}

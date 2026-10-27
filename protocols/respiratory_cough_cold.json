@@ -1,0 +1,147 @@
+{
+  "protocol_id": "RESP_COUGH_COLD_001",
+  "version": "1.0.0",
+  "title": "Acute Upper Respiratory Infection, Cough, and Rhinitis",
+  "domain": "RESPIRATORY",
+  "status": "APPROVED",
+  "population": {
+    "min_age_years": 0,
+    "max_age_years": 120,
+    "gender_restriction": "ANY",
+    "pregnancy_applicable": true
+  },
+  "red_flags": [
+    {
+      "flag_id": "RF_RESP_01",
+      "clinical_concept": "Respiratory Distress / Resting Dyspnea / Stridor",
+      "spoken_prompt": {
+        "en-IN": "Are you struggling to breathe while sitting resting, or hearing a harsh whistling sound in your throat?",
+        "hi-IN": "क्या आपको बैठे-बैठे सांस लेने में तकलीफ हो रही है, या सांस लेते समय गले से सीटी जैसी आवाज आ रही है?",
+        "ta-IN": "அமர்ந்திருக்கும் போதே மூச்சு விடுவதில் சிரமம் உள்ளதா, அல்லது தொண்டையில் விசித்திரமான சீழ்க்கை ஒலி கேட்கிறதா?"
+      },
+      "severity_weight": 10,
+      "triage_action": "RED",
+      "immediate_escalation_message": "Immediate emergency care required for acute respiratory compromise."
+    },
+    {
+      "flag_id": "RF_RESP_02",
+      "clinical_concept": "Hemoptysis (Coughing blood)",
+      "spoken_prompt": {
+        "en-IN": "Have you coughed up any fresh blood or rust-colored phlegm?",
+        "hi-IN": "क्या खांसी में ताजा खून या भूरे रंग का बलगम आया है?",
+        "ta-IN": "இருமும் போது ரத்தம் அல்லது பழுப்பு நிற சளி வருகிறதா?"
+      },
+      "severity_weight": 10,
+      "triage_action": "RED",
+      "immediate_escalation_message": "Urgent in-person clinician evaluation required for hemoptysis."
+    },
+    {
+      "flag_id": "RF_RESP_03_PED",
+      "clinical_concept": "Pediatric Age Under 4 Years Guardrail (CDSCO 2026 Mandate)",
+      "spoken_prompt": {
+        "en-IN": "Is the child younger than 4 years old?",
+        "hi-IN": "क्या बच्चे की उम्र 4 साल से कम है?",
+        "ta-IN": "குழந்தைக்கு 4 வயதுக்கு குறைவாக உள்ளதா?"
+      },
+      "severity_weight": 8,
+      "triage_action": "ORANGE",
+      "immediate_escalation_message": "CDSCO 2026 guidelines prohibit OTC cough-cold FDC syrups under age 4. Must consult pediatrician or RMP."
+    }
+  ],
+  "questions": [
+    {
+      "question_id": "Q_RESP_DURATION",
+      "slot_target": "symptom.duration_days",
+      "question_type": "DURATION_DAYS",
+      "prompt_text": {
+        "en-IN": "For how many days have you had this cough or cold?",
+        "hi-IN": "आपको यह खांसी या जुकाम कितने दिनों से है?",
+        "ta-IN": "இந்த இருமல் அல்லது சளி எத்தனை நாட்களாக உள்ளது?"
+      },
+      "clinical_priority": "CRITICAL"
+    },
+    {
+      "question_id": "Q_RESP_SPUTUM_TYPE",
+      "slot_target": "symptom.character",
+      "question_type": "SINGLE_CHOICE",
+      "options": ["Dry cough", "Wet with clear phlegm", "Wet with thick yellow/green phlegm"],
+      "prompt_text": {
+        "en-IN": "Is your cough dry, or do you bring up clear or thick colored phlegm?",
+        "hi-IN": "क्या खांसी सूखी है, या बलगम वाली है?",
+        "ta-IN": "இருமல் வறட்டு இருமலா, அல்லது சளியுடன் கூடிய இருமலா?"
+      },
+      "clinical_priority": "HIGH"
+    },
+    {
+      "question_id": "Q_RESP_FEVER_PRESENT",
+      "slot_target": "symptom.associated",
+      "question_type": "BOOLEAN",
+      "prompt_text": {
+        "en-IN": "Do you also have a fever or high body temperature?",
+        "hi-IN": "क्या आपको बुखार भी महसूस हो रहा है?",
+        "ta-IN": "உங்களுக்கு காய்ச்சலும் உள்ளதா?"
+      },
+      "clinical_priority": "HIGH"
+    }
+  ],
+  "differentials": [
+    {
+      "condition_name": "Acute Viral Upper Respiratory Infection (Common Cold)",
+      "icd10_code": "J06.9",
+      "mandatory_supporting_findings": ["Rhinorrhea or nasal congestion", "Sore scratchy throat", "Mild dry cough"],
+      "contraindicating_findings": ["Purulent hemoptysis", "Resting dyspnea"],
+      "clinical_rationale": "Self-limiting viral infection of upper respiratory tract resolving in 7-10 days."
+    },
+    {
+      "condition_name": "Allergic Rhinitis / Cough",
+      "icd10_code": "J30.9",
+      "mandatory_supporting_findings": ["Bouts of sneezing", "Clear watery rhinorrhea", "Itchy eyes/palate"],
+      "contraindicating_findings": ["High fever", "Colored purulent phlegm"],
+      "clinical_rationale": "IgE-mediated inflammatory response to airborne allergens without microbial infection."
+    },
+    {
+      "condition_name": "Acute Bronchitis",
+      "icd10_code": "J20.9",
+      "mandatory_supporting_findings": ["Productive cough > 5 days", "Chest wall discomfort with coughing"],
+      "contraindicating_findings": ["Lung crackles on auscultation (requires physical exam)"],
+      "clinical_rationale": "Lower bronchial inflammation commonly triggered following viral upper respiratory infection."
+    }
+  ],
+  "investigations": [
+    {
+      "test_name": "Complete Blood Count (CBC) with Differential",
+      "loinc_code": "58410-2",
+      "urgency": "CONDITIONAL",
+      "condition_trigger": "High fever lasting > 3 days or purulent colored sputum",
+      "rationale_for_patient": "Evaluates white blood cell count to detect significant secondary bacterial infection."
+    },
+    {
+      "test_name": "Chest X-Ray PA View",
+      "loinc_code": "36643-5",
+      "urgency": "CONDITIONAL",
+      "condition_trigger": "Prolonged cough > 2 weeks or localized chest discomfort",
+      "rationale_for_patient": "Assesses lung fields to rule out pneumonia or pulmonary consolidation."
+    }
+  ],
+  "medication_pathway": {
+    "otc_candidates_allowed": true,
+    "requires_pharmacist_verification": true,
+    "max_self_care_days": 3,
+    "cdsco_schedule_filter": "STRICT_OTC_ONLY"
+  },
+  "escalation_matrix": {
+    "RED": "IMMEDIATE_EMERGENCY_AMBULANCE_HOSPITAL",
+    "ORANGE": "SAME_DAY_TELEMED_OR_CLINICIAN_EVAL",
+    "YELLOW": "PHARMACIST_EVALUATION_AND_REVIEW",
+    "GREEN": "SYMPTOMATIC_SELF_CARE_PATHWAY",
+    "UNABLE_TO_ASSESS": "MANDATORY_IN_PERSON_DOCTOR_CONSULT"
+  },
+  "governance": {
+    "author_name": "Dr. Manpreet Singh, MD (Pulmonary Medicine)",
+    "author_nmc_reg": "DMC-32910",
+    "reviewer_name": "Dr. Priya Nair, MD (Internal Medicine)",
+    "reviewer_nmc_reg": "TCMC-44109",
+    "approval_date": "2026-10-01",
+    "review_due_date": "2027-10-01"
+  }
+}

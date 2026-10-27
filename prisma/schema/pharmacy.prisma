@@ -1,0 +1,77 @@
+// ============================================================================
+// DrGodly Pharmacy Assist: Prisma Schema Extension
+// Integrates natively with Yazhnimalan/bezs-hms (Next.js 16 + React 19 + Prisma)
+// ============================================================================
+
+enum PharmacyTriageLevel {
+  RED
+  ORANGE
+  YELLOW
+  GREEN
+  UNABLE_TO_ASSESS
+}
+
+enum PharmacistAction {
+  DISPENSED_OTC
+  ESCALATED_DOCTOR
+  REFERRED_EMERGENCY
+  COUNSELED_ONLY
+}
+
+model Pharmacy {
+  id              String             @id @default(uuid())
+  code            String             @unique // e.g. 'DRG-BLR-001'
+  name            String
+  license_number  String             // State Drug Control Drug License (DL 20/21)
+  address         String
+  city            String
+  state           String
+  pincode         String
+  latitude        Float?
+  longitude       Float?
+  phone_number    String
+  inbound_did     String             // Mapped telephone virtual DID for QR tel: link
+  is_active       Boolean            @default(true)
+  created_at      DateTime           @default(now())
+  updated_at      DateTime           @updatedAt
+
+  reviews         PharmacistReview[]
+  qr_codes        PharmacyQrCode[]
+
+  @@map("pharmacies")
+}
+
+model PharmacyQrCode {
+  id              String   @id @default(uuid())
+  pharmacy_id     String
+  code_identifier String   @unique // e.g. 'QR-PH001-COUNTER1'
+  counter_label   String   @default("Main Counter")
+  tel_number      String   // e.g. '+918047361899'
+  scans_count     Int      @default(0)
+  is_active       Boolean  @default(true)
+  created_at      DateTime @default(now())
+
+  pharmacy        Pharmacy @relation(fields: [pharmacy_id], references: [id], onDelete: Cascade)
+
+  @@index([pharmacy_id])
+  @@map("pharmacy_qr_codes")
+}
+
+model PharmacistReview {
+  id                  String              @id @default(uuid())
+  intake_id           Int                 @unique // Links to bezs-hms Intake model
+  pharmacy_id         String
+  pharmacist_user_id  String              // BetterAuth User ID of the on-duty pharmacist
+  triage_level        PharmacyTriageLevel
+  allergies_verified  Boolean             @default(false)
+  red_flags_checked   Boolean             @default(false)
+  action_taken        PharmacistAction
+  dispensed_items     Json?               // [{ generic_name, brand_name, dosage, quantity }]
+  counseling_notes    String?
+  created_at          DateTime            @default(now())
+
+  pharmacy            Pharmacy            @relation(fields: [pharmacy_id], references: [id])
+
+  @@index([pharmacy_id])
+  @@map("pharmacist_reviews")
+}

@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Local Environment Variables
+.env
+.env.local
+.env.*.local
+
+# External Reference Clones
+references/
+
+# Build & Cache Directories
+.next/
+out/
+build/
+dist/
+.turbo/
+*.tsbuildinfo
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# OS Files
+.DS_Store
+Thumbs.db

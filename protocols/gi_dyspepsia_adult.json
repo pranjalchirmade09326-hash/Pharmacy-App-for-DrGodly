@@ -1,0 +1,147 @@
+{
+  "protocol_id": "GI_DYSPEPSIA_ADULT_001",
+  "version": "1.0.0",
+  "title": "Adult Acute Dyspepsia and Epigastric Discomfort",
+  "domain": "ACIDITY_GERD",
+  "status": "APPROVED",
+  "population": {
+    "min_age_years": 18,
+    "max_age_years": 120,
+    "gender_restriction": "ANY",
+    "pregnancy_applicable": true
+  },
+  "red_flags": [
+    {
+      "flag_id": "RF_DYS_01",
+      "clinical_concept": "Acute Coronary Syndrome Mimic / Radiating Chest Pain",
+      "spoken_prompt": {
+        "en-IN": "Does the pain move to your left arm, neck, or jaw, or are you sweating heavily?",
+        "hi-IN": "क्या यह दर्द आपके बाएं हाथ, गर्दन या जबड़े में जा रहा है, या बहुत ज्यादा पसीना आ रहा है?",
+        "ta-IN": "இந்த வலி உங்கள் இடது கை, கழுத்து அல்லது தாடைக்கு பரவுகிறதா, அல்லது அதிக வியர்வை உள்ளதா?"
+      },
+      "severity_weight": 10,
+      "triage_action": "RED",
+      "immediate_escalation_message": "Immediate emergency care required to rule out acute cardiac event."
+    },
+    {
+      "flag_id": "RF_DYS_02",
+      "clinical_concept": "Upper Gastrointestinal Bleeding (Hematemesis or Melena)",
+      "spoken_prompt": {
+        "en-IN": "Have you vomited blood or coffee-ground material, or passed black sticky stools?",
+        "hi-IN": "क्या उल्टी में खून आया है, या काले रंग का चिपचिपा मल हुआ है?",
+        "ta-IN": "வாந்தியில் ரத்தம் வந்ததா, அல்லது கறுப்பு நிற மலம் கழித்தீர்களா?"
+      },
+      "severity_weight": 10,
+      "triage_action": "RED",
+      "immediate_escalation_message": "Immediate hospital evaluation required for gastrointestinal bleeding."
+    },
+    {
+      "flag_id": "RF_DYS_03",
+      "clinical_concept": "Peritonitis / Rigid Acute Abdomen",
+      "spoken_prompt": {
+        "en-IN": "Is the stomach pain sudden, unbearable, and does touching your stomach cause severe pain?",
+        "hi-IN": "क्या पेट में अचानक बहुत तेज़ दर्द हुआ है और पेट छूने पर असहनीय दर्द होता है?",
+        "ta-IN": "வயிற்றில் திடீரென தாங்க முடியாத வலி ஏற்பட்டு, தொட்டாலே வலிக்கிறதா?"
+      },
+      "severity_weight": 9,
+      "triage_action": "RED",
+      "immediate_escalation_message": "Urgent surgical evaluation needed."
+    }
+  ],
+  "questions": [
+    {
+      "question_id": "Q_DYS_ONSET",
+      "slot_target": "symptom.duration_days",
+      "question_type": "DURATION_DAYS",
+      "prompt_text": {
+        "en-IN": "How many days or hours have you had this stomach discomfort?",
+        "hi-IN": "आपको यह पेट की तकलीफ कितने दिनों या घंटों से हो रही है?",
+        "ta-IN": "இந்த வயிற்று அசௌகரியம் எத்தனை நாட்களாக அல்லது மணிநேரமாக உள்ளது?"
+      },
+      "clinical_priority": "CRITICAL"
+    },
+    {
+      "question_id": "Q_DYS_FOOD_RELATION",
+      "slot_target": "symptom.aggravating",
+      "question_type": "SINGLE_CHOICE",
+      "options": ["Worse after eating", "Better after eating", "No relationship with food"],
+      "prompt_text": {
+        "en-IN": "Does the discomfort get worse immediately after eating, or on an empty stomach?",
+        "hi-IN": "क्या यह तकलीफ खाना खाने के बाद ज्यादा होती है, या खाली पेट रहने पर?",
+        "ta-IN": "சாப்பிட்ட உடனே வலி அதிகமாகிறதா, அல்லது வெறும் வயிற்றில் அதிகமாகிறதா?"
+      },
+      "clinical_priority": "HIGH"
+    },
+    {
+      "question_id": "Q_DYS_REGURGITATION",
+      "slot_target": "symptom.associated",
+      "question_type": "BOOLEAN",
+      "prompt_text": {
+        "en-IN": "Do you feel sour acid or food rising up into your throat or chest?",
+        "hi-IN": "क्या खट्टा पानी या खाना गले और छाती की तरफ ऊपर आता महसूस होता है?",
+        "ta-IN": "புளித்த நீர் அல்லது உணவு தொண்டைக்குள் மேலெழுந்து வருவது போல் உணர்கிறீர்களா?"
+      },
+      "clinical_priority": "HIGH"
+    }
+  ],
+  "differentials": [
+    {
+      "condition_name": "Functional Dyspepsia",
+      "icd10_code": "K30",
+      "mandatory_supporting_findings": ["Epigastric discomfort", "Post-prandial fullness or burning"],
+      "contraindicating_findings": ["Severe dysphagia", "Unexplained weight loss"],
+      "clinical_rationale": "Common non-ulcer stomach discomfort often triggered by irregular meals or stress."
+    },
+    {
+      "condition_name": "Gastroesophageal Reflux Disease (GERD)",
+      "icd10_code": "K21.9",
+      "mandatory_supporting_findings": ["Acid regurgitation", "Retrosternal heartburn"],
+      "contraindicating_findings": [],
+      "clinical_rationale": "Reflux of gastric contents causing burning sensation radiating retrosternally."
+    },
+    {
+      "condition_name": "Acute Gastritis",
+      "icd10_code": "K29.0",
+      "mandatory_supporting_findings": ["Epigastric tenderness", "History of NSAID use or spicy intake"],
+      "contraindicating_findings": [],
+      "clinical_rationale": "Inflammation of the gastric lining commonly associated with painkillers or dietary triggers."
+    }
+  ],
+  "investigations": [
+    {
+      "test_name": "Helicobacter pylori Stool Antigen Test",
+      "loinc_code": "51965-2",
+      "urgency": "CONDITIONAL",
+      "condition_trigger": "Symptoms persisting > 14 days or recurring frequently",
+      "rationale_for_patient": "Identifies if a common stomach bacterial infection is causing recurrent acidity."
+    },
+    {
+      "test_name": "Complete Blood Count (CBC)",
+      "loinc_code": "58410-2",
+      "urgency": "ROUTINE",
+      "condition_trigger": "Suspected chronic microscopic blood loss or anemia",
+      "rationale_for_patient": "Checks hemoglobin levels to rule out internal weakness or blood loss."
+    }
+  ],
+  "medication_pathway": {
+    "otc_candidates_allowed": true,
+    "requires_pharmacist_verification": true,
+    "max_self_care_days": 3,
+    "cdsco_schedule_filter": "STRICT_OTC_ONLY"
+  },
+  "escalation_matrix": {
+    "RED": "IMMEDIATE_EMERGENCY_AMBULANCE_HOSPITAL",
+    "ORANGE": "SAME_DAY_TELEMED_OR_CLINICIAN_EVAL",
+    "YELLOW": "PHARMACIST_EVALUATION_AND_REVIEW",
+    "GREEN": "SYMPTOMATIC_SELF_CARE_PATHWAY",
+    "UNABLE_TO_ASSESS": "MANDATORY_IN_PERSON_DOCTOR_CONSULT"
+  },
+  "governance": {
+    "author_name": "Dr. S. Radhakrishnan, MD (Internal Medicine)",
+    "author_nmc_reg": "MCI-48192",
+    "reviewer_name": "Dr. Ananya Sen, DNB (Gastroenterology)",
+    "reviewer_nmc_reg": "WBMC-61022",
+    "approval_date": "2026-09-15",
+    "review_due_date": "2027-09-15"
+  }
+}
