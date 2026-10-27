@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { MOCK_INTAKES, PharmacyIntakeRecord } from "../data/intakes";
 import { colors } from "../theme/colors";
-import { borderRadius } from "../theme/spacing";
+import { borderRadius, shadows } from "../theme/spacing";
 import { Badge } from "../components/Badge";
 import { Button } from "../components/Button";
 import { EmergencyModal } from "../components/EmergencyModal";
@@ -314,40 +314,44 @@ const styles = StyleSheet.create({
   },
   stationHeader: {
     backgroundColor: "#FFFFFF",
-    borderRadius: borderRadius.lg,
-    padding: 14,
+    borderRadius: borderRadius.xl,
+    padding: 16,
     borderWidth: 1,
     borderColor: colors.cardBorder,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginBottom: 14,
+    marginBottom: 16,
+    ...shadows.sm,
   },
   stationInfo: {
     flex: 1,
+    marginRight: 8,
   },
   stationTitle: {
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: "900",
     color: colors.textPrimary,
+    letterSpacing: -0.3,
   },
   licenseNo: {
-    fontSize: 11,
+    fontSize: 11.5,
     color: colors.textSecondary,
     marginTop: 2,
   },
   bold: {
-    fontWeight: "700",
+    fontWeight: "800",
   },
   queueSection: {
     marginBottom: 16,
   },
   sectionHeading: {
-    fontSize: 13,
-    fontWeight: "800",
+    fontSize: 12.5,
+    fontWeight: "900",
     color: colors.textPrimary,
-    marginBottom: 8,
+    marginBottom: 10,
     textTransform: "uppercase",
+    letterSpacing: 0.5,
   },
   queueScroll: {
     flexGrow: 0,
@@ -356,12 +360,13 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   queueCard: {
-    width: 200,
+    width: 210,
     backgroundColor: "#FFFFFF",
     borderRadius: borderRadius.lg,
-    padding: 12,
+    padding: 14,
     borderWidth: 1.5,
     borderColor: colors.cardBorder,
+    ...shadows.sm,
   },
   queueCardSelected: {
     borderColor: colors.primary,
@@ -379,10 +384,11 @@ const styles = StyleSheet.create({
   queueTime: {
     fontSize: 10,
     color: colors.textMuted,
+    fontWeight: "600",
   },
   queueName: {
-    fontSize: 13,
-    fontWeight: "800",
+    fontSize: 13.5,
+    fontWeight: "900",
     color: colors.textPrimary,
   },
   queueMeta: {
@@ -399,43 +405,47 @@ const styles = StyleSheet.create({
   },
   criticalAlertCard: {
     backgroundColor: colors.redLight,
-    borderWidth: 2,
+    borderWidth: 1.5,
     borderColor: colors.redEmergency,
-    borderRadius: borderRadius.lg,
-    padding: 14,
-    marginBottom: 14,
+    borderRadius: borderRadius.xl,
+    padding: 16,
+    marginBottom: 16,
+    ...shadows.sm,
   },
   criticalAlertTitle: {
-    fontSize: 13,
+    fontSize: 13.5,
     fontWeight: "900",
     color: colors.redEmergency,
+    letterSpacing: -0.1,
   },
   criticalAlertDesc: {
     fontSize: 12,
     color: "#7F1D1D",
-    marginTop: 2,
-    marginBottom: 10,
-    lineHeight: 16,
+    marginTop: 3,
+    marginBottom: 12,
+    lineHeight: 17,
   },
   emergencyBannerBtn: {
     backgroundColor: colors.redEmergency,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderRadius: borderRadius.sm,
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    borderRadius: borderRadius.md,
     alignItems: "center",
+    ...shadows.sm,
   },
   emergencyBannerBtnText: {
     color: "#FFFFFF",
-    fontSize: 12,
-    fontWeight: "800",
+    fontSize: 12.5,
+    fontWeight: "900",
   },
   card: {
     backgroundColor: "#FFFFFF",
     borderRadius: borderRadius.xl,
-    padding: 16,
+    padding: 18,
     borderWidth: 1,
     borderColor: colors.cardBorder,
-    marginBottom: 14,
+    marginBottom: 16,
+    ...shadows.sm,
   },
   cardHeader: {
     flexDirection: "row",

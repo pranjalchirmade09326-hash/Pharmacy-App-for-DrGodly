@@ -70,16 +70,18 @@ export function Badge({ label, variant = "slate", style }: BadgeProps) {
 
 const styles = StyleSheet.create({
   baseBadge: {
-    paddingHorizontal: 8,
-    paddingVertical: 3,
+    paddingHorizontal: 10,
+    paddingVertical: 3.5,
     borderRadius: 9999,
     borderWidth: 1,
     alignSelf: "flex-start",
+    alignItems: "center",
+    justifyContent: "center",
   },
   baseText: {
-    fontSize: 11,
-    fontWeight: "700",
+    fontSize: 10.5,
+    fontWeight: "800",
     textTransform: "uppercase",
-    letterSpacing: 0.4,
+    letterSpacing: 0.5,
   },
 });

@@ -9,6 +9,7 @@ import {
   ScrollView,
 } from "react-native";
 import { colors } from "../theme/colors";
+import { borderRadius, shadows } from "../theme/spacing";
 import { EmergencyBanner } from "../components/EmergencyBanner";
 import { MobileHeader } from "../components/MobileHeader";
 import { useCart } from "../context/CartContext";
@@ -398,16 +399,17 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     borderBottomWidth: 1,
     borderBottomColor: colors.cardBorder,
-    paddingVertical: 6,
+    paddingVertical: 7,
   },
   roleScroll: {
     paddingHorizontal: 12,
     gap: 6,
+    alignItems: "center",
   },
   rolePill: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 16,
+    paddingHorizontal: 13,
+    paddingVertical: 6.5,
+    borderRadius: borderRadius.full,
     backgroundColor: colors.surfaceMuted,
     borderWidth: 1,
     borderColor: colors.cardBorder,
@@ -415,14 +417,17 @@ const styles = StyleSheet.create({
   rolePillActive: {
     backgroundColor: colors.primary,
     borderColor: colors.primary,
+    ...shadows.sm,
   },
   rolePillText: {
-    fontSize: 11,
+    fontSize: 11.5,
     fontWeight: "700",
     color: colors.textSecondary,
+    letterSpacing: -0.1,
   },
   rolePillTextActive: {
     color: "#FFFFFF",
+    fontWeight: "800",
   },
   body: {
     flex: 1,
@@ -434,28 +439,32 @@ const styles = StyleSheet.create({
   subHeader: {
     backgroundColor: "#FFFFFF",
     paddingHorizontal: 16,
-    paddingVertical: 10,
+    paddingVertical: 11,
     borderBottomWidth: 1,
     borderBottomColor: colors.cardBorder,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    ...shadows.sm,
   },
   backBtn: {
     paddingVertical: 4,
     paddingHorizontal: 8,
+    borderRadius: borderRadius.sm,
+    backgroundColor: colors.primaryLight,
   },
   backBtnText: {
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: "800",
     color: colors.primary,
   },
   subHeaderTitle: {
-    fontSize: 14,
+    fontSize: 14.5,
     fontWeight: "800",
     color: colors.textPrimary,
     flex: 1,
     textAlign: "center",
+    letterSpacing: -0.2,
   },
   tabBar: {
     flexDirection: "row",
@@ -463,12 +472,8 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: colors.cardBorder,
     paddingVertical: 6,
-    paddingBottom: 8,
-    elevation: 8,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: -2 },
-    shadowOpacity: 0.06,
-    shadowRadius: 3,
+    paddingBottom: 10,
+    ...shadows.md,
   },
   tabItem: {
     flex: 1,
@@ -484,19 +489,21 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   tabIcon: {
-    fontSize: 17,
+    fontSize: 18,
   },
   badgePill: {
     position: "absolute",
-    top: -2,
-    right: -6,
+    top: -3,
+    right: -8,
     backgroundColor: colors.primary,
-    borderRadius: 8,
-    minWidth: 16,
-    height: 16,
+    borderRadius: borderRadius.full,
+    minWidth: 17,
+    height: 17,
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 3,
+    borderWidth: 1.5,
+    borderColor: "#FFFFFF",
   },
   badgePillText: {
     color: "#FFFFFF",
@@ -504,10 +511,11 @@ const styles = StyleSheet.create({
     fontWeight: "900",
   },
   tabLabel: {
-    fontSize: 10,
+    fontSize: 10.5,
     fontWeight: "600",
     color: colors.textMuted,
     marginTop: 2,
+    letterSpacing: -0.1,
   },
   tabLabelActive: {
     color: colors.primary,

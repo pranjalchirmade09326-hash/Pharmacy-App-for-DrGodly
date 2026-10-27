@@ -9,12 +9,12 @@ import {
 } from "react-native";
 import { colors } from "../theme/colors";
 import { useCart } from "../context/CartContext";
-import { borderRadius } from "../theme/spacing";
+import { borderRadius, shadows } from "../theme/spacing";
 
 const STORES = [
-  { id: "PHARM-DEL-041", name: "Apollo Pharmacy — Connaught Place, New Delhi" },
-  { id: "PHARM-BLR-012", name: "MedPlus — Indiranagar, Bengaluru" },
-  { id: "PHARM-MUM-088", name: "Wellness Forever — Andheri West, Mumbai" },
+  { id: "PHARM-DEL-041", name: "Apollo Pharmacy — Connaught Place, New Delhi", area: "Connaught Place, New Delhi", distance: "0.2 km" },
+  { id: "PHARM-BLR-012", name: "MedPlus — Indiranagar, Bengaluru", area: "Indiranagar, Bengaluru", distance: "1.1 km" },
+  { id: "PHARM-MUM-088", name: "Wellness Forever — Andheri West, Mumbai", area: "Andheri West, Mumbai", distance: "2.4 km" },
 ];
 
 interface MobileHeaderProps {
@@ -28,28 +28,34 @@ export function MobileHeader({ onOpenCart }: MobileHeaderProps) {
 
   return (
     <View style={styles.header}>
-      {/* Brand & Subtitle */}
-      <View style={styles.brandRow}>
-        <View style={styles.logoBadge}>
-          <Text style={styles.logoText}>✝</Text>
-        </View>
-        <View>
-          <View style={styles.titleRow}>
-            <Text style={styles.title}>DrGodly</Text>
-            <View style={styles.tag}>
-              <Text style={styles.tagText}>PHARMACY</Text>
+      {/* Brand & Store Selector */}
+      <View style={styles.brandContainer}>
+        <View style={styles.brandRow}>
+          <View style={styles.logoBadge}>
+            <Text style={styles.logoText}>✝</Text>
+          </View>
+          <View>
+            <View style={styles.titleRow}>
+              <Text style={styles.title}>DrGodly</Text>
+              <View style={styles.tag}>
+                <Text style={styles.tagText}>CLINIC & RX</Text>
+              </View>
             </View>
           </View>
-          <TouchableOpacity
-            activeOpacity={0.7}
-            onPress={() => setIsStoreModalOpen(true)}
-            style={styles.storeRow}
-          >
-            <Text style={styles.storeText} numberOfLines={1}>
-              📍 {selectedStore.name} ▾
-            </Text>
-          </TouchableOpacity>
         </View>
+
+        {/* Location selector pill */}
+        <TouchableOpacity
+          activeOpacity={0.75}
+          onPress={() => setIsStoreModalOpen(true)}
+          style={styles.storePill}
+        >
+          <Text style={styles.locationPin}>📍</Text>
+          <Text style={styles.storeText} numberOfLines={1}>
+            {selectedStore.area}
+          </Text>
+          <Text style={styles.storeChevron}>▾</Text>
+        </TouchableOpacity>
       </View>
 
       {/* Cart Icon & Badge */}
@@ -77,46 +83,71 @@ export function MobileHeader({ onOpenCart }: MobileHeaderProps) {
       >
         <View style={styles.modalBackdrop}>
           <View style={styles.modalCard}>
-            <Text style={styles.modalTitle}>Select Pharmacy Counter</Text>
-            <Text style={styles.modalSubtitle}>
-              Orders and clinical intake will be assigned to this store.
-            </Text>
+            <View style={styles.modalHeader}>
+              <View>
+                <Text style={styles.modalTitle}>Select Pharmacy Counter</Text>
+                <Text style={styles.modalSubtitle}>
+                  Intakes and orders are assigned to this registered counter.
+                </Text>
+              </View>
+              <TouchableOpacity
+                onPress={() => setIsStoreModalOpen(false)}
+                style={styles.modalCloseBtn}
+              >
+                <Text style={styles.modalCloseIcon}>✕</Text>
+              </TouchableOpacity>
+            </View>
 
             <FlatList
               data={STORES}
               keyExtractor={(item) => item.id}
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  activeOpacity={0.7}
-                  onPress={() => {
-                    setSelectedStore(item);
-                    setIsStoreModalOpen(false);
-                  }}
-                  style={[
-                    styles.storeOption,
-                    selectedStore.id === item.id && styles.storeOptionSelected,
-                  ]}
-                >
-                  <Text
+              contentContainerStyle={{ paddingVertical: 8 }}
+              renderItem={({ item }) => {
+                const isSelected = selectedStore.id === item.id;
+                return (
+                  <TouchableOpacity
+                    activeOpacity={0.7}
+                    onPress={() => {
+                      setSelectedStore(item);
+                      setIsStoreModalOpen(false);
+                    }}
                     style={[
-                      styles.storeOptionText,
-                      selectedStore.id === item.id && styles.storeOptionTextSelected,
+                      styles.storeOption,
+                      isSelected && styles.storeOptionSelected,
                     ]}
                   >
-                    {item.name}
-                  </Text>
-                  {selectedStore.id === item.id && (
-                    <Text style={styles.checkIcon}>✓</Text>
-                  )}
-                </TouchableOpacity>
-              )}
+                    <View style={styles.storeOptionLeft}>
+                      <View style={[styles.storeRadio, isSelected && styles.storeRadioSelected]}>
+                        {isSelected && <View style={styles.storeRadioInner} />}
+                      </View>
+                      <View style={{ flex: 1 }}>
+                        <Text
+                          style={[
+                            styles.storeOptionText,
+                            isSelected && styles.storeOptionTextSelected,
+                          ]}
+                          numberOfLines={1}
+                        >
+                          {item.name}
+                        </Text>
+                        <Text style={styles.storeDistance}>Distance: {item.distance}</Text>
+                      </View>
+                    </View>
+                    {isSelected && (
+                      <View style={styles.checkBadge}>
+                        <Text style={styles.checkIcon}>✓ ACTIVE</Text>
+                      </View>
+                    )}
+                  </TouchableOpacity>
+                );
+              }}
             />
 
             <TouchableOpacity
               onPress={() => setIsStoreModalOpen(false)}
               style={styles.closeButton}
             >
-              <Text style={styles.closeButtonText}>Close</Text>
+              <Text style={styles.closeButtonText}>Done</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -129,30 +160,35 @@ const styles = StyleSheet.create({
   header: {
     backgroundColor: "#FFFFFF",
     paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingVertical: 10,
     borderBottomWidth: 1,
     borderBottomColor: colors.cardBorder,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    ...shadows.sm,
+  },
+  brandContainer: {
+    flex: 1,
+    marginRight: 10,
   },
   brandRow: {
     flexDirection: "row",
     alignItems: "center",
-    flex: 1,
+    marginBottom: 4,
   },
   logoBadge: {
-    width: 38,
-    height: 38,
+    width: 30,
+    height: 30,
     borderRadius: borderRadius.md,
     backgroundColor: colors.primary,
     alignItems: "center",
     justifyContent: "center",
-    marginRight: 10,
+    marginRight: 8,
   },
   logoText: {
     color: "#FFFFFF",
-    fontSize: 20,
+    fontSize: 17,
     fontWeight: "900",
   },
   titleRow: {
@@ -161,121 +197,201 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   title: {
-    fontSize: 18,
+    fontSize: 17,
     fontWeight: "900",
     color: colors.textPrimary,
-    letterSpacing: -0.5,
+    letterSpacing: -0.4,
   },
   tag: {
     backgroundColor: colors.primaryLight,
     borderWidth: 1,
-    borderColor: "#99F6E4",
+    borderColor: "#BFDBFE",
     paddingHorizontal: 6,
     paddingVertical: 1.5,
-    borderRadius: 4,
+    borderRadius: borderRadius.full,
   },
   tagText: {
-    fontSize: 9,
+    fontSize: 8.5,
     fontWeight: "800",
-    color: colors.primaryDark,
+    color: colors.primary,
+    letterSpacing: 0.5,
   },
-  storeRow: {
-    marginTop: 1,
-    maxWidth: 240,
+  storePill: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: colors.surfaceMuted,
+    paddingHorizontal: 9,
+    paddingVertical: 3.5,
+    borderRadius: borderRadius.full,
+    borderWidth: 1,
+    borderColor: colors.cardBorder,
+    alignSelf: "flex-start",
+    maxWidth: "92%",
+  },
+  locationPin: {
+    fontSize: 10.5,
+    marginRight: 4,
   },
   storeText: {
     fontSize: 11,
+    color: colors.textSecondary,
+    fontWeight: "600",
+    flexShrink: 1,
+  },
+  storeChevron: {
+    fontSize: 9,
     color: colors.textMuted,
-    fontWeight: "500",
+    marginLeft: 4,
   },
   cartButton: {
-    position: "relative",
-    padding: 8,
-    borderRadius: borderRadius.md,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     backgroundColor: colors.surfaceMuted,
+    borderWidth: 1,
+    borderColor: colors.cardBorder,
+    alignItems: "center",
+    justifyContent: "center",
+    position: "relative",
   },
   cartIcon: {
     fontSize: 18,
   },
   cartBadge: {
     position: "absolute",
-    top: 2,
-    right: 2,
+    top: -2,
+    right: -2,
     backgroundColor: colors.primary,
-    borderRadius: 9999,
-    width: 18,
+    borderRadius: 9,
+    minWidth: 18,
     height: 18,
     alignItems: "center",
     justifyContent: "center",
+    paddingHorizontal: 4,
+    borderWidth: 1.5,
+    borderColor: "#FFFFFF",
   },
   cartBadgeText: {
     color: "#FFFFFF",
-    fontSize: 10,
+    fontSize: 9.5,
     fontWeight: "900",
   },
   modalBackdrop: {
     flex: 1,
-    backgroundColor: "rgba(15, 23, 42, 0.6)",
+    backgroundColor: "rgba(15, 23, 42, 0.5)",
     justifyContent: "center",
-    padding: 20,
+    padding: 16,
   },
   modalCard: {
     backgroundColor: "#FFFFFF",
     borderRadius: borderRadius.xl,
     padding: 20,
     maxHeight: "80%",
+    ...shadows.lg,
+  },
+  modalHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    marginBottom: 12,
   },
   modalTitle: {
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: "800",
     color: colors.textPrimary,
+    letterSpacing: -0.3,
   },
   modalSubtitle: {
     fontSize: 12,
     color: colors.textMuted,
-    marginTop: 4,
-    marginBottom: 16,
+    marginTop: 2,
+  },
+  modalCloseBtn: {
+    padding: 4,
+  },
+  modalCloseIcon: {
+    fontSize: 16,
+    color: colors.textMuted,
+    fontWeight: "700",
   },
   storeOption: {
-    paddingVertical: 12,
-    paddingHorizontal: 12,
-    borderRadius: borderRadius.md,
-    borderWidth: 1,
-    borderColor: colors.cardBorder,
-    marginBottom: 8,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    paddingVertical: 12,
+    paddingHorizontal: 12,
+    borderRadius: borderRadius.lg,
+    borderWidth: 1,
+    borderColor: colors.cardBorder,
+    marginBottom: 8,
+    backgroundColor: "#FFFFFF",
   },
   storeOptionSelected: {
-    backgroundColor: colors.primaryLight,
     borderColor: colors.primary,
+    backgroundColor: colors.primaryLight,
+  },
+  storeOptionLeft: {
+    flexDirection: "row",
+    alignItems: "center",
+    flex: 1,
+    marginRight: 8,
+  },
+  storeRadio: {
+    width: 18,
+    height: 18,
+    borderRadius: 9,
+    borderWidth: 2,
+    borderColor: colors.cardBorder,
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: 10,
+  },
+  storeRadioSelected: {
+    borderColor: colors.primary,
+  },
+  storeRadioInner: {
+    width: 9,
+    height: 9,
+    borderRadius: 4.5,
+    backgroundColor: colors.primary,
   },
   storeOptionText: {
     fontSize: 13,
-    color: colors.textSecondary,
+    color: colors.textPrimary,
     fontWeight: "600",
-    flex: 1,
   },
   storeOptionTextSelected: {
-    color: colors.primaryDark,
     fontWeight: "800",
+    color: colors.primaryDark,
+  },
+  storeDistance: {
+    fontSize: 10.5,
+    color: colors.textMuted,
+    marginTop: 2,
+  },
+  checkBadge: {
+    backgroundColor: colors.greenLight,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: borderRadius.full,
+    borderWidth: 1,
+    borderColor: "#A7F3D0",
   },
   checkIcon: {
-    color: colors.primary,
+    color: colors.greenSafe,
+    fontSize: 9.5,
     fontWeight: "900",
-    marginLeft: 8,
   },
   closeButton: {
-    marginTop: 8,
-    paddingVertical: 10,
-    alignItems: "center",
+    backgroundColor: colors.textPrimary,
     borderRadius: borderRadius.md,
-    backgroundColor: colors.surfaceMuted,
+    paddingVertical: 12,
+    alignItems: "center",
+    marginTop: 10,
   },
   closeButtonText: {
-    fontSize: 13,
-    fontWeight: "700",
-    color: colors.textSecondary,
+    color: "#FFFFFF",
+    fontSize: 14,
+    fontWeight: "800",
   },
 });

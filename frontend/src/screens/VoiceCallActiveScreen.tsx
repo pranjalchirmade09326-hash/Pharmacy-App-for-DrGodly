@@ -8,6 +8,7 @@ import {
   Alert,
 } from "react-native";
 import { colors } from "../theme/colors";
+import { borderRadius, shadows } from "../theme/spacing";
 
 interface VoiceCallActiveScreenProps {
   onComplete?: (intakeData: any) => void;
@@ -110,39 +111,57 @@ export function VoiceCallActiveScreen({
       {/* Top Bar */}
       <View style={styles.topBar}>
         <View style={styles.liveIndicator}>
-          <View style={styles.pulseDot} />
+          <View style={styles.pulseContainer}>
+            <View style={styles.pulseRing} />
+            <View style={styles.pulseDot} />
+          </View>
           <Text style={styles.liveText}>DRGODLY INTAKE LIVE</Text>
         </View>
-        <Text style={styles.timer}>{formatTimer(secondsElapsed)}</Text>
+        <View style={styles.timerContainer}>
+          <Text style={styles.timer}>{formatTimer(secondsElapsed)}</Text>
+        </View>
       </View>
 
       {/* Voice Visualizer Avatar */}
       <View style={styles.visualizerContainer}>
-        <View style={styles.avatarCircle}>
-          <Text style={styles.avatarIcon}>🩺</Text>
+        <View style={styles.avatarGlow}>
+          <View style={styles.avatarCircle}>
+            <Text style={styles.avatarIcon}>🩺</Text>
+          </View>
         </View>
+        
         <View style={styles.waveformRow}>
           {[40, 65, 90, 110, 80, 55, 75, 95, 60, 45].map((h, i) => (
             <View
               key={i}
               style={[
                 styles.waveformBar,
-                { height: isMuted ? 10 : h * (0.4 + (i % 3) * 0.2) },
+                { height: isMuted ? 8 : h * (0.35 + (i % 3) * 0.22) },
               ]}
             />
           ))}
         </View>
-        <Text style={styles.topicPill}>Current Phase: {activeTurn.topic}</Text>
+
+        <View style={styles.topicPill}>
+          <Text style={styles.topicPillText}>Current Focus: {activeTurn.topic}</Text>
+        </View>
       </View>
 
       {/* Real-time Bilingual Transcript */}
       <ScrollView style={styles.transcriptBox} contentContainerStyle={styles.transcriptContent}>
         <View style={styles.bubbleAI}>
-          <Text style={styles.speakerLabel}>DrGodly Assistant ({language}):</Text>
+          <View style={styles.bubbleHeaderRow}>
+            <Text style={styles.speakerLabel}>DrGodly Assistant ({language})</Text>
+            <Text style={styles.bubbleTime}>AI Voice</Text>
+          </View>
           <Text style={styles.bubbleTextAI}>{activeTurn.ai}</Text>
         </View>
+
         <View style={styles.bubblePatient}>
-          <Text style={styles.speakerLabelPatient}>Patient (Speech-to-Text):</Text>
+          <View style={styles.bubbleHeaderRow}>
+            <Text style={styles.speakerLabelPatient}>Patient (Rajesh Kumar)</Text>
+            <Text style={styles.bubbleTimePatient}>Speech-to-Text</Text>
+          </View>
           <Text style={styles.bubbleTextPatient}>{activeTurn.patient}</Text>
         </View>
       </ScrollView>
@@ -152,7 +171,7 @@ export function VoiceCallActiveScreen({
         <TouchableOpacity
           style={styles.advanceTurnButton}
           onPress={handleNextTurn}
-          activeOpacity={0.8}
+          activeOpacity={0.85}
         >
           <Text style={styles.advanceTurnText}>
             {currentTurn < dialogueScript.length - 1
@@ -198,79 +217,115 @@ export function VoiceCallActiveScreen({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.card,
+    backgroundColor: colors.background,
   },
   topBar: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingHorizontal: 20,
-    paddingTop: 16,
+    paddingHorizontal: 18,
+    paddingTop: 14,
     paddingBottom: 12,
+    backgroundColor: "#FFFFFF",
     borderBottomWidth: 1,
     borderBottomColor: colors.cardBorder,
+    ...shadows.sm,
   },
   liveIndicator: {
     flexDirection: "row",
     alignItems: "center",
   },
+  pulseContainer: {
+    width: 14,
+    height: 14,
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: 6,
+  },
+  pulseRing: {
+    position: "absolute",
+    width: 14,
+    height: 14,
+    borderRadius: 7,
+    backgroundColor: "rgba(16, 185, 129, 0.25)",
+  },
   pulseDot: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
+    width: 7,
+    height: 7,
+    borderRadius: 3.5,
     backgroundColor: colors.greenSafe,
-    marginRight: 8,
   },
   liveText: {
-    fontSize: 12,
-    fontWeight: "700",
+    fontSize: 11,
+    fontWeight: "900",
     color: colors.greenSafe,
     letterSpacing: 0.8,
   },
+  timerContainer: {
+    backgroundColor: colors.surfaceMuted,
+    paddingHorizontal: 10,
+    paddingVertical: 3,
+    borderRadius: borderRadius.full,
+    borderWidth: 1,
+    borderColor: colors.cardBorder,
+  },
   timer: {
-    fontSize: 16,
-    fontWeight: "700",
+    fontSize: 14,
+    fontWeight: "800",
     color: colors.textPrimary,
   },
   visualizerContainer: {
     alignItems: "center",
-    paddingVertical: 24,
+    paddingVertical: 20,
+    backgroundColor: "#FFFFFF",
+    borderBottomWidth: 1,
+    borderBottomColor: colors.cardBorderLight,
+  },
+  avatarGlow: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
     backgroundColor: colors.primaryLight,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 14,
   },
   avatarCircle: {
-    width: 72,
-    height: 72,
-    borderRadius: 36,
+    width: 64,
+    height: 64,
+    borderRadius: 32,
     backgroundColor: colors.primary,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 16,
+    ...shadows.md,
   },
   avatarIcon: {
-    fontSize: 34,
+    fontSize: 30,
   },
   waveformRow: {
     flexDirection: "row",
     alignItems: "center",
-    height: 48,
+    height: 44,
     marginBottom: 12,
+    gap: 4,
   },
   waveformBar: {
-    width: 5,
-    backgroundColor: colors.secondary,
+    width: 4.5,
+    backgroundColor: colors.primary,
     borderRadius: 3,
-    marginHorizontal: 3,
   },
   topicPill: {
-    backgroundColor: colors.card,
+    backgroundColor: colors.surfaceMuted,
     paddingHorizontal: 14,
-    paddingVertical: 6,
-    borderRadius: 20,
-    fontSize: 12,
-    fontWeight: "600",
-    color: colors.primary,
+    paddingVertical: 5,
+    borderRadius: borderRadius.full,
     borderWidth: 1,
     borderColor: colors.cardBorder,
+  },
+  topicPillText: {
+    fontSize: 11.5,
+    fontWeight: "700",
+    color: colors.primaryDark,
   },
   transcriptBox: {
     flex: 1,
@@ -280,72 +335,98 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   bubbleAI: {
-    backgroundColor: colors.surfaceMuted,
-    borderRadius: 14,
+    backgroundColor: "#FFFFFF",
+    borderRadius: borderRadius.xl,
     borderBottomLeftRadius: 4,
     padding: 14,
     marginBottom: 12,
-    maxWidth: "88%",
+    maxWidth: "90%",
+    borderWidth: 1,
+    borderColor: colors.cardBorder,
+    ...shadows.sm,
   },
   bubblePatient: {
-    backgroundColor: colors.secondaryLight,
-    borderRadius: 14,
+    backgroundColor: colors.primaryLight,
+    borderRadius: borderRadius.xl,
     borderBottomRightRadius: 4,
     padding: 14,
     marginBottom: 12,
-    maxWidth: "88%",
+    maxWidth: "90%",
     alignSelf: "flex-end",
+    borderWidth: 1,
+    borderColor: "#BFDBFE",
+    ...shadows.sm,
+  },
+  bubbleHeaderRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 4,
   },
   speakerLabel: {
     fontSize: 11,
-    fontWeight: "700",
+    fontWeight: "800",
     color: colors.primary,
-    marginBottom: 4,
+    letterSpacing: 0.2,
+  },
+  bubbleTime: {
+    fontSize: 9.5,
+    color: colors.textMuted,
+    fontWeight: "600",
   },
   speakerLabelPatient: {
     fontSize: 11,
-    fontWeight: "700",
-    color: colors.secondaryDark,
-    marginBottom: 4,
+    fontWeight: "800",
+    color: colors.primaryDark,
+    letterSpacing: 0.2,
+  },
+  bubbleTimePatient: {
+    fontSize: 9.5,
+    color: colors.primary,
+    fontWeight: "600",
   },
   bubbleTextAI: {
-    fontSize: 14,
+    fontSize: 13.5,
     color: colors.textPrimary,
-    lineHeight: 20,
+    lineHeight: 19,
   },
   bubbleTextPatient: {
-    fontSize: 14,
+    fontSize: 13.5,
     color: colors.textPrimary,
-    lineHeight: 20,
+    lineHeight: 19,
+    fontWeight: "500",
   },
   footer: {
     padding: 16,
-    backgroundColor: colors.card,
+    backgroundColor: "#FFFFFF",
     borderTopWidth: 1,
     borderTopColor: colors.cardBorder,
+    ...shadows.md,
   },
   advanceTurnButton: {
     backgroundColor: colors.primary,
-    borderRadius: 10,
+    borderRadius: borderRadius.lg,
     paddingVertical: 14,
     alignItems: "center",
     marginBottom: 12,
+    ...shadows.sm,
   },
   advanceTurnText: {
     color: "#FFFFFF",
-    fontSize: 15,
-    fontWeight: "700",
+    fontSize: 14.5,
+    fontWeight: "800",
+    letterSpacing: -0.1,
   },
   controlsRow: {
     flexDirection: "row",
     justifyContent: "space-between",
+    gap: 8,
   },
   controlBtn: {
     flex: 1,
     alignItems: "center",
     paddingVertical: 10,
-    marginHorizontal: 4,
-    borderRadius: 8,
+    borderRadius: borderRadius.lg,
     borderWidth: 1,
     borderColor: colors.cardBorder,
     backgroundColor: colors.surfaceMuted,
@@ -356,11 +437,12 @@ const styles = StyleSheet.create({
   },
   emergencyBtn: {
     backgroundColor: colors.redLight,
-    borderColor: colors.redEmergency,
+    borderColor: "#FECACA",
   },
   endCallBtn: {
     backgroundColor: colors.redEmergency,
     borderColor: colors.redEmergency,
+    ...shadows.sm,
   },
   controlIcon: {
     fontSize: 18,
@@ -368,7 +450,7 @@ const styles = StyleSheet.create({
   },
   controlLabel: {
     fontSize: 11,
-    fontWeight: "600",
+    fontWeight: "700",
     color: colors.textSecondary,
   },
 });

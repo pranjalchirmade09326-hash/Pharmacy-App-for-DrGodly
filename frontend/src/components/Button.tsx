@@ -8,7 +8,7 @@ import {
   TextStyle,
 } from "react-native";
 import { colors } from "../theme/colors";
-import { borderRadius } from "../theme/spacing";
+import { borderRadius, shadows } from "../theme/spacing";
 
 export type ButtonVariant = "primary" | "secondary" | "danger" | "outline" | "success";
 export type ButtonSize = "sm" | "md" | "lg";
@@ -40,36 +40,51 @@ export function Button({
     switch (variant) {
       case "primary":
         return {
-          container: { backgroundColor: colors.primary },
+          container: {
+            backgroundColor: colors.primary,
+            ...shadows.sm,
+          },
           text: { color: "#FFFFFF" },
         };
       case "secondary":
         return {
-          container: { backgroundColor: colors.textPrimary },
+          container: {
+            backgroundColor: colors.textPrimary,
+            ...shadows.sm,
+          },
           text: { color: "#FFFFFF" },
         };
       case "success":
         return {
-          container: { backgroundColor: colors.secondary },
+          container: {
+            backgroundColor: colors.secondary,
+            ...shadows.sm,
+          },
           text: { color: "#FFFFFF" },
         };
       case "danger":
         return {
-          container: { backgroundColor: colors.redEmergency },
+          container: {
+            backgroundColor: colors.redEmergency,
+            ...shadows.sm,
+          },
           text: { color: "#FFFFFF" },
         };
       case "outline":
         return {
           container: {
             backgroundColor: "#FFFFFF",
-            borderWidth: 1,
+            borderWidth: 1.5,
             borderColor: colors.cardBorder,
           },
           text: { color: colors.textPrimary },
         };
       default:
         return {
-          container: { backgroundColor: colors.primary },
+          container: {
+            backgroundColor: colors.primary,
+            ...shadows.sm,
+          },
           text: { color: "#FFFFFF" },
         };
     }
@@ -79,19 +94,31 @@ export function Button({
     switch (size) {
       case "sm":
         return {
-          container: { paddingVertical: 6, paddingHorizontal: 12, borderRadius: borderRadius.sm },
-          text: { fontSize: 12 },
+          container: {
+            paddingVertical: 7,
+            paddingHorizontal: 14,
+            borderRadius: borderRadius.md,
+          },
+          text: { fontSize: 12.5, fontWeight: "700" },
         };
       case "lg":
         return {
-          container: { paddingVertical: 14, paddingHorizontal: 20, borderRadius: borderRadius.lg },
-          text: { fontSize: 16 },
+          container: {
+            paddingVertical: 15,
+            paddingHorizontal: 22,
+            borderRadius: borderRadius.lg,
+          },
+          text: { fontSize: 16, fontWeight: "800" },
         };
       case "md":
       default:
         return {
-          container: { paddingVertical: 10, paddingHorizontal: 16, borderRadius: borderRadius.md },
-          text: { fontSize: 14 },
+          container: {
+            paddingVertical: 11,
+            paddingHorizontal: 18,
+            borderRadius: borderRadius.md,
+          },
+          text: { fontSize: 14, fontWeight: "700" },
         };
     }
   };
@@ -101,7 +128,7 @@ export function Button({
 
   return (
     <TouchableOpacity
-      activeOpacity={0.8}
+      activeOpacity={0.82}
       onPress={onPress}
       disabled={disabled || loading}
       style={[
@@ -120,7 +147,14 @@ export function Button({
       ) : (
         <>
           {icon}
-          <Text style={[styles.baseText, vStyle.text, sStyle.text, textStyle]}>
+          <Text
+            style={[
+              styles.baseText,
+              vStyle.text,
+              sStyle.text,
+              textStyle,
+            ]}
+          >
             {title}
           </Text>
         </>
@@ -137,7 +171,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   baseText: {
-    fontWeight: "700",
+    letterSpacing: -0.2,
   },
   disabledButton: {
     opacity: 0.5,

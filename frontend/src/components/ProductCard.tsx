@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { CatalogProduct } from "../data/products";
 import { colors } from "../theme/colors";
-import { borderRadius } from "../theme/spacing";
+import { borderRadius, shadows } from "../theme/spacing";
 import { formatINR } from "../utils/currency";
 import { Badge } from "./Badge";
 import { useCart } from "../context/CartContext";
@@ -34,11 +34,11 @@ export function ProductCard({ product, onPress }: ProductCardProps) {
           {/* Scheduling Badge */}
           <View style={styles.badgeRow}>
             {product.prescriptionRequired ? (
-              <Badge label="Rx • Schedule H" variant="purple" />
+              <Badge label="Rx • Sched H" variant="purple" />
             ) : product.cdscoCategory === "AYUSH" ? (
               <Badge label="Ayurvedic / OTC" variant="yellow" />
             ) : (
-              <Badge label="CDSCO OTC Safe" variant="green" />
+              <Badge label="CDSCO Safe OTC" variant="green" />
             )}
             <Text style={styles.packSize}>{product.packSize}</Text>
           </View>
@@ -100,25 +100,21 @@ export function ProductCard({ product, onPress }: ProductCardProps) {
 const styles = StyleSheet.create({
   card: {
     backgroundColor: "#FFFFFF",
-    borderRadius: borderRadius.lg,
-    padding: 12,
+    borderRadius: borderRadius.xl,
+    padding: 14,
     marginBottom: 12,
     borderWidth: 1,
     borderColor: colors.cardBorder,
-    shadowColor: "#0F172A",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 1,
+    ...shadows.sm,
   },
   clickableArea: {
     flexDirection: "row",
     alignItems: "flex-start",
   },
   image: {
-    width: 76,
-    height: 76,
-    borderRadius: borderRadius.md,
+    width: 80,
+    height: 80,
+    borderRadius: borderRadius.lg,
     backgroundColor: colors.surfaceMuted,
     marginRight: 12,
   },
@@ -132,19 +128,21 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   packSize: {
-    fontSize: 10,
+    fontSize: 10.5,
     color: colors.textMuted,
+    fontWeight: "500",
   },
   brandName: {
-    fontSize: 14,
-    fontWeight: "800",
+    fontSize: 14.5,
+    fontWeight: "900",
     color: colors.textPrimary,
+    letterSpacing: -0.2,
   },
   generic: {
-    fontSize: 11,
+    fontSize: 11.5,
     color: colors.textSecondary,
     marginTop: 2,
-    lineHeight: 15,
+    lineHeight: 16,
   },
   pricingRow: {
     flexDirection: "row",
@@ -153,9 +151,10 @@ const styles = StyleSheet.create({
     marginTop: 6,
   },
   sellingPrice: {
-    fontSize: 15,
+    fontSize: 15.5,
     fontWeight: "900",
     color: colors.textPrimary,
+    letterSpacing: -0.2,
   },
   mrp: {
     fontSize: 11,
@@ -164,45 +163,45 @@ const styles = StyleSheet.create({
   },
   actionRow: {
     marginTop: 10,
-    paddingTop: 8,
+    paddingTop: 10,
     borderTopWidth: 1,
     borderTopColor: colors.cardBorder,
     alignItems: "flex-end",
   },
   addButton: {
-    backgroundColor: colors.primaryLight,
-    borderWidth: 1,
-    borderColor: colors.primary,
-    paddingHorizontal: 14,
-    paddingVertical: 6,
-    borderRadius: borderRadius.sm,
+    backgroundColor: colors.primary,
+    paddingHorizontal: 16,
+    paddingVertical: 7,
+    borderRadius: borderRadius.full,
+    ...shadows.sm,
   },
   addButtonText: {
     fontSize: 12,
-    fontWeight: "700",
-    color: colors.primaryDark,
+    fontWeight: "800",
+    color: "#FFFFFF",
   },
   stepper: {
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: colors.primaryLight,
-    borderRadius: borderRadius.sm,
-    borderWidth: 1,
+    borderRadius: borderRadius.full,
+    borderWidth: 1.5,
     borderColor: colors.primary,
+    paddingHorizontal: 2,
   },
   stepBtn: {
     paddingHorizontal: 10,
     paddingVertical: 4,
   },
   stepBtnText: {
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: "900",
-    color: colors.primaryDark,
+    color: colors.primary,
   },
   stepQty: {
     fontSize: 13,
     fontWeight: "800",
-    color: colors.primaryDark,
+    color: colors.primary,
     paddingHorizontal: 8,
   },
 });

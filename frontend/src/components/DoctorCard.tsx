@@ -2,9 +2,8 @@ import React from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { Doctor } from "../data/doctors";
 import { colors } from "../theme/colors";
-import { borderRadius } from "../theme/spacing";
+import { borderRadius, shadows } from "../theme/spacing";
 import { formatINR } from "../utils/currency";
-import { Badge } from "./Badge";
 
 interface DoctorCardProps {
   doctor: Doctor;
@@ -80,7 +79,10 @@ export function DoctorCard({ doctor, onPress }: DoctorCardProps) {
         </View>
 
         <View style={styles.slotActionBox}>
-          <Text style={styles.slotText}>⏱ {doctor.nextAvailableSlot}</Text>
+          <View style={styles.slotIndicator}>
+            <View style={styles.slotDot} />
+            <Text style={styles.slotText}>⏱ {doctor.nextAvailableSlot}</Text>
+          </View>
           <View style={styles.actionPill}>
             <Text style={styles.actionPillText}>Select Slot ›</Text>
           </View>
@@ -93,27 +95,23 @@ export function DoctorCard({ doctor, onPress }: DoctorCardProps) {
 const styles = StyleSheet.create({
   card: {
     backgroundColor: "#FFFFFF",
-    borderRadius: borderRadius.lg,
-    padding: 14,
+    borderRadius: borderRadius.xl,
+    padding: 16,
     marginBottom: 12,
     borderWidth: 1,
     borderColor: colors.cardBorder,
-    shadowColor: "#0F172A",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 1,
+    ...shadows.sm,
   },
   topRow: {
     flexDirection: "row",
     alignItems: "center",
   },
   avatar: {
-    width: 60,
-    height: 60,
-    borderRadius: borderRadius.md,
+    width: 64,
+    height: 64,
+    borderRadius: borderRadius.lg,
     backgroundColor: colors.surfaceMuted,
-    marginRight: 12,
+    marginRight: 14,
   },
   headerInfo: {
     flex: 1,
@@ -124,17 +122,18 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   name: {
-    fontSize: 15,
-    fontWeight: "800",
+    fontSize: 15.5,
+    fontWeight: "900",
     color: colors.textPrimary,
     flex: 1,
     marginRight: 6,
+    letterSpacing: -0.2,
   },
   ratingBadge: {
     backgroundColor: colors.yellowLight,
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 4,
+    paddingHorizontal: 7,
+    paddingVertical: 2.5,
+    borderRadius: borderRadius.full,
     borderWidth: 1,
     borderColor: "#FDE68A",
   },
@@ -144,35 +143,37 @@ const styles = StyleSheet.create({
     color: colors.yellowModerate,
   },
   specialty: {
-    fontSize: 12,
+    fontSize: 12.5,
     fontWeight: "700",
     color: colors.primary,
     marginTop: 2,
   },
   degrees: {
-    fontSize: 11,
+    fontSize: 11.5,
     color: colors.textMuted,
     marginTop: 2,
   },
   metaBox: {
     backgroundColor: colors.surfaceMuted,
-    borderRadius: borderRadius.sm,
-    padding: 8,
-    marginTop: 10,
-    gap: 3,
+    borderRadius: borderRadius.md,
+    padding: 10,
+    marginTop: 12,
+    gap: 4,
+    borderWidth: 1,
+    borderColor: colors.cardBorderLight,
   },
   metaRow: {
     flexDirection: "row",
     alignItems: "center",
   },
   metaLabel: {
-    fontSize: 10,
+    fontSize: 10.5,
     fontWeight: "700",
     color: colors.textMuted,
-    width: 70,
+    width: 75,
   },
   metaValue: {
-    fontSize: 11,
+    fontSize: 11.5,
     color: colors.textSecondary,
     flex: 1,
     fontWeight: "500",
@@ -181,40 +182,54 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginTop: 12,
-    paddingTop: 10,
+    marginTop: 14,
+    paddingTop: 12,
     borderTopWidth: 1,
     borderTopColor: colors.cardBorder,
   },
   feeLabel: {
     fontSize: 10,
-    fontWeight: "600",
+    fontWeight: "700",
     color: colors.textMuted,
     textTransform: "uppercase",
+    letterSpacing: 0.5,
   },
   feeValue: {
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: "900",
     color: colors.textPrimary,
+    letterSpacing: -0.3,
   },
   slotActionBox: {
     alignItems: "flex-end",
   },
-  slotText: {
-    fontSize: 10,
-    fontWeight: "700",
-    color: colors.secondary,
+  slotIndicator: {
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 4,
+  },
+  slotDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: colors.greenSafe,
+    marginRight: 4,
+  },
+  slotText: {
+    fontSize: 10.5,
+    fontWeight: "700",
+    color: colors.secondaryDark,
   },
   actionPill: {
     backgroundColor: colors.primary,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: borderRadius.sm,
+    paddingHorizontal: 14,
+    paddingVertical: 7,
+    borderRadius: borderRadius.full,
+    ...shadows.sm,
   },
   actionPillText: {
     color: "#FFFFFF",
     fontSize: 12,
-    fontWeight: "700",
+    fontWeight: "800",
   },
 });
