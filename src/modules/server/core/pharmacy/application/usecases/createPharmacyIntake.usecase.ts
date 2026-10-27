@@ -4,8 +4,8 @@
  * and triggers dual synchronization to naveenraj-g/fhir.
  */
 
-import { FhirSyncService, PharmacyIntakePayload } from '../../fhir/fhirSync.service';
-import { CdscoFormularyService } from '../../formulary/cdscoFormulary.service';
+import { FhirSyncService, PharmacyIntakePayload } from '../../../fhir/fhirSync.service';
+import { CdscoFormularyService } from '../../../formulary/cdscoFormulary.service';
 
 export interface CreatePharmacyIntakeDTO {
   pharmacy_code: string;
@@ -91,7 +91,9 @@ export class CreatePharmacyIntakeUseCase {
       });
       fhirEncounterId = fhirEncounter.id;
 
-      await this.fhirSyncService.recordSymptomObservations(fhirPatientId, fhirEncounterId, dto.symptoms);
+      if (fhirPatientId && fhirEncounterId) {
+        await this.fhirSyncService.recordSymptomObservations(fhirPatientId, fhirEncounterId, dto.symptoms);
+      }
     } catch (err) {
       console.error('Failed to sync encounter to external FHIR server:', err);
     }

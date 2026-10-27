@@ -1,0 +1,55 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DoctorProfile",
+  "type": "object",
+  "required": [
+    "id",
+    "fullName",
+    "degrees",
+    "nmcRegistrationNumber",
+    "stateMedicalCouncil",
+    "specialization",
+    "experienceYears",
+    "languages",
+    "consultationFeeINR",
+    "rating",
+    "reviewCount",
+    "avatarUrl",
+    "aboutBio",
+    "availableToday",
+    "nextAvailableSlot",
+    "slots"
+  ],
+  "properties": {
+    "id": { "type": "string", "format": "uuid" },
+    "fullName": { "type": "string" },
+    "degrees": { "type": "array", "items": { "type": "string" } },
+    "nmcRegistrationNumber": { "type": "string" },
+    "stateMedicalCouncil": { "type": "string" },
+    "specialization": { "type": "string" },
+    "experienceYears": { "type": "integer", "minimum": 0 },
+    "languages": { "type": "array", "items": { "type": "string" } },
+    "consultationFeeINR": { "type": "number", "minimum": 0 },
+    "rating": { "type": "number", "minimum": 1.0, "maximum": 5.0 },
+    "reviewCount": { "type": "integer", "minimum": 0 },
+    "avatarUrl": { "type": "string" },
+    "aboutBio": { "type": "string" },
+    "availableToday": { "type": "boolean" },
+    "nextAvailableSlot": { "type": "string" },
+    "hospitalAffiliation": { "type": "string" },
+    "slots": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["slotId", "date", "time", "period", "isBooked"],
+        "properties": {
+          "slotId": { "type": "string" },
+          "date": { "type": "string", "format": "date" },
+          "time": { "type": "string" },
+          "period": { "type": "string", "enum": ["morning", "afternoon", "evening"] },
+          "isBooked": { "type": "boolean" }
+        }
+      }
+    }
+  }
+}
