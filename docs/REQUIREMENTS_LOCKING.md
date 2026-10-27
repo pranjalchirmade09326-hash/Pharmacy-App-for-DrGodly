@@ -6,9 +6,9 @@
 - **Status:** LOCKED
 - **Jurisdiction:** India (CDSCO 2026, NMC Telemedicine Guidelines 2020, DPDP Act 2023, ABDM R4)
 - **Ecosystem:**
-  - Frontend Base: `https://github.com/Yazhnimalan/bezs-hms` (Next.js 16, React 19, Tailwind CSS v4)
-  - Backend FHIR: `https://github.com/naveenraj-g/fhir.git` (FastAPI FHIR R4 server & MCP gateway)
-  - Active Working Repo: `https://github.com/pranjalchirmade09326-hash/Pharmacy-App-for-DrGodly.git`
+  - Frontend Base: `DrGodly HMS` (Next.js 16, React 19, Tailwind CSS v4)
+  - Backend FHIR: `Central FHIR R4 Server` (FastAPI FHIR R4 server & MCP gateway)
+  - Active Working Repo: `DrGodly Pharmacy Assist Monorepo`
 
 ---
 

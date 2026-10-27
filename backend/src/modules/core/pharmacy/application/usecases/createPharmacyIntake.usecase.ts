@@ -1,7 +1,7 @@
 /**
  * Use Case: Create Pharmacy Intake
- * Integrates native voice call intake from Vapi/telephony with DrGodly bezs-hms Prisma models
- * and triggers dual synchronization to naveenraj-g/fhir.
+ * Integrates native voice call intake from Vapi/telephony with DrGodly DrGodly HMS Prisma models
+ * and triggers dual synchronization to central FHIR R4 server.
  */
 
 import { FhirSyncService, PharmacyIntakePayload } from '../../../fhir/fhirSync.service';
@@ -67,7 +67,7 @@ export class CreatePharmacyIntakeUseCase {
       intake_timestamp: new Date().toISOString(),
     };
 
-    // 4. Synchronize to FHIR Platform (naveenraj-g/fhir)
+    // 4. Synchronize to FHIR Platform (central FHIR R4 server)
     let fhirPatientId: string | number | null = null;
     let fhirEncounterId: string | number | null = null;
 

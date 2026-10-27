@@ -1,6 +1,6 @@
 // ============================================================================
 // DrGodly Pharmacy Assist: Prisma Schema Extension
-// Integrates natively with Yazhnimalan/bezs-hms (Next.js 16 + React 19 + Prisma)
+// Integrates natively with DrGodly HMS (Next.js 16 + React 19 + Prisma)
 // ============================================================================
 
 enum PharmacyTriageLevel {
@@ -59,7 +59,7 @@ model PharmacyQrCode {
 
 model PharmacistReview {
   id                  String              @id @default(uuid())
-  intake_id           Int                 @unique // Links to bezs-hms Intake model
+  intake_id           Int                 @unique // Links to drgodly-hms Intake model
   pharmacy_id         String
   pharmacist_user_id  String              // BetterAuth User ID of the on-duty pharmacist
   triage_level        PharmacyTriageLevel

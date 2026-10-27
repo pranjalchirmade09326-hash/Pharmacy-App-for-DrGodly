@@ -2,18 +2,18 @@
 **Document ID:** DRG-ARCH-2026-V2  
 **Product:** DrGodly Pharmacy Assist  
 **Ecosystem Integration:**  
-* **Frontend / HMS Hub:** [`Yazhnimalan/bezs-hms`](https://github.com/Yazhnimalan/bezs-hms) (Next.js 16 App Router, React 19, Prisma, Tailwind v4, LiveKit, Vapi)
-* **Backend / FHIR Server:** [`naveenraj-g/fhir`](https://github.com/naveenraj-g/fhir.git) (FastAPI + SQLAlchemy 2.0 + PostgreSQL 15, FHIR R4 REST API)
-* **AI Agent Platform:** [`Yazhnimalan/bezs-agent`](https://github.com/Yazhnimalan/bezs-agent) & [`fhir-mcp`](https://github.com/naveenraj-g/fhir/tree/main/fhir-mcp) (FastMCP at `:8002/mcp`)
-* **IAM / Auth:** [`Yazhnimalan/bezs-iam`](https://github.com/Yazhnimalan/bezs-iam) (BetterAuth at `:5001`)
-* **Storage / PDFs:** [`Yazhnimalan/bezs-filenest`](https://github.com/Yazhnimalan/bezs-filenest) (FileNest at `:8000`)
+* **Frontend / HMS Hub:** **DrGodly HMS Frontend Hub** (Next.js 16 App Router, React 19, Prisma, Tailwind v4, LiveKit, Vapi)
+* **Backend / FHIR Server:** **DrGodly FHIR R4 Interoperability Server** (FastAPI + SQLAlchemy 2.0 + PostgreSQL 15, FHIR R4 REST API)
+* **AI Agent Platform:** **DrGodly Voice AI Agent** & **FHIR MCP Gateway** (FastMCP at `:8002/mcp`)
+* **IAM / Auth:** **DrGodly IAM Authentication Service** (BetterAuth at `:5001`)
+* **Storage / PDFs:** **DrGodly FileNest Document Storage** (FileNest at `:8000`)
 **Jurisdiction:** India (Compliant with CDSCO 2026, DPDP Act 2023, Telemedicine Practice Guidelines 2020, ABDM FHIR R4)  
 
 ---
 
 ## 1. High-Level Architectural Topology
 
-DrGodly Pharmacy Assist builds natively on top of the **DrGodly / Bezs Healthcare Ecosystem**. Rather than introducing a siloed tech stack, Pharmacy Assist plugs directly into the existing Next.js 16 App Router frontend (`bezs-hms`), the FastAPI FHIR R4 backend (`naveenraj-g/fhir`), and the LiveKit/Vapi/FileNest infrastructure.
+DrGodly Pharmacy Assist builds natively on top of the **DrGodly / Bezs Healthcare Ecosystem**. Rather than introducing a siloed tech stack, Pharmacy Assist plugs directly into the existing Next.js 16 App Router frontend (`drgodly-hms`), the FastAPI FHIR R4 backend (`FHIR R4 Server`), and the LiveKit/Vapi/FileNest infrastructure.
 
 ```mermaid
 flowchart TD
@@ -24,18 +24,18 @@ flowchart TD
 
     subgraph VOICE_AGENT["2. Voice Intake & Orchestration"]
         TEL --> VAPI_GW["Vapi / Telephony Gateway<br>(WebSockets 16kHz PCM)"]
-        VAPI_GW <--> AGENT["bezs-agent :8018<br>(INTAKE_VOICE_AGENT_URL)"]
+        VAPI_GW <--> AGENT["drgodly-agent :8018<br>(INTAKE_VOICE_AGENT_URL)"]
         AGENT --> EXTRACT["Clinical Entity Extractor<br>(Hinglish/Tanglish Slot Filler)"]
     end
 
-    subgraph FRONTEND_HUB["3. drgodly Frontend Hub (bezs-hms :4000)"]
+    subgraph FRONTEND_HUB["3. drgodly Frontend Hub (drgodly-hms :4000)"]
         EXTRACT --> INTAKE_API["src/modules/server/core/intake<br>(Next.js 16 Server Actions / zsa)"]
-        PHARM_UI["src/app/[locale]/(apps)/bezs/pharmacy<br>(Pharmacist 4-Column Workspace)"] <--> INTAKE_API
-        DOC_UI["src/app/[locale]/(apps)/bezs/telemedicine/doctor<br>(Doctor Consultation Console)"] <--> LIVEKIT["LiveKit Server :7880<br>(Video / Audio Consult)"]
+        PHARM_UI["src/app/[locale]/(apps)/drgodly/pharmacy<br>(Pharmacist 4-Column Workspace)"] <--> INTAKE_API
+        DOC_UI["src/app/[locale]/(apps)/drgodly/telemedicine/doctor<br>(Doctor Consultation Console)"] <--> LIVEKIT["LiveKit Server :7880<br>(Video / Audio Consult)"]
         INTAKE_API <--> PRISMA[("Local Postgres :5432<br>Intakes, Pharmacist Reviews")]
     end
 
-    subgraph FHIR_BACKEND["4. FHIR R4 Backend (naveenraj-g/fhir :8000)"]
+    subgraph FHIR_BACKEND["4. FHIR R4 Backend (FHIR R4 Server :8000)"]
         INTAKE_API <--> FHIR_CLIENT["FHIR REST / GQL Client<br>(FHIR_SERVER_URL: /api/fhir/v1)"]
         FHIR_CLIENT <--> FHIR_SERVER["FastAPI fhir-server<br>(Patient, Encounter, Condition,<br>Observation, MedicationRequest)"]
         FHIR_SERVER <--> FHIR_MCP["fhir-mcp :8002<br>(FastMCP AI Tools Gateway)"]
@@ -43,8 +43,8 @@ flowchart TD
     end
 
     subgraph ECOSYSTEM["5. Supporting Ecosystem Services"]
-        INTAKE_API <--> IAM["bezs-iam :5001<br>(BetterAuth JWKS)"]
-        INTAKE_API <--> FILENEST["bezs-filenest :8000<br>(Prescriptions & Reports PDF)"]
+        INTAKE_API <--> IAM["drgodly-iam :5001<br>(BetterAuth JWKS)"]
+        INTAKE_API <--> FILENEST["drgodly-filenest :8000<br>(Prescriptions & Reports PDF)"]
         INTAKE_API --> WA_DISPATCH["WhatsApp Report Dispatcher"]
         WA_DISPATCH --> WA_API
     end
@@ -54,7 +54,7 @@ flowchart TD
 
 ## 2. Integration Alignment with Core Repositories
 
-### 2.1 Frontend: `Yazhnimalan/bezs-hms` (DrGodly HMS)
+### 2.1 Frontend: `DrGodly HMS` (DrGodly HMS)
 * **Framework:** Next.js 16.2.4 (App Router) + React 19.2.4 + TypeScript + Tailwind CSS v4.
 * **Component Architecture:** Radix UI, shadcn, Lucide/Remixicon icons, Framer Motion, Recharts.
 * **Clean Architecture Layout:**
@@ -62,12 +62,12 @@ flowchart TD
   * Server modules in `src/modules/server/core/`: Resource controllers, usecases, domain interfaces, and infrastructure repositories wired via `@evyweb/ioctopus` Dependency Injection.
   * Server Actions via `zsa` and `zsa-react`.
 * **Pharmacy Workspace Mounting:**
-  * Mounted under the localized route: `src/app/[locale]/(apps)/bezs/pharmacy`.
+  * Mounted under the localized route: `src/app/[locale]/(apps)/drgodly/pharmacy`.
   * Integrates with `src/modules/server/core/intake` and a new dedicated `src/modules/server/core/pharmacy` module.
   * Telemedicine doctor escalation directly invokes `src/modules/server/core/consultation` and the LiveKit room provisioning pipeline (`@livekit/components-react`).
 * **Document Handling:** PDF reports and signed e-prescriptions store in FileNest via `@filenest-fs/nextjs`.
 
-### 2.2 Backend: `naveenraj-g/fhir` (FHIR R4 Platform)
+### 2.2 Backend: `FHIR R4 Server` (FHIR R4 Platform)
 * **Framework:** Python 3.12+, FastAPI, Uvicorn, SQLAlchemy 2.0, asyncpg, Redis 7, uv.
 * **API Endpoints:** Mounted at `/api/fhir/v1/<resource>`.
 * **Clinical Data Mapping:**
@@ -90,7 +90,7 @@ flowchart TD
 │                        TIER 1: CONVERSATIONAL AI                       │
 │  • Voice Ingestion via Vapi / Telephony Gateway                        │
 │  • Speech recognition (STT) across Indian accents & code-switching     │
-│  • Slot filling via bezs-agent (INTAKE_VOICE_AGENT_URL :8018)          │
+│  • Slot filling via drgodly-agent (INTAKE_VOICE_AGENT_URL :8018)          │
 │  • ZERO clinical authority: Cannot prescribe, triage, or diagnose     │
 └───────────────────────────────────┬────────────────────────────────────┘
                                     │ Structured Clinical Slots (JSON)
@@ -107,7 +107,7 @@ flowchart TD
                                     ▼
 ┌────────────────────────────────────────────────────────────────────────┐
 │                 TIER 3: HUMAN HEALTHCARE PROFESSIONAL                  │
-│  • Pharmacist Console (bezs-hms): 4-column review, OTC dispense audit  │
+│  • Pharmacist Console (drgodly-hms): 4-column review, OTC dispense audit  │
 │  • Doctor Telemedicine (LiveKit): Video consult, SOAP note, digital Rx │
 │  • Laboratory Network: NABL accredited diagnostic test fulfillment     │
 └────────────────────────────────────────────────────────────────────────┘
@@ -117,7 +117,7 @@ flowchart TD
 
 ## 4. Extended Prisma Schema (Local Application Data)
 
-In `bezs-hms/prisma/schema/schema.prisma`, the local database stores proprietary pharmacy workflow data, linking to FHIR resources by ID:
+In `drgodly-hms/prisma/schema/schema.prisma`, the local database stores proprietary pharmacy workflow data, linking to FHIR resources by ID:
 
 ```prisma
 model Pharmacy {
@@ -223,9 +223,9 @@ flowchart TD
 
 ---
 
-## 6. Pharmacist Console UI Layout in `bezs-hms`
+## 6. Pharmacist Console UI Layout in `drgodly-hms`
 
-Mounted under `src/app/[locale]/(apps)/bezs/pharmacy`:
+Mounted under `src/app/[locale]/(apps)/drgodly/pharmacy`:
 * **Header:** Pharmacy Selector (multi-store switcher), Active On-Call Doctor Pill, Emergency Counters.
 * **Intake Queue Table:** Reuses `@tanstack/react-table` from `src/modules/shared/components/tables`, color-coded by triage level (`RED`, `ORANGE`, `YELLOW`, `GREEN`, `UNABLE_TO_ASSESS`).
 * **4-Column Clinical Review Screen:**
@@ -239,7 +239,7 @@ Mounted under `src/app/[locale]/(apps)/bezs/pharmacy`:
 
 ## 7. FHIR R4 Synchronizer Specification
 
-When an intake completes, the `FhirSyncService` dispatches typed payloads to `naveenraj-g/fhir`:
+When an intake completes, the `FhirSyncService` dispatches typed payloads to `FHIR R4 Server`:
 
 ```typescript
 // Example: Creating FHIR Encounter from DrGodly Pharmacy Intake

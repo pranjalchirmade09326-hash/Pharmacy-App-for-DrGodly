@@ -1,30 +1,27 @@
 {
-  "name": "drgodly-pharmacy",
+  "name": "drgodly-pharmacy-assist-monorepo",
   "version": "1.0.0",
   "private": true,
-  "description": "DrGodly Pharmacy Assist - Clinical Intake, Doctor Teleconsultation & Pharmacy Care Navigation for Indian Pharmacies",
+  "description": "DrGodly Pharmacy Assist - Clinical Intake, Doctor Teleconsultation & Pharmacy Care Navigation Monorepo",
+  "workspaces": [
+    "frontend/web",
+    "frontend/mobile",
+    "backend"
+  ],
   "scripts": {
-    "dev": "next dev -p 3000",
-    "build": "next build",
-    "start": "next start -p 3000",
-    "lint": "next lint",
-    "type-check": "tsc --noEmit"
-  },
-  "dependencies": {
-    "clsx": "^2.1.1",
-    "lucide-react": "^0.475.0",
-    "next": "^15.2.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "tailwind-merge": "^3.0.1"
+    "dev": "npm --prefix frontend/web run dev",
+    "dev:web": "npm --prefix frontend/web run dev",
+    "dev:mobile": "npm --prefix frontend/mobile start",
+    "build": "npm --prefix frontend/web run build",
+    "build:web": "npm --prefix frontend/web run build",
+    "build:backend": "npm --prefix backend run build",
+    "start": "npm --prefix frontend/web start",
+    "type-check": "npm --prefix frontend/web run type-check && npm --prefix backend run type-check",
+    "type-check:web": "npm --prefix frontend/web run type-check",
+    "type-check:mobile": "npm --prefix frontend/mobile run type-check",
+    "type-check:backend": "npm --prefix backend run type-check"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4.0.6",
-    "@types/node": "^20.14.0",
-    "@types/react": "^19.0.8",
-    "@types/react-dom": "^19.0.3",
-    "postcss": "^8.5.1",
-    "tailwindcss": "^4.0.6",
     "typescript": "^5.7.3"
   }
 }

@@ -1,6 +1,6 @@
 /**
  * DrGodly Pharmacy Assist — FHIR R4 Synchronization Service
- * Interfaces directly with naveenraj-g/fhir (FastAPI FHIR R4 server)
+ * Interfaces directly with the centralized FastAPI FHIR R4 server
  * Base URL: process.env.FHIR_SERVER_URL || 'http://localhost:8001'
  */
 
@@ -55,11 +55,11 @@ export class FhirSyncService {
       const errorText = await response.text();
       throw new Error(`FHIR Server Error [${response.status}] at ${path}: ${errorText}`);
     }
-    return response.json();
+    return (await response.json()) as T;
   }
 
   /**
-   * Find or Create Patient in naveenraj-g/fhir
+   * Find or Create Patient in FHIR R4 Server
    */
   async findOrCreatePatient(payload: {
     phone: string;
@@ -96,7 +96,7 @@ export class FhirSyncService {
   }
 
   /**
-   * Creates an Encounter in naveenraj-g/fhir for the pharmacy intake
+   * Creates an Encounter in FHIR R4 Server for the pharmacy intake
    */
   async createEncounter(patientFhirId: string | number, intake: PharmacyIntakePayload): Promise<any> {
     return this.request<any>('/api/fhir/v1/Encounter', {
@@ -129,7 +129,7 @@ export class FhirSyncService {
   }
 
   /**
-   * Syncs Extracted Symptoms as Observations in naveenraj-g/fhir
+   * Syncs Extracted Symptoms as Observations in FHIR R4 Server
    */
   async recordSymptomObservations(
     patientFhirId: string | number,
@@ -169,7 +169,7 @@ export class FhirSyncService {
   }
 
   /**
-   * Syncs AI Differential Considerations as Provisional Conditions in naveenraj-g/fhir
+   * Syncs AI Differential Considerations as Provisional Conditions in FHIR R4 Server
    */
   async recordDifferentialConditions(
     patientFhirId: string | number,

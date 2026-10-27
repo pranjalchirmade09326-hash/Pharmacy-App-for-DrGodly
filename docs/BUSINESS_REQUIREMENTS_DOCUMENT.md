@@ -2,10 +2,10 @@
 **Document ID:** DRG-BRD-2026-V2  
 **Product:** DrGodly Pharmacy Assist  
 **Ecosystem Integration:**  
-* **Frontend / HMS Hub:** [`Yazhnimalan/bezs-hms`](https://github.com/Yazhnimalan/bezs-hms) (Next.js 16 App Router, React 19, Prisma, LiveKit, Vapi)
-* **Backend / FHIR Server:** [`naveenraj-g/fhir`](https://github.com/naveenraj-g/fhir.git) (FastAPI FHIR R4 Platform + FastMCP Gateway at `:8002/mcp`)
-* **AI Agent Platform:** [`Yazhnimalan/bezs-agent`](https://github.com/Yazhnimalan/bezs-agent) (Voice & Clinical Extraction at `:8018`)
-* **IAM & File Storage:** [`Yazhnimalan/bezs-iam`](https://github.com/Yazhnimalan/bezs-iam) & [`Yazhnimalan/bezs-filenest`](https://github.com/Yazhnimalan/bezs-filenest)
+* **Frontend / HMS Hub:** **DrGodly HMS Frontend Hub** (Next.js 16 App Router, React 19, Prisma, LiveKit, Vapi)
+* **Backend / FHIR Server:** **DrGodly FHIR R4 Interoperability Server** (FastAPI FHIR R4 Platform + FastMCP Gateway at `:8002/mcp`)
+* **AI Agent Platform:** **DrGodly Voice AI Agent** (Voice & Clinical Extraction at `:8018`)
+* **IAM & File Storage:** **DrGodly IAM Authentication Service** & **DrGodly FileNest Document Storage**
 **Jurisdiction:** India  
 **Applicable Regulations:** CDSCO Drugs & Cosmetics Act 1940 / Rules 1945 (2026 Updates), Telemedicine Practice Guidelines 2020, Digital Personal Data Protection (DPDP) Act 2023, Ayushman Bharat Digital Mission (ABDM)  
 **Status:** Approved for Engineering Implementation  
@@ -30,7 +30,7 @@ At the pharmacy counter, a verbal interaction takes place:
 * **Absence of Medical Records:** Encounters are completely unrecorded; no longitudinal history or paper trail exists for subsequent doctor visits or hospital referrals.
 
 ### 1.3 The DrGodly Strategic Vision
-DrGodly Pharmacy Assist introduces an intelligent, zero-friction clinical intake and care navigation layer integrating directly with the **DrGodly HMS (`bezs-hms`)** and **FHIR Platform (`naveenraj-g/fhir`)**:
+DrGodly Pharmacy Assist introduces an intelligent, zero-friction clinical intake and care navigation layer integrating directly with the **DrGodly HMS (`drgodly-hms`)** and **FHIR Platform (`FHIR R4 Server`)**:
 ```
 [Pharmacy QR Standee] 
         │ (Camera scan)
@@ -38,14 +38,14 @@ DrGodly Pharmacy Assist introduces an intelligent, zero-friction clinical intake
 [Native Phone Dialer (tel:+91XXXXXXXXXX)]
         │ (1-Tap Call — Zero App Download)
         ▼
-[Vapi / bezs-agent Multilingual Voice AI]
+[Vapi / drgodly-agent Multilingual Voice AI]
         │ (Empathetic turn-by-turn intake)
         ▼
 [Deterministic Clinical Safety Engine]
         │
         ├─────────────────────────────────────────┐
         ▼                                         ▼
-[Interactive WhatsApp Patient Report]    [bezs-hms Pharmacist Workspace]
+[Interactive WhatsApp Patient Report]    [drgodly-hms Pharmacist Workspace]
         │                                         │
         ▼                                         ├─────────────────────────┐
 [Accredited Lab Booking]                          ▼                         ▼
@@ -53,7 +53,7 @@ DrGodly Pharmacy Assist introduces an intelligent, zero-friction clinical intake
                                                   │                         │
                                                   └────────────┬────────────┘
                                                                ▼
-                                                  [naveenraj-g/fhir Server]
+                                                  [FHIR R4 Server Server]
                                                   (Patient, Encounter, Condition,
                                                    Observation, MedicationRequest)
 ```
@@ -69,7 +69,7 @@ The platform is strictly an **intake, triage, and care navigation system**—not
 2. **Zero-Friction Patient Adoption:** Eliminate the 84% user drop-off associated with native mobile app installations by utilizing standard telephony (`tel:`) and WhatsApp.
 3. **Operational Efficiency for Pharmacies:** Reduce unstructured counter conversation time from 5 minutes to under 90 seconds of structured clinical review on the Pharmacist Dashboard.
 4. **Strict Regulatory Governance:** Ensure that 100% of dispensed medications comply with CDSCO 2026 schedules (OTC vs Schedule H/H1) and the Telemedicine Practice Guidelines 2020.
-5. **Ecosystem Interoperability:** Automatically synchronize every intake, condition, and medication record with the central `naveenraj-g/fhir` platform and ABDM national health grid.
+5. **Ecosystem Interoperability:** Automatically synchronize every intake, condition, and medication record with the central `FHIR R4 Server` platform and ABDM national health grid.
 
 ### 2.2 Key Performance Indicators (KPIs)
 
@@ -96,7 +96,7 @@ The platform is strictly an **intake, triage, and care navigation system**—not
 
 ### 3.2 Telemedicine Practice Guidelines 2020 (NMC / MoHFW)
 * **Role of AI/ML Systems:** AI platforms are permitted solely as assistive clinical intake, triage, and documentation tools. AI is legally prohibited from autonomously counseling patients on treatment or generating prescriptions.
-* **LiveKit Doctor Teleconsultations:** Integrated with `bezs-hms`, allowing RMPs to conduct live video calls, review AI-drafted SOAP notes, and issue digitally signed e-prescriptions.
+* **LiveKit Doctor Teleconsultations:** Integrated with `drgodly-hms`, allowing RMPs to conduct live video calls, review AI-drafted SOAP notes, and issue digitally signed e-prescriptions.
 
 ### 3.3 Digital Personal Data Protection (DPDP) Act 2023
 * **Explicit Verbal Consent:** Recorded affirmative verbal consent ("Yes", "Haan", "Aam") captured on the voice call before collecting sensitive personal health data.

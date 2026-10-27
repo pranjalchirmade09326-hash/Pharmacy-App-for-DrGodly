@@ -21,29 +21,29 @@ In India, approximately 65-70% of first-contact outpatient health queries occur 
 
 DrGodly Pharmacy Assist is engineered to integrate natively with DrGodly’s existing production healthcare microservices:
 
-1. **Frontend / Hospital Management System Hub:** [`Yazhnimalan/bezs-hms`](https://github.com/Yazhnimalan/bezs-hms)
-   * Pharmacist Workspace Console mounted natively under `src/app/[locale]/(apps)/bezs/pharmacy`.
+1. **Frontend / Hospital Management System Hub:** **DrGodly HMS Frontend Hub**
+   * Pharmacist Workspace Console mounted natively under `src/app/[locale]/(apps)/drgodly/pharmacy`.
    * Tech stack: Next.js 16 App Router, React 19, Tailwind CSS v4, Radix UI, shadcn, Lucide Icons.
    * Telemedicine escalations utilize `LiveKit` video rooms (`@livekit/components-react`).
    * Clinical intake PDFs and invoices persist in `FileNest` (`@filenest-fs/nextjs`).
-2. **Backend / FHIR Interoperability Server:** [`naveenraj-g/fhir`](https://github.com/naveenraj-g/fhir.git)
+2. **Backend / FHIR Interoperability Server:** **DrGodly FHIR R4 Interoperability Server**
    * FastAPI + SQLAlchemy 2.0 + PostgreSQL 15, exposing full FHIR R4 REST resources (`/api/fhir/v1/Encounter`, `Patient`, `Condition`, `Observation`, `MedicationRequest`).
    * Streamable FastMCP server (`fhir-mcp`) running at `:8002/mcp` for schema-validated clinical queries by AI agents.
-3. **Voice AI Ingestion Engine:** [`Yazhnimalan/bezs-agent`](https://github.com/Yazhnimalan/bezs-agent) + Vapi / LiveKit Agents
+3. **Voice AI Ingestion Engine:** **DrGodly Voice AI Agent** + Vapi / LiveKit Agents
    * Low-latency streaming voice processing Indian English, Hindi, Tamil, Telugu, Marathi, and colloquial code-switching (Hinglish/Tanglish).
-4. **IAM / Authentication Service:** [`Yazhnimalan/bezs-iam`](https://github.com/Yazhnimalan/bezs-iam)
+4. **IAM / Authentication Service:** **DrGodly IAM Authentication Service**
    * BetterAuth server running at `:5001` handling RBAC for Pharmacists, RMPs, Lab Partners, and Pharmacy Admins.
-5. **Document Storage:** [`Yazhnimalan/bezs-filenest`](https://github.com/Yazhnimalan/bezs-filenest)
+5. **Document Storage:** **DrGodly FileNest Document Storage**
    * S3-compatible microservice running at `:8000` storing patient reports and audio recordings with AES-256 encryption.
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────────────────┐
 │                              DRGODLY INTEGRATED WORKFLOW                                │
 │                                                                                         │
-│   [Pharmacy QR (tel:)] ──► [Vapi / bezs-agent Voice AI] ──► [Decoupled 4-Prompt AI]     │
+│   [Pharmacy QR (tel:)] ──► [Vapi / drgodly-agent Voice AI] ──► [Decoupled 4-Prompt AI]     │
 │                                                                    │                    │
 │                                                                    ▼                    │
-│   [Patient WhatsApp Report] ◄────── [bezs-hms Pharmacist Console] ◄                    │
+│   [Patient WhatsApp Report] ◄────── [drgodly-hms Pharmacist Console] ◄                    │
 │                                                │                                        │
 │                               ┌────────────────┴────────────────┐                       │
 │                               ▼                                 ▼                       │
@@ -51,7 +51,7 @@ DrGodly Pharmacy Assist is engineered to integrate natively with DrGodly’s exi
 │                               │                                 │                       │
 │                               └────────────────┬────────────────┘                       │
 │                                                ▼                                        │
-│                                    [naveenraj-g/fhir Server]                             │
+│                                    [FHIR R4 Server Server]                             │
 │                                    (/api/fhir/v1/Encounter, Patient,                    │
 │                                     Condition, Observation, MedicationRequest)          │
 └─────────────────────────────────────────────────────────────────────────────────────────┘
@@ -317,7 +317,7 @@ Step 6: Testing, Code Cleanup & Git Push (TypeScript strict type-check, build ve
 
 ## 15. Repository Branching & Remote Deployment Status
 
-* **Remote Git Repository:** `https://github.com/pranjalchirmade09326-hash/Pharmacy-App-for-DrGodly.git`
+* **Remote Git Repository:** `DrGodly Pharmacy Assist Monorepo`
 * **Core Branches:**
   * `main`: Production release branch.
   * `development`: Active integration branch.
