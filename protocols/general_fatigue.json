@@ -1,0 +1,124 @@
+{
+  "protocol_id": "PROTO_GENERAL_FATIGUE_001",
+  "version": "1.0.0",
+  "title": "General Fatigue, Lassitude & Weakness",
+  "domain": "GENERAL",
+  "status": "APPROVED",
+  "population": {
+    "min_age_years": 12,
+    "max_age_years": 120,
+    "gender_restriction": "ANY",
+    "pregnancy_applicable": true
+  },
+  "red_flags": [
+    {
+      "flag_id": "RF_FAT_01",
+      "clinical_concept": "Exertional Syncope / Unstable Bradycardia / Severe Pallor",
+      "spoken_prompt": {
+        "en-IN": "Have you fainted or blacked out, or do you feel severe chest fluttering with extreme shortness of breath on standing?",
+        "hi-IN": "क्या आप बेहोश होकर गिर पड़े हैं, या खड़े होने पर अत्यधिक सांस फूलना और दिल की धड़कन तेज होना महसूस होता है?",
+        "ta-IN": "நீங்கள் மயங்கி விழுந்தீர்களா, அல்லது நின்றதும் கடுமையான மூச்சுத் திணறல் மற்றும் படபடப்பு ஏற்படுகிறதா?"
+      },
+      "severity_weight": 10,
+      "triage_action": "RED",
+      "immediate_escalation_message": "Immediate emergency room evaluation required for severe anemia, cardiac arrhythmia, or syncope."
+    },
+    {
+      "flag_id": "RF_FAT_02",
+      "clinical_concept": "Unexplained Significant Weight Loss with Night Sweats (B-Symptoms)",
+      "spoken_prompt": {
+        "en-IN": "Have you noticed soaking night sweats or lost significant weight without dieting?",
+        "hi-IN": "क्या रात में पसीने से कपड़े भीग जाते हैं, या बिना किसी कारण के वजन बहुत कम हो गया है?",
+        "ta-IN": "இரவில் வியர்வையில் நனையும் உணர்வு அல்லது காரணம் இல்லாமல் கணிசமான எடை இழப்பு ஏற்பட்டுள்ளதா?"
+      },
+      "severity_weight": 9,
+      "triage_action": "ORANGE",
+      "immediate_escalation_message": "Urgent in-person doctor assessment required to rule out chronic infection (e.g. tuberculosis) or occult malignancy."
+    }
+  ],
+  "questions": [
+    {
+      "question_id": "Q_FAT_DURATION",
+      "slot_target": "symptom.duration_days",
+      "question_type": "DURATION_DAYS",
+      "prompt_text": {
+        "en-IN": "How many weeks or months have you been feeling this persistent weakness or exhaustion?",
+        "hi-IN": "यह लगातार थकान और कमजोरी कितने हफ्तों या महीनों से महसूस हो रही है?",
+        "ta-IN": "இந்த தொடர் சோர்வு மற்றும் பலவீனம் எத்தனை வாரங்களாக அல்லது மாதங்களாக உள்ளது?"
+      },
+      "clinical_priority": "CRITICAL"
+    },
+    {
+      "question_id": "Q_FAT_SLEEP_APPETITE",
+      "slot_target": "symptom.character",
+      "question_type": "SINGLE_CHOICE",
+      "options": ["Normal sleep but waking tired", "Severe insomnia and poor appetite", "Post-viral recovery period"],
+      "prompt_text": {
+        "en-IN": "Is the fatigue worse even after full sleep, or did it start right after a viral fever / illness?",
+        "hi-IN": "क्या पूरी नींद लेने के बाद भी थकान रहती है, या यह हाल ही में किसी बुखार के ठीक होने के बाद शुरू हुई है?",
+        "ta-IN": "முழு உறக்கத்திற்கு பிறகும் சோர்வு உள்ளதா, அல்லது காய்ச்சல் வந்து குணமான பிறகு தொடங்கியதா?"
+      },
+      "clinical_priority": "HIGH"
+    }
+  ],
+  "differentials": [
+    {
+      "condition_name": "Nutritional Anemia / Iron Deficiency",
+      "icd10_code": "D50.9",
+      "mandatory_supporting_findings": ["Pale conjunctiva or palmar pallor", "Easy fatigability on mild exertion", "Postural lightheadedness"],
+      "contraindicating_findings": ["Gross splenomegaly", "Petechial rash"],
+      "clinical_rationale": "High prevalence deficiency in Indian population, requiring complete blood count and targeted nutritional repletion."
+    },
+    {
+      "condition_name": "Post-Viral Convalescence / Asthenia",
+      "icd10_code": "R53.82",
+      "mandatory_supporting_findings": ["History of resolved febrile/viral illness within 2-4 weeks", "Gradually improving energy"],
+      "contraindicating_findings": ["Progressive worsening weakness > 3 months"],
+      "clinical_rationale": "Transient post-infectious physiological recovery period supported by hydration, balanced nutrition, and adequate rest."
+    }
+  ],
+  "investigations": [
+    {
+      "test_name": "Complete Blood Count (CBC) with Hemoglobin & RBC Indices",
+      "loinc_code": "58410-2",
+      "urgency": "URGENT",
+      "condition_trigger": "Persistent weakness or pallor",
+      "rationale_for_patient": "Detects anemia, low hemoglobin, and red blood cell health."
+    },
+    {
+      "test_name": "Fasting Blood Glucose & Glycated Hemoglobin (HbA1c)",
+      "loinc_code": "4548-4",
+      "urgency": "ROUTINE",
+      "condition_trigger": "Fatigue accompanied by increased thirst or frequent urination",
+      "rationale_for_patient": "Screens for diabetes mellitus or impaired glucose tolerance."
+    },
+    {
+      "test_name": "Thyroid Stimulating Hormone (TSH, Ultrasensitive)",
+      "loinc_code": "3016-3",
+      "urgency": "ROUTINE",
+      "condition_trigger": "Fatigue with weight gain, dry skin, or cold intolerance",
+      "rationale_for_patient": "Checks for thyroid underactivity (hypothyroidism)."
+    }
+  ],
+  "medication_pathway": {
+    "otc_candidates_allowed": true,
+    "requires_pharmacist_verification": true,
+    "max_self_care_days": 5,
+    "cdsco_schedule_filter": "STRICT_OTC_ONLY"
+  },
+  "escalation_matrix": {
+    "RED": "IMMEDIATE_EMERGENCY_AMBULANCE_HOSPITAL",
+    "ORANGE": "SAME_DAY_TELEMED_OR_CLINICIAN_EVAL",
+    "YELLOW": "PHARMACIST_EVALUATION_AND_REVIEW",
+    "GREEN": "SYMPTOMATIC_SELF_CARE_PATHWAY",
+    "UNABLE_TO_ASSESS": "MANDATORY_IN_PERSON_DOCTOR_CONSULT"
+  },
+  "governance": {
+    "author_name": "Dr. Rajeshwar Rao, MD (Internal Medicine)",
+    "author_nmc_reg": "NMC-MED-2011-88421",
+    "reviewer_name": "Dr. Sunita Deshmukh, MD (Internal Medicine)",
+    "reviewer_nmc_reg": "NMC-MED-2015-44910",
+    "approval_date": "2026-01-26",
+    "review_due_date": "2026-07-26"
+  }
+}

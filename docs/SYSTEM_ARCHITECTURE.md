@@ -285,3 +285,64 @@ export async function syncPharmacyEncounterToFhir(intake: IntakePayload) {
   return { fhirEncounterId: encounter.id, patientFhirId };
 }
 ```
+
+---
+
+## 8. Decoupled 4-Prompt AI Voice Orchestration Layer
+
+To eliminate single-prompt hallucinations, DrGodly strictly partitions conversational intake across four dedicated prompt services:
+
+```
+[Spoken Audio Stream] ──► [Vapi Gateway]
+                                │
+                                ▼
+ ┌─────────────────────────────────────────────────────────────┐
+ │ Prompt 1: Conversation Controller                           │
+ │ • Indian empathy; language detection (HI, EN, TA, TE, MR)   │
+ │ • Enforces DPDP consent; asks ONE single question at a time │
+ │ • ZERO diagnostic authority; strictly navigates dialogue   │
+ └──────────────────────────────┬──────────────────────────────┘
+                                │ Spoken Turns Transcript
+                                ▼
+ ┌─────────────────────────────────────────────────────────────┐
+ │ Prompt 2: Clinical Entity Extractor                         │
+ │ • Extracts structured concepts into SBAR JSON schema        │
+ │ • Maps chief complaint, duration, severity scale (1-10)     │
+ │ • Identifies relevant negatives, chronic history, allergies │
+ └──────────────────────────────┬──────────────────────────────┘
+                                │ Structured Clinical JSON
+                                ▼
+ ┌─────────────────────────────────────────────────────────────┐
+ │ Prompt 3: Safety Classifier (Deterministic Rule Engine)     │
+ │ • Evaluates concepts against 13 versioned protocol schemas  │
+ │ • Classifies Triage Level: RED / ORANGE / YELLOW / GREEN    │
+ │ • Enforces CDSCO 2026 Under-4 Pediatric Anti-Cold FDC Ban   │
+ └──────────────────────────────┬──────────────────────────────┘
+                                │ Triage Tag & Safety Flags
+                                ▼
+ ┌─────────────────────────────────────────────────────────────┐
+ │ Prompt 4: Clinical Report Generator                         │
+ │ • Formats SBAR clinical summary for Pharmacist & Doctor     │
+ │ • Formats dual-message WhatsApp payload with action buttons │
+ │ • Attaches mandatory statutory CDSCO & Telemedicine notice │
+ └─────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 9. Mobile React Native Architecture (`mobile/`)
+
+The mobile client is engineered in React Native (TypeScript 5.8, React Navigation 7) with direct feature parity with the web workspace:
+
+* **Directory:** [`mobile/`](file:///d:/Pharmacy%20app/mobile/)
+* **Screens:**
+  1. `HomeScreen.tsx`: Universal 1-tap `tel:` telephony trigger, QR simulation, 4-step intake walkthrough.
+  2. `DoctorSearchScreen.tsx`: NMC-verified doctor search, specialty pills, fee filters.
+  3. `DoctorDetailScreen.tsx`: Multi-day calendar, interactive slot chips with teal highlight toggle, teleconsultation booking.
+  4. `ProductCatalogScreen.tsx`: CDSCO-compliant OTC catalog, Schedule H prescription warning badges, quantity counter.
+  5. `CheckoutScreen.tsx`: Itemized cart, prescription validation gate, patient form, 12% GST calculation.
+  6. `PharmacistTriageScreen.tsx`: High-density clinical queue, real-time KPI cards (`124` Intakes, `14` Referrals, `98` Completed, `12` Review), SBAR summary, and 4 decision actions.
+  7. `LabsScreen.tsx`: Diagnostic partner network with distance sorting, NABL accreditation, and test booking.
+* **Shared Context:** `CartContext.tsx` provides centralized item management, quantity counting, and pricing arithmetic.
+* **Web Simulator:** Accessible at route `/mobile` with interactive iPhone 16 Pro mockup.
+

@@ -1,0 +1,123 @@
+{
+  "protocol_id": "PROTO_VOMITING_001",
+  "version": "1.0.0",
+  "title": "Acute Nausea and Vomiting",
+  "domain": "NAUSEA_VOMITING",
+  "status": "APPROVED",
+  "population": {
+    "min_age_years": 1,
+    "max_age_years": 120,
+    "gender_restriction": "ANY",
+    "pregnancy_applicable": true
+  },
+  "red_flags": [
+    {
+      "flag_id": "RF_VOM_01",
+      "clinical_concept": "Hematemesis / 'Coffee Ground' Vomitus",
+      "spoken_prompt": {
+        "en-IN": "Have you vomited fresh red blood or dark brown grains resembling coffee grounds?",
+        "hi-IN": "क्या उल्टी में ताजा खून या कॉफी जैसा गहरा भूरा पदार्थ आया है?",
+        "ta-IN": "வாந்தியில் புதிய ரத்தம் அல்லது காபி போன்ற அடர் பழுப்பு நிற பொருள் வந்ததா?"
+      },
+      "severity_weight": 10,
+      "triage_action": "RED",
+      "immediate_escalation_message": "Immediate hospital emergency admission required for active upper gastrointestinal bleeding."
+    },
+    {
+      "flag_id": "RF_VOM_02",
+      "clinical_concept": "Intractable Vomiting with Inability to Retain Any Fluids (> 24h)",
+      "spoken_prompt": {
+        "en-IN": "Are you unable to keep down even a single sip of water for over 12 hours, with dry mouth and dizziness?",
+        "hi-IN": "क्या आप 12 घंटे से एक घूंट पानी भी नहीं रोक पा रहे, मुंह सूख गया है और चक्कर आ रहे हैं?",
+        "ta-IN": "12 மணி நேரத்திற்கும் மேலாக ஒரு மடக்கு தண்ணீர் கூட குடிக்க முடியவில்லையா, தலைசுற்றல் உள்ளதா?"
+      },
+      "severity_weight": 9,
+      "triage_action": "RED",
+      "immediate_escalation_message": "Urgent parenteral hydration and medical stabilization needed."
+    },
+    {
+      "flag_id": "RF_VOM_03",
+      "clinical_concept": "Severe Projectile Vomiting with Severe Headache or Stiff Neck",
+      "spoken_prompt": {
+        "en-IN": "Is the vomiting forceful/projectile, occurring with a bursting headache or head injury?",
+        "hi-IN": "क्या उल्टी बहुत तेज फव्वारे जैसी आ रही है, और साथ में सिर में बहुत तेज दर्द या चोट लगी है?",
+        "ta-IN": "வாந்தி வேகமான பீறிடுதலுடன் வருகிறதா, மற்றும் கடுமையான தலைவலி அல்லது தலையில் காயம் உள்ளதா?"
+      },
+      "severity_weight": 10,
+      "triage_action": "RED",
+      "immediate_escalation_message": "Immediate emergency CT brain scan needed to rule out raised intracranial pressure."
+    }
+  ],
+  "questions": [
+    {
+      "question_id": "Q_VOM_FREQUENCY",
+      "slot_target": "symptom.frequency",
+      "question_type": "SINGLE_CHOICE",
+      "options": ["1 to 2 times", "3 to 5 times", "Continuous vomiting without relief"],
+      "prompt_text": {
+        "en-IN": "How many times have you vomited in the last 24 hours?",
+        "hi-IN": "पिछले 24 घंटों में आपको कितनी बार उल्टी हुई है?",
+        "ta-IN": "கடந்த 24 மணி நேரத்தில் எத்தனை முறை வாந்தி எடுத்தீர்கள்?"
+      },
+      "clinical_priority": "CRITICAL"
+    },
+    {
+      "question_id": "Q_VOM_TIMING_FOOD",
+      "slot_target": "symptom.character",
+      "question_type": "SINGLE_CHOICE",
+      "options": ["Immediately after eating outside food", "Morning nausea on waking", "Motion / travel sickness"],
+      "prompt_text": {
+        "en-IN": "Did the vomiting start after eating outside street food, or during travel/motion?",
+        "hi-IN": "क्या उल्टी बाहर का खाना खाने के बाद शुरू हुई, या यात्रा/गाड़ी में बैठने पर?",
+        "ta-IN": "வெளியே உணவு சாப்பிட்ட பிறகு வாந்தி தொடங்கியதா, அல்லது பயணத்தின் போதா?"
+      },
+      "clinical_priority": "HIGH"
+    }
+  ],
+  "differentials": [
+    {
+      "condition_name": "Acute Gastritis / Food-Borne Emesis",
+      "icd10_code": "K29.0",
+      "mandatory_supporting_findings": ["Nausea and episodic vomiting", "Epigastric tenderness", "History of dietary indiscretion"],
+      "contraindicating_findings": ["Focal neurological deficits", "Hematemesis"],
+      "clinical_rationale": "Acute gastric mucosal irritation responsive to small sips of oral rehydration and antiemetics under supervision."
+    },
+    {
+      "condition_name": "Motion Sickness / Kinetosis",
+      "icd10_code": "T75.3",
+      "mandatory_supporting_findings": ["Nausea triggered during vehicular travel", "Pale clammy skin", "Rapid resolution after stopping vehicle"],
+      "contraindicating_findings": ["Fever", "Abdominal guarding"],
+      "clinical_rationale": "Vestibular mismatch during travel managed with prophylactic antihistamines/antiemetics."
+    }
+  ],
+  "investigations": [
+    {
+      "test_name": "Serum Electrolytes & Blood Urea / Creatinine",
+      "loinc_code": "24362-6",
+      "urgency": "URGENT",
+      "condition_trigger": "Vomiting >= 4 episodes or signs of volume depletion",
+      "rationale_for_patient": "Evaluates kidney function and electrolyte losses caused by repeated vomiting."
+    }
+  ],
+  "medication_pathway": {
+    "otc_candidates_allowed": true,
+    "requires_pharmacist_verification": true,
+    "max_self_care_days": 1,
+    "cdsco_schedule_filter": "STRICT_OTC_ONLY"
+  },
+  "escalation_matrix": {
+    "RED": "IMMEDIATE_EMERGENCY_AMBULANCE_HOSPITAL",
+    "ORANGE": "SAME_DAY_TELEMED_OR_CLINICIAN_EVAL",
+    "YELLOW": "PHARMACIST_EVALUATION_AND_REVIEW",
+    "GREEN": "SYMPTOMATIC_SELF_CARE_PATHWAY",
+    "UNABLE_TO_ASSESS": "MANDATORY_IN_PERSON_DOCTOR_CONSULT"
+  },
+  "governance": {
+    "author_name": "Dr. Anand Kulkarni, MD, DNB (Gastroenterology)",
+    "author_nmc_reg": "NMC-GAS-2009-77142",
+    "reviewer_name": "Dr. Rajeshwar Rao, MD (Internal Medicine)",
+    "reviewer_nmc_reg": "NMC-MED-2011-88421",
+    "approval_date": "2026-01-26",
+    "review_due_date": "2026-07-26"
+  }
+}

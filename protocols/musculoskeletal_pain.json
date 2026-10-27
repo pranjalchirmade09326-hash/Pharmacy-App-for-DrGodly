@@ -1,0 +1,121 @@
+{
+  "protocol_id": "PROTO_MSK_PAIN_001",
+  "version": "1.0.0",
+  "title": "Acute Musculoskeletal & Low Back Pain",
+  "domain": "MUSCULOSKELETAL",
+  "status": "APPROVED",
+  "population": {
+    "min_age_years": 16,
+    "max_age_years": 120,
+    "gender_restriction": "ANY",
+    "pregnancy_applicable": true
+  },
+  "red_flags": [
+    {
+      "flag_id": "RF_MSK_01",
+      "clinical_concept": "Cauda Equina Syndrome / Sphincter Incontinence",
+      "spoken_prompt": {
+        "en-IN": "Have you lost control of your urine or bowels, or felt numbness between your legs / groin?",
+        "hi-IN": "क्या पेशाब या मल पर नियंत्रण खो गया है, या जांघों के बीच सुन्नपन महसूस हो रहा है?",
+        "ta-IN": "சிறுநீர் அல்லது மலத்தை கட்டுப்படுத்த முடியவில்லையா, அல்லது இடுப்பு பகுதியில் உணர்வின்மை உள்ளதா?"
+      },
+      "severity_weight": 10,
+      "triage_action": "RED",
+      "immediate_escalation_message": "Immediate emergency orthopedic/neuro spine evaluation required for cauda equina compression."
+    },
+    {
+      "flag_id": "RF_MSK_02",
+      "clinical_concept": "Progressive Motor Weakness / Foot Drop",
+      "spoken_prompt": {
+        "en-IN": "Are you unable to lift your foot while walking, or experiencing progressive leg weakness?",
+        "hi-IN": "क्या चलते समय पैर का पंजा नहीं उठ रहा, या पैर में तेजी से कमजोरी आ रही है?",
+        "ta-IN": "நடக்கும் போது பாதத்தை தூக்க முடியவில்லையா, அல்லது காலில் கடுமையான பலவீனம் உள்ளதா?"
+      },
+      "severity_weight": 9,
+      "triage_action": "ORANGE",
+      "immediate_escalation_message": "Urgent clinician evaluation required for severe nerve root compromise."
+    }
+  ],
+  "questions": [
+    {
+      "question_id": "Q_MSK_SITE_ACTIVITY",
+      "slot_target": "symptom.body_location",
+      "question_type": "BODY_LOCATION",
+      "prompt_text": {
+        "en-IN": "Where is the pain located—lower back, neck, shoulders, or knee, and did it start after heavy lifting?",
+        "hi-IN": "दर्द कहाँ है—कमर के निचले हिस्से में, गर्दन में, कंधे में या घुटने में, और क्या यह वजन उठाने के बाद शुरू हुआ?",
+        "ta-IN": "வலி எங்குள்ளது—கீழ் முதுகு, கழுத்து, தோள்பட்டை அல்லது மூட்டு, மற்றும் எடையை தூக்கிய பிறகு தொடங்கியதா?"
+      },
+      "clinical_priority": "CRITICAL"
+    },
+    {
+      "question_id": "Q_MSK_DURATION",
+      "slot_target": "symptom.duration_days",
+      "question_type": "DURATION_DAYS",
+      "prompt_text": {
+        "en-IN": "How many days have you had this pain?",
+        "hi-IN": "यह दर्द कितने दिनों से है?",
+        "ta-IN": "இந்த வலி எத்தனை நாட்களாக உள்ளது?"
+      },
+      "clinical_priority": "HIGH"
+    },
+    {
+      "question_id": "Q_MSK_RADIATION_LEGS",
+      "slot_target": "symptom.character",
+      "question_type": "SINGLE_CHOICE",
+      "options": ["Localized to back muscles only", "Shooting electric shock pain down back of leg below knee"],
+      "prompt_text": {
+        "en-IN": "Does the pain stay in your back, or shoot down below your knee like an electric shock?",
+        "hi-IN": "क्या दर्द सिर्फ पीठ तक सीमित है, या घुटने के नीचे बिजली के झटके की तरह पैर में उतरता है?",
+        "ta-IN": "வலி முதுகில் மட்டும் உள்ளதா, அல்லது முழங்காலுக்கு கீழே மின்சாரம் பாய்வது போல் பரவுகிறதா?"
+      },
+      "clinical_priority": "HIGH"
+    }
+  ],
+  "differentials": [
+    {
+      "condition_name": "Acute Mechanical Lumbar Strain / Sprain",
+      "icd10_code": "M54.5",
+      "mandatory_supporting_findings": ["Localized paraspinal tenderness", "Pain aggravated by movement and relieved by rest", "Absence of neurological deficits"],
+      "contraindicating_findings": ["Saddle anesthesia", "Bowel or bladder dysfunction"],
+      "clinical_rationale": "Self-limiting soft tissue injury of paraspinal muscles and ligaments."
+    },
+    {
+      "condition_name": "Lumbar Radiculopathy (Sciatica)",
+      "icd10_code": "M54.4",
+      "mandatory_supporting_findings": ["Dermatomal radiating leg pain below knee", "Positive straight leg raise sensation"],
+      "contraindicating_findings": ["Fever", "Unexplained weight loss"],
+      "clinical_rationale": "Nerve root irritation requiring doctor evaluation for physical therapy and targeted analgesia."
+    }
+  ],
+  "investigations": [
+    {
+      "test_name": "Digital X-Ray Lumbosacral Spine (AP & Lateral)",
+      "loinc_code": "30704-1",
+      "urgency": "CONDITIONAL",
+      "condition_trigger": "History of significant fall/trauma or pain persisting > 4 weeks",
+      "rationale_for_patient": "Evaluates bone alignment, disc space narrowing, and checks for fractures."
+    }
+  ],
+  "medication_pathway": {
+    "otc_candidates_allowed": true,
+    "requires_pharmacist_verification": true,
+    "max_self_care_days": 3,
+    "cdsco_schedule_filter": "STRICT_OTC_ONLY"
+  },
+  "escalation_matrix": {
+    "RED": "IMMEDIATE_EMERGENCY_AMBULANCE_HOSPITAL",
+    "ORANGE": "SAME_DAY_TELEMED_OR_CLINICIAN_EVAL",
+    "YELLOW": "PHARMACIST_EVALUATION_AND_REVIEW",
+    "GREEN": "SYMPTOMATIC_SELF_CARE_PATHWAY",
+    "UNABLE_TO_ASSESS": "MANDATORY_IN_PERSON_DOCTOR_CONSULT"
+  },
+  "governance": {
+    "author_name": "Dr. Rohit Singhal, MS (Orthopedics)",
+    "author_nmc_reg": "NMC-ORT-2008-54311",
+    "reviewer_name": "Dr. Rajeshwar Rao, MD (Internal Medicine)",
+    "reviewer_nmc_reg": "NMC-MED-2011-88421",
+    "approval_date": "2026-01-22",
+    "review_due_date": "2026-07-22"
+  }
+}

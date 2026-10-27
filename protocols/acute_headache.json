@@ -1,0 +1,133 @@
+{
+  "protocol_id": "PROTO_HEADACHE_001",
+  "version": "1.0.0",
+  "title": "Acute Headache & Migraine Screening",
+  "domain": "HEADACHE",
+  "status": "APPROVED",
+  "population": {
+    "min_age_years": 12,
+    "max_age_years": 120,
+    "gender_restriction": "ANY",
+    "pregnancy_applicable": true
+  },
+  "red_flags": [
+    {
+      "flag_id": "RF_HA_01",
+      "clinical_concept": "Thunderclap Headache / Subarachnoid Hemorrhage Suspect",
+      "spoken_prompt": {
+        "en-IN": "Did the headache reach unbearable maximum intensity within seconds like a sudden explosion?",
+        "hi-IN": "क्या सिरदर्द अचानक धमाके की तरह कुछ ही सेकंडों में असहनीय तेज हो गया?",
+        "ta-IN": "தலைவலி திடீரென சில நொடிகளிலேயே தாங்க முடியாத உச்சக்கட்ட தீவிரத்தை அடைந்ததா?"
+      },
+      "severity_weight": 10,
+      "triage_action": "RED",
+      "immediate_escalation_message": "Immediate emergency room transfer for non-contrast CT brain to rule out subarachnoid hemorrhage."
+    },
+    {
+      "flag_id": "RF_HA_02",
+      "clinical_concept": "Focal Neurological Deficit / Stroke Mimic",
+      "spoken_prompt": {
+        "en-IN": "Do you have any facial drooping, weakness in your arm or leg, slurred speech, or double vision?",
+        "hi-IN": "क्या चेहरे का एक हिस्सा लटक गया है, हाथ-पैर में कमजोरी, आवाज लथपथ हो रही है या दोहरा दिख रहा है?",
+        "ta-IN": "முகத்தில் கோணல், கை அல்லது காலில் பலவீனம், குழப்பமான பேச்சு அல்லது இரட்டை பார்வை உள்ளதா?"
+      },
+      "severity_weight": 10,
+      "triage_action": "RED",
+      "immediate_escalation_message": "Immediate stroke emergency code activation."
+    },
+    {
+      "flag_id": "RF_HA_03",
+      "clinical_concept": "Headache with High Fever & Meningism",
+      "spoken_prompt": {
+        "en-IN": "Is the severe headache accompanied by high fever, confusion, and painful stiff neck?",
+        "hi-IN": "क्या तेज सिरदर्द के साथ तेज बुखार, गर्दन में अकड़न और भ्रम की स्थिति है?",
+        "ta-IN": "கடுமையான தலைவலியுடன் அதிக காய்ச்சல், கழுத்து விரைப்பு மற்றும் குழப்பம் உள்ளதா?"
+      },
+      "severity_weight": 10,
+      "triage_action": "RED",
+      "immediate_escalation_message": "Immediate hospital transfer for suspected acute bacterial/viral meningitis."
+    }
+  ],
+  "questions": [
+    {
+      "question_id": "Q_HA_ONSET_SEVERITY",
+      "slot_target": "symptom.severity_score",
+      "question_type": "SCALE_1_10",
+      "prompt_text": {
+        "en-IN": "On a scale of 1 to 10, how severe is your headache right now?",
+        "hi-IN": "1 से 10 के पैमाने पर, अभी सिरदर्द कितना तेज है?",
+        "ta-IN": "1 முதல் 10 என்ற அளவில், இப்போது உங்கள் தலைவலி எவ்வளவு தீவிரமாக உள்ளது?"
+      },
+      "clinical_priority": "CRITICAL"
+    },
+    {
+      "question_id": "Q_HA_LOCATION_CHARACTER",
+      "slot_target": "symptom.character",
+      "question_type": "SINGLE_CHOICE",
+      "options": ["Tight band-like pressure on both sides", "Throbbing pulsating pain on one side", "Behind one eye with runny nose"],
+      "prompt_text": {
+        "en-IN": "Is the headache a dull band around the head, or throbbing on one side with light sensitivity?",
+        "hi-IN": "क्या सिरदर्द दोनों तरफ कसाव जैसा है, या एक तरफ धड़कन के साथ और रोशनी से परेशानी हो रही है?",
+        "ta-IN": "தலைவலி இருபுறமும் அழுத்தமாக உள்ளதா, அல்லது வெளிச்சத்தை பார்க்க முடியாத துடிக்கும் ஒற்றைத் தலைவலியா?"
+      },
+      "clinical_priority": "HIGH"
+    },
+    {
+      "question_id": "Q_HA_DURATION_HOURS",
+      "slot_target": "symptom.duration_days",
+      "question_type": "DURATION_DAYS",
+      "prompt_text": {
+        "en-IN": "For how many hours or days have you had this continuous headache?",
+        "hi-IN": "यह सिरदर्द कितने घंटों या दिनों से लगातार बना हुआ है?",
+        "ta-IN": "இந்த தலைவலி எத்தனை மணிநேரமாக அல்லது நாட்களாக உள்ளது?"
+      },
+      "clinical_priority": "HIGH"
+    }
+  ],
+  "differentials": [
+    {
+      "condition_name": "Tension-Type Headache (TTH)",
+      "icd10_code": "G44.2",
+      "mandatory_supporting_findings": ["Bilateral tight band or pressure sensation", "Mild to moderate intensity", "Not aggravated by routine physical activity"],
+      "contraindicating_findings": ["Severe nausea/vomiting", "Marked photophobia and phonophobia combined"],
+      "clinical_rationale": "Most prevalent benign primary headache disorder related to stress, eye strain, or muscular tension."
+    },
+    {
+      "condition_name": "Migraine without Aura",
+      "icd10_code": "G43.0",
+      "mandatory_supporting_findings": ["Unilateral throbbing/pulsatile pain", "Moderate to severe intensity", "Associated nausea or sensitivity to light/sound"],
+      "contraindicating_findings": ["Sudden instantaneous peak (< 1 min)", "Focal neurological deficit"],
+      "clinical_rationale": "Neurovascular disorder requiring abortive OTC analgesic or doctor consultation for specific triptan therapy."
+    }
+  ],
+  "investigations": [
+    {
+      "test_name": "Blood Pressure (Sphygmomanometry)",
+      "loinc_code": "85354-9",
+      "urgency": "URGENT",
+      "condition_trigger": "Headache in adult >= 40 years or known hypertensive",
+      "rationale_for_patient": "Rules out malignant hypertension or hypertensive crisis."
+    }
+  ],
+  "medication_pathway": {
+    "otc_candidates_allowed": true,
+    "requires_pharmacist_verification": true,
+    "max_self_care_days": 2,
+    "cdsco_schedule_filter": "STRICT_OTC_ONLY"
+  },
+  "escalation_matrix": {
+    "RED": "IMMEDIATE_EMERGENCY_AMBULANCE_HOSPITAL",
+    "ORANGE": "SAME_DAY_TELEMED_OR_CLINICIAN_EVAL",
+    "YELLOW": "PHARMACIST_EVALUATION_AND_REVIEW",
+    "GREEN": "SYMPTOMATIC_SELF_CARE_PATHWAY",
+    "UNABLE_TO_ASSESS": "MANDATORY_IN_PERSON_DOCTOR_CONSULT"
+  },
+  "governance": {
+    "author_name": "Dr. Prateek Sen, MD, DM (Neurology)",
+    "author_nmc_reg": "NMC-NEU-2010-91244",
+    "reviewer_name": "Dr. Rajeshwar Rao, MD (Internal Medicine)",
+    "reviewer_nmc_reg": "NMC-MED-2011-88421",
+    "approval_date": "2026-01-22",
+    "review_due_date": "2026-07-22"
+  }
+}

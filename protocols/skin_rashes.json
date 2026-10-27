@@ -1,0 +1,120 @@
+{
+  "protocol_id": "PROTO_SKIN_RASH_001",
+  "version": "1.0.0",
+  "title": "Minor Skin Rashes, Pruritus & Contact Dermatitis",
+  "domain": "SKIN_RASH",
+  "status": "APPROVED",
+  "population": {
+    "min_age_years": 1,
+    "max_age_years": 120,
+    "gender_restriction": "ANY",
+    "pregnancy_applicable": true
+  },
+  "red_flags": [
+    {
+      "flag_id": "RF_RASH_01",
+      "clinical_concept": "Stevens-Johnson Syndrome (SJS) / Toxic Epidermal Necrolysis / Mucosal Involvement",
+      "spoken_prompt": {
+        "en-IN": "Are there painful blisters or peeling skin inside your mouth, lips, eyes, or genitals after taking a new medicine?",
+        "hi-IN": "क्या नई दवाई लेने के बाद मुंह, होंठ, आंखों या गुप्त अंगों में छाले या त्वचा उखड़ रही है?",
+        "ta-IN": "புதிய மருந்து சாப்பிட்ட பிறகு வாய், உதடுகள், கண்கள் அல்லது அந்தரங்க உறுப்புகளில் கொப்புளங்கள் அல்லது தோல் உரிகிறதா?"
+      },
+      "severity_weight": 10,
+      "triage_action": "RED",
+      "immediate_escalation_message": "Immediate emergency burn/dermatology ICU transfer required for suspected drug-induced epidermal detachment."
+    },
+    {
+      "flag_id": "RF_RASH_02",
+      "clinical_concept": "Non-Blanching Petechial / Purpuric Rash (Meningococcal or Thrombocytopenic)",
+      "spoken_prompt": {
+        "en-IN": "Do you have tiny dark red or purple spots on your skin that do not fade or turn white when pressed with a clear glass?",
+        "hi-IN": "क्या त्वचा पर छोटे लाल या बैंगनी रंग के धब्बे हैं जो कांच का गिलास दबाने पर भी हल्के नहीं पड़ते?",
+        "ta-IN": "தோலில் சிறிய சிவப்பு அல்லது ஊதா நிற புள்ளிகள் உள்ளதா, அழுத்தும் போது நிறம் மாறாமல் உள்ளதா?"
+      },
+      "severity_weight": 10,
+      "triage_action": "RED",
+      "immediate_escalation_message": "Immediate emergency evaluation for meningococcal septicemia or acute thrombocytopenia."
+    }
+  ],
+  "questions": [
+    {
+      "question_id": "Q_RASH_DISTRIBUTION",
+      "slot_target": "symptom.body_location",
+      "question_type": "BODY_LOCATION",
+      "prompt_text": {
+        "en-IN": "Where on your body is the rash located—hands, face, chest, or all over?",
+        "hi-IN": "चकत्ते शरीर पर कहाँ हैं—हाथों पर, चेहरे पर, छाती पर, या पूरे शरीर में?",
+        "ta-IN": "சொறி உடலில் எங்குள்ளது—கைகள், முகம், மார்பு, அல்லது உடல் முழுவதும்?"
+      },
+      "clinical_priority": "CRITICAL"
+    },
+    {
+      "question_id": "Q_RASH_ITCHING_SEVERITY",
+      "slot_target": "symptom.severity_score",
+      "question_type": "SCALE_1_10",
+      "prompt_text": {
+        "en-IN": "How severe is the itching or burning sensation on a scale of 1 to 10?",
+        "hi-IN": "खुजली या जलन 1 से 10 के पैमाने पर कितनी तेज है?",
+        "ta-IN": "அரிப்பு அல்லது எரிச்சல் உணர்வு 1 முதல் 10 என்ற அளவில் எவ்வளவு அதிகமாக உள்ளது?"
+      },
+      "clinical_priority": "HIGH"
+    },
+    {
+      "question_id": "Q_RASH_DURATION_DAYS",
+      "slot_target": "symptom.duration_days",
+      "question_type": "DURATION_DAYS",
+      "prompt_text": {
+        "en-IN": "How many days has this rash been present?",
+        "hi-IN": "यह दाने या चकत्ते कितने दिनों से हैं?",
+        "ta-IN": "இந்த சொறி எத்தனை நாட்களாக உள்ளது?"
+      },
+      "clinical_priority": "HIGH"
+    }
+  ],
+  "differentials": [
+    {
+      "condition_name": "Contact Dermatitis (Irritant or Allergic)",
+      "icd10_code": "L23.9",
+      "mandatory_supporting_findings": ["Localized erythematous patches", "Pruritus", "History of exposure to new soap, detergent, plant, or cosmetic"],
+      "contraindicating_findings": ["Mucosal involvement", "High fever"],
+      "clinical_rationale": "Superficial inflammatory response to contact triggers, responsive to emollient and topical soothing calamine."
+    },
+    {
+      "condition_name": "Acute Urticaria (Hives)",
+      "icd10_code": "L50.0",
+      "mandatory_supporting_findings": ["Transient raised itchy wheals (erythematous plaques)", "Individual lesions resolve within 24 hours"],
+      "contraindicating_findings": ["Stridor or difficulty breathing", "Facial lip swelling"],
+      "clinical_rationale": "Mast cell degranulation responding rapidly to oral second-generation antihistamines."
+    }
+  ],
+  "investigations": [
+    {
+      "test_name": "Complete Blood Count (CBC) with Absolute Eosinophil Count (AEC)",
+      "loinc_code": "58410-2",
+      "urgency": "ROUTINE",
+      "condition_trigger": "Generalized itchy rash persisting > 1 week",
+      "rationale_for_patient": "Identifies allergic eosinophilia or secondary infection."
+    }
+  ],
+  "medication_pathway": {
+    "otc_candidates_allowed": true,
+    "requires_pharmacist_verification": true,
+    "max_self_care_days": 3,
+    "cdsco_schedule_filter": "STRICT_OTC_ONLY"
+  },
+  "escalation_matrix": {
+    "RED": "IMMEDIATE_EMERGENCY_AMBULANCE_HOSPITAL",
+    "ORANGE": "SAME_DAY_TELEMED_OR_CLINICIAN_EVAL",
+    "YELLOW": "PHARMACIST_EVALUATION_AND_REVIEW",
+    "GREEN": "SYMPTOMATIC_SELF_CARE_PATHWAY",
+    "UNABLE_TO_ASSESS": "MANDATORY_IN_PERSON_DOCTOR_CONSULT"
+  },
+  "governance": {
+    "author_name": "Dr. Priya Nair, MD, DVD (Dermatology)",
+    "author_nmc_reg": "NMC-DER-2013-62389",
+    "reviewer_name": "Dr. Sunita Deshmukh, MD (Internal Medicine)",
+    "reviewer_nmc_reg": "NMC-MED-2015-44910",
+    "approval_date": "2026-01-26",
+    "review_due_date": "2026-07-26"
+  }
+}

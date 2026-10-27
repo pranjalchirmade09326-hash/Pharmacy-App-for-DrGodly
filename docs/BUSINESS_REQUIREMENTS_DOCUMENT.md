@@ -104,8 +104,53 @@ The platform is strictly an **intake, triage, and care navigation system**—not
 
 ---
 
-## 4. Monetization & Revenue Model
+## 4. Comprehensive Monetization & Commercial Architecture
 
-1. **Pharmacy SaaS Subscriptions:** Basic Tier (₹999/mo), Pro Tier (₹2,499/mo), Enterprise Chain SLA.
-2. **Telemedicine Revenue Share:** 15–25% on every completed teleconsultation executed via LiveKit.
-3. **Diagnostic Lab Referral Fees:** Fixed lead generation fee (₹75–₹200) per test booked with accredited partner laboratories.
+DrGodly Pharmacy Assist operates a high-margin, multi-sided B2B2C business model serving retail pharmacies, patients, telemedicine doctors, and diagnostic laboratory chains:
+
+### 4.1 Pharmacy SaaS & Access Pricing Models
+* **Option A — Flat SaaS Subscription:** 
+  * Basic Counter Tier: ₹999 / month / counter (up to 150 intakes/month, standard SBAR summary, WhatsApp delivery).
+  * Pro Counter Tier: ₹2,499 / month / counter (unlimited intakes, LiveKit teleconsultation bridge, priority support, NABL lab referral network).
+* **Option B — Usage-Based Metering:** 
+  * ₹10 per completed clinical intake with zero upfront fixed software fees; ideal for independent rural and semi-urban chemists.
+* **Option C — Hybrid Commercial Model (Recommended for Growth):** 
+  * ₹499 base monthly access fee + ₹5 per completed intake above 100 intakes.
+* **Option D — Enterprise Pharmacy Chains (Apollo, MedPlus, Wellness Forever):** 
+  * Custom enterprise contract, multi-location central dashboard, active ERP/POS inventory integration, centralized CDSCO audit logging, dedicated SLA.
+
+### 4.2 High-Margin Downstream Revenue Streams
+1. **Telemedicine Consultation Revenue Share:**
+   * Instant RMP video teleconsultations via LiveKit are priced at ₹199 to ₹399 depending on specialty.
+   * Revenue split: 70% to RMP, 15% to DrGodly platform, 15% to retail pharmacy as referral incentive.
+2. **Diagnostic Laboratory Referral Network Commissions:**
+   * NABL-accredited diagnostic partner laboratories (Dr Lal PathLabs, Metropolis, Agilus, Suburban) offer integrated test booking with transparent pricing.
+   * Referral lead generation fee: ₹75 to ₹200 per fulfilled diagnostic test (or 15-20% of invoice value).
+3. **Chronic Condition Navigation & Adherence Reminders:**
+   * WhatsApp automated refill notifications and adherence checks for diabetic, hypertensive, and thyroid patients.
+
+---
+
+## 5. Master Product KPIs & North Star Metric
+
+### 5.1 The North Star Metric
+> **Intake-to-Appropriate-Action Rate (IAAR):**  
+> *The percentage of completed patient intakes that result in a clinically verified and safe outcome within 2 hours (either verified OTC dispensing, completed doctor consultation, or booked diagnostic test).*  
+> **Target:** $\ge 88\%$
+
+### 5.2 Key Performance Indicators (Categorized)
+
+| Category | Specific Metric | Target SLA |
+| :--- | :--- | :--- |
+| **Acquisition** | QR Scan to Call Conversion Rate | $\ge 40\%$ |
+| **Acquisition** | New Patient First-Time Call Completion Rate | $\ge 85\%$ |
+| **Voice AI Performance** | First-Word Audio Latency (Streaming Vapi/LiveKit) | $< 650\text{ ms}$ |
+| **Voice AI Performance** | Speech-to-Speech Turnaround Latency | $< 950\text{ ms}$ |
+| **Clinical Safety** | Red-Flag Screening Sensitivity | $100\%$ (Zero missed emergency life threats) |
+| **Clinical Safety** | CDSCO Schedule H/H1 Unauthorized Dispensing | $0\%$ (Strictly prevented) |
+| **Clinical Safety** | Pediatric Under-4 Anti-Cold FDC Interception | $100\%$ (Enforced by CDSCO 2026 rule) |
+| **Pharmacist Efficiency** | Average Pharmacist Decision Review Time | $< 75\text{ seconds}$ |
+| **Business / Unit Economics** | Intakes per Active Counter per Day | $\ge 15\text{ intakes}$ |
+| **Business / Unit Economics** | Doctor Consultation Escalate Rate | $12\%\text{ -- }18\%$ |
+| **Business / Unit Economics** | Diagnostic Lab Order Conversion Rate | $8\%\text{ -- }12\%$ |
+

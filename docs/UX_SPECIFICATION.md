@@ -260,3 +260,63 @@ Doctors do not need to re-ask demographic, duration, or basic symptom questions.
   * Watermark & Cryptographic Signature Hash.
   * "Digitally signed under Information Technology Act, 2000."
   * One-click send to pharmacy dispensing queue + patient WhatsApp.
+
+---
+
+## 7. Interactive WhatsApp Patient Delivery & Care Channel UX
+
+Following voice call completion, the patient receives a structured two-message sequence via DrGodly’s verified WhatsApp Business API:
+
+### 7.1 Message 1: Triage Notification & Summary
+```text
+Namaste Rajesh Kumar ji,
+
+Thank you for speaking with DrGodly at Apollo Pharmacy (Indiranagar).
+Your clinical intake summary has been securely transmitted to Pharmacist Ramesh.
+
+📋 Intake ID: #INTAKE-2026-8812
+⏱️ Triage Status: 🟡 YELLOW (Pharmacist Care Review)
+🩺 Chief Complaint: Upper abdominal burning and acidity (2 days)
+
+Your pharmacist is reviewing your details right now at the counter.
+```
+
+### 7.2 Message 2: Interactive CTA Action Buttons
+Four interactive WhatsApp buttons:
+1. `[📄 View My Health Report]`: Deep-links to web report viewer (`/report/[id]`) with symptom breakdown and lifestyle advice.
+2. `[👨‍⚕️ Consult Doctor Now]`: Triggers instant video teleconsultation with an on-demand RMP.
+3. `[🧪 Find Labs Nearby]`: Opens nearby NABL-accredited diagnostic partner laboratory directory.
+4. `[📤 Share Report]`: Generates a shareable PDF summary for personal family doctor consultation.
+
+### 7.3 Mandatory Statutory Disclaimer
+Every report and WhatsApp summary includes the required legal disclaimer:
+> *"DrGodly is an AI clinical intake assistant and does NOT provide medical advice, diagnosis, or prescription. This health summary is prepared solely for licensed registered medical practitioners and pharmacists in compliance with the NMC Telemedicine Practice Guidelines 2020 and CDSCO Drugs Rules 2026."*
+
+---
+
+## 8. Diagnostic Laboratory Discovery Network UX
+
+When an intake indicates necessary diagnostic investigation (e.g. CBC for persistent fever, Lipid Profile for chest symptoms, Stool R/M for diarrhea):
+
+### 8.1 Network Discovery Card
+* **Distance Sorting:** Nearby labs within 5 km radius (e.g., Dr Lal PathLabs 1.2 km away, Metropolis 2.5 km away).
+* **NABL Accreditation Badge:** High-contrast verified quality marker.
+* **Turnaround Times:** Clear expected test result delivery window (e.g. "4-6 hours").
+* **Transparent Pricing:** Exact rupee pricing per test (e.g., Complete Blood Count: ₹350, Dengue NS1: ₹800, HbA1c: ₹450).
+* **One-Click Home Collection Booking:** Patient or pharmacist selects preferred date and time slot for phlebotomist home visit.
+
+---
+
+## 9. React Native Mobile UI Screens Specification (`mobile/`)
+
+The mobile codebase provides dedicated native screens optimized for mobile devices and pharmacist counter handhelds:
+
+1. **`HomeScreen.tsx`:** Counter QR poster display, 1-tap `tel:` telephony trigger, 4-step intake walkthrough, and interactive Speech-to-SBAR simulator.
+2. **`DoctorSearchScreen.tsx`:** Search bar, specialty filter pills, consultation fee range filters, and NMC verified doctor cards.
+3. **`DoctorDetailScreen.tsx`:** Qualifications, multi-day calendar tabs, interactive slot chips with teal highlight toggle, and booking confirmation modal (`#TELE-2026-904`).
+4. **`ProductCatalogScreen.tsx`:** CDSCO-compliant OTC wellness catalog, Schedule H prescription warning badges, and floating cart bar.
+5. **`CheckoutScreen.tsx`:** Itemized cart list, Schedule H prescription gate, patient delivery form, and transparent GST 12% calculation.
+6. **`PharmacistTriageScreen.tsx`:** Real-time KPI cards (`124` Intakes, `14` Referrals, `98` Completed, `12` Review), queue switcher, SBAR clinical summary, red flag screening, and 4 pharmacist decision actions.
+7. **`LabsScreen.tsx`:** Diagnostic partner network with distance sorting, NABL accreditation badges, test pricing, and booking modal.
+8. **Interactive Web Simulator (`/mobile`):** Renders all 7 mobile screens inside an interactive iPhone 16 Pro mockup in the web browser.
+
