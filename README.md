@@ -10,29 +10,19 @@ DrGodly Pharmacy Assist is organized as a clean, production-grade monorepo parti
 
 ```text
 drgodly-pharmacy/
-├── frontend/
-│   ├── web/                          # Next.js 15 Web Application (App Router, React 19, Tailwind CSS v4)
-│   │   ├── src/
-│   │   │   ├── app/                  # Routes: /, /doctors, /catalog, /checkout, /pharmacy/workspace, /labs, /report, /mobile
-│   │   │   ├── components/           # UI design system atoms & molecules
-│   │   │   ├── data/                 # Realistic mock datasets (doctors, intakes, products, labs)
-│   │   │   ├── lib/                  # Zustand cart store & utility helpers
-│   │   │   └── modules/client/       # High-density 4-column pharmacist workspace
-│   │   ├── package.json
-│   │   └── tsconfig.json
-│   │
-│   └── mobile/                       # Pure React Native Mobile Application (React Native 0.76.5, React Navigation 7)
-│       ├── src/
-│       │   ├── screens/              # HomeScreen, DoctorSearchScreen, DoctorDetailScreen, ProductCatalogScreen,
-│       │   │                         # CheckoutScreen, PharmacistTriageScreen, LabsScreen
-│       │   ├── components/           # Mobile design system components
-│       │   ├── context/              # CartContext provider
-│       │   ├── navigation/           # Bottom tab router & stack navigation
-│       │   ├── theme/                # Medical blue & teal design tokens
-│       │   └── utils/                # Currency formatters & helpers
-│       ├── App.tsx
-│       ├── package.json
-│       └── tsconfig.json
+├── frontend/                         # Pure React Native Mobile Application (React Native 0.76.5, React Navigation 7)
+│   ├── src/
+│   │   ├── screens/                  # HomeScreen, DoctorSearchScreen, DoctorDetailScreen, ProductCatalogScreen,
+│   │   │                             # CheckoutScreen, PharmacistTriageScreen, LabsScreen
+│   │   ├── components/               # Mobile design system components (Button, Badge, DoctorCard, ProductCard, SlotChip, EmergencyBanner, Modal)
+│   │   ├── context/                  # CartContext provider
+│   │   ├── data/                     # Mock clinical datasets (doctors, intakes, products)
+│   │   ├── navigation/               # Bottom tab router & stack navigation (AppNavigator, types)
+│   │   ├── theme/                    # Medical blue & teal design tokens
+│   │   └── utils/                    # Currency formatters & helpers
+│   ├── App.tsx                       # Root React Native component wrapping CartProvider and NavigationContainer
+│   ├── package.json
+│   └── tsconfig.json
 │
 ├── backend/
 │   ├── api/                          # OpenAPI 3.0.3 specification for REST endpoints
@@ -87,24 +77,22 @@ drgodly-pharmacy/
 All standard `npm` package manager commands are supported at the root:
 
 ```bash
-# Run web application in development mode
-npm run dev
-# or
-npm run dev:web
-
-# Run mobile application bundler
+# Start React Native packager / bundler
 npm run dev:mobile
+# or
+npm start
 
-# Production build of web application
-npm run build
+# Run Android emulator
+npm run android
 
-# Run TypeScript type verification across all packages
-npm run type-check
+# Run iOS simulator (macOS)
+npm run ios
 
-# Run individual package type checks
-npm run type-check:web
-npm run type-check:mobile
+# TypeScript verification for backend services
 npm run type-check:backend
+
+# TypeScript verification for frontend mobile app
+npm run type-check:frontend
 ```
 
 ---

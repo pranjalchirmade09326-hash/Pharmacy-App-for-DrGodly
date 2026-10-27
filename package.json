@@ -2,23 +2,19 @@
   "name": "drgodly-pharmacy-assist-monorepo",
   "version": "1.0.0",
   "private": true,
-  "description": "DrGodly Pharmacy Assist - Clinical Intake, Doctor Teleconsultation & Pharmacy Care Navigation Monorepo",
+  "description": "DrGodly Pharmacy Assist - React Native Mobile App & Backend Clinical Services Monorepo",
   "workspaces": [
-    "frontend/web",
-    "frontend/mobile",
+    "frontend",
     "backend"
   ],
   "scripts": {
-    "dev": "npm --prefix frontend/web run dev",
-    "dev:web": "npm --prefix frontend/web run dev",
-    "dev:mobile": "npm --prefix frontend/mobile start",
-    "build": "npm --prefix frontend/web run build",
-    "build:web": "npm --prefix frontend/web run build",
+    "start": "npm --prefix frontend start",
+    "dev:mobile": "npm --prefix frontend start",
+    "android": "npm --prefix frontend run android",
+    "ios": "npm --prefix frontend run ios",
     "build:backend": "npm --prefix backend run build",
-    "start": "npm --prefix frontend/web start",
-    "type-check": "npm --prefix frontend/web run type-check && npm --prefix backend run type-check",
-    "type-check:web": "npm --prefix frontend/web run type-check",
-    "type-check:mobile": "npm --prefix frontend/mobile run type-check",
+    "type-check": "npm --prefix backend run type-check",
+    "type-check:frontend": "npm --prefix frontend run type-check",
     "type-check:backend": "npm --prefix backend run type-check"
   },
   "devDependencies": {
