@@ -96,6 +96,22 @@ export function HomeScreen({ navigation }: HomeScreenProps) {
           <Text style={styles.openDialerText}>Open Native Phone Dialer Now</Text>
         </TouchableOpacity>
 
+        <TouchableOpacity
+          activeOpacity={0.85}
+          onPress={() => navigation.navigate("LanguageConsent")}
+          style={{
+            backgroundColor: colors.primary,
+            borderRadius: 8,
+            paddingVertical: 12,
+            alignItems: "center",
+            marginTop: 8,
+          }}
+        >
+          <Text style={{ color: "#FFFFFF", fontSize: 13, fontWeight: "800" }}>
+            🎙️ Start In-App Voice Intake Call Now ›
+          </Text>
+        </TouchableOpacity>
+
         <Text style={styles.statutoryNote}>
           DrGodly is an AI clinical assistant. It does not replace a doctor.
         </Text>
@@ -242,6 +258,54 @@ export function HomeScreen({ navigation }: HomeScreenProps) {
           <Text style={styles.navCardSubtitle}>CDSCO 2026 Compliant</Text>
         </TouchableOpacity>
       </View>
+
+      <View style={[styles.navGrid, { marginTop: -6 }]}>
+        <TouchableOpacity
+          activeOpacity={0.8}
+          onPress={() => navigation.navigate("LabsTab")}
+          style={styles.navCard}
+        >
+          <Text style={styles.navIcon}>🧪</Text>
+          <Text style={styles.navCardTitle}>Diagnostic Labs</Text>
+          <Text style={styles.navCardSubtitle}>NABL Certified At-Home</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          activeOpacity={0.8}
+          onPress={() => navigation.navigate("HealthRecords")}
+          style={styles.navCard}
+        >
+          <Text style={styles.navIcon}>📂</Text>
+          <Text style={styles.navCardTitle}>Health Vault</Text>
+          <Text style={styles.navCardSubtitle}>ABHA ID & Documents</Text>
+        </TouchableOpacity>
+      </View>
+
+      <TouchableOpacity
+        activeOpacity={0.85}
+        onPress={() => navigation.navigate("SymptomIntake")}
+        style={{
+          backgroundColor: colors.surfaceMuted,
+          borderWidth: 1,
+          borderColor: colors.cardBorder,
+          borderRadius: borderRadius.md,
+          padding: 14,
+          marginBottom: 12,
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <View style={{ flex: 1 }}>
+          <Text style={{ fontSize: 14, fontWeight: "700", color: colors.textPrimary }}>
+            📝 Prefer Typing? Manual Symptom Intake Form
+          </Text>
+          <Text style={{ fontSize: 11, color: colors.textSecondary, marginTop: 2 }}>
+            Step-by-step guided questionnaire with CDSCO safety checks.
+          </Text>
+        </View>
+        <Text style={{ fontSize: 16, color: colors.primary, fontWeight: "800", marginLeft: 8 }}>›</Text>
+      </TouchableOpacity>
 
       <TouchableOpacity
         activeOpacity={0.85}

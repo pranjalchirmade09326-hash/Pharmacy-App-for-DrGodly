@@ -14,7 +14,11 @@ import { Badge } from "../components/Badge";
 import { Button } from "../components/Button";
 import { EmergencyModal } from "../components/EmergencyModal";
 
-export function PharmacistTriageScreen() {
+interface PharmacistTriageScreenProps {
+  navigation?: any;
+}
+
+export function PharmacistTriageScreen({ navigation }: PharmacistTriageScreenProps) {
   const [selectedIntake, setSelectedIntake] = useState<PharmacyIntakeRecord>(
     MOCK_INTAKES[0]
   );
@@ -71,6 +75,16 @@ export function PharmacistTriageScreen() {
           <Text style={styles.stationTitle}>Pharmacist Clinical Console</Text>
           <Text style={styles.licenseNo}>
             Logged in: <Text style={styles.bold}>RPh. Sandeep M. (Reg: DL-PH-2015-8812)</Text>
+          </Text>
+          <TouchableOpacity
+            onPress={() => navigation?.navigate && navigation.navigate("CaseHistory")}
+            style={{ marginTop: 4 }}
+          >
+            <Text style={{ fontSize: 11, fontWeight: "700", color: colors.primary }}>
+              📜 View Full Audit Logs & Case History ›
+            </Text>
+          </TouchableOpacity>
+          <Text style={{ display: 'none' }}>
           </Text>
         </View>
         <Badge label="Active Station" variant="green" />
@@ -227,6 +241,22 @@ export function PharmacistTriageScreen() {
         )}
 
         <View style={styles.actionButtonsCol}>
+          <TouchableOpacity
+            style={{
+              backgroundColor: colors.primaryLight,
+              padding: 12,
+              borderRadius: 8,
+              borderWidth: 1,
+              borderColor: colors.primary,
+              alignItems: "center",
+              marginBottom: 10,
+            }}
+            onPress={() => navigation?.navigate && navigation.navigate("IntakeReview", { intakeId: selectedIntake.intakeId })}
+          >
+            <Text style={{ fontSize: 13, fontWeight: "700", color: colors.primary }}>
+              🔍 Open Detailed Clinical Review & Audio Player ›
+            </Text>
+          </TouchableOpacity>
           {selectedIntake.triageLevel !== "RED" ? (
             <>
               <Button

@@ -1,36 +1,37 @@
 export const colors = {
-  // Brand Medical Blue / Teal
-  primary: "#0D9488",
-  primaryHover: "#0F766E",
-  primaryLight: "#F0FDFA",
-  primaryDark: "#115E59",
+  // Brand Medical Blue & Teal (DrGodly Master Design System)
+  primary: "#185ADB",          // Deep Medical Blue
+  primaryHover: "#1344A8",
+  primaryLight: "#EFF6FF",
+  primaryDark: "#0F3C96",
 
-  // Mint Green / Success
-  secondary: "#10B981",
-  secondaryHover: "#059669",
-  secondaryLight: "#ECFDF5",
+  // Secondary Accent & Success
+  secondary: "#16B8B0",        // Mint Teal
+  secondaryHover: "#129690",
+  secondaryLight: "#E6FAF8",
+  secondaryDark: "#0C6864",
 
-  // Clinical Triage Severity
-  redEmergency: "#EF4444",
-  redLight: "#FEF2F2",
-  orangeUrgent: "#F97316",
+  // Clinical Triage Severity Tokens
+  redEmergency: "#C62828",     // Critical Alert / Red Flag
+  redLight: "#FFEBEE",
+  orangeUrgent: "#EA580C",     // Urgent Clinician Assessment
   orangeLight: "#FFF7ED",
-  yellowModerate: "#F59E0B",
+  yellowModerate: "#B76A00",   // Warning / Pharmacist Review
   yellowLight: "#FEFCE8",
-  greenSafe: "#10B981",
-  greenLight: "#ECFDF5",
-  blueInfo: "#0284C7",
-  blueLight: "#F0F9FF",
-  purpleRx: "#8B5CF6",
+  greenSafe: "#18865B",        // Clinical Green / Safe
+  greenLight: "#EDF7F2",
+  blueInfo: "#185ADB",
+  blueLight: "#EFF6FF",
+  purpleRx: "#7C3AED",         // Prescription Schedule H/H1
   purpleLight: "#F5F3FF",
 
   // Neutrals / Surfaces
-  background: "#F8FAFC",
-  card: "#FFFFFF",
+  background: "#F8FAFC",       // Off-white canvas
+  card: "#FFFFFF",             // Pure White
   cardBorder: "#E2E8F0",
-  textPrimary: "#0F172A",
-  textSecondary: "#475569",
-  textMuted: "#64748B",
+  textPrimary: "#172B4D",      // Deep Navy Slate
+  textSecondary: "#475569",    // Slate Secondary
+  textMuted: "#6B778C",        // Muted Caption
   divider: "#E2E8F0",
   surfaceMuted: "#F1F5F9",
 };
