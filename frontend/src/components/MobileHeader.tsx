@@ -135,7 +135,7 @@ export function MobileHeader({ onOpenCart }: MobileHeaderProps) {
                     </View>
                     {isSelected && (
                       <View style={styles.checkBadge}>
-                        <Text style={styles.checkIcon}>✓ ACTIVE</Text>
+                        <Text style={styles.checkIcon}>✓</Text>
                       </View>
                     )}
                   </TouchableOpacity>
@@ -144,6 +144,7 @@ export function MobileHeader({ onOpenCart }: MobileHeaderProps) {
             />
 
             <TouchableOpacity
+              activeOpacity={0.85}
               onPress={() => setIsStoreModalOpen(false)}
               style={styles.closeButton}
             >
@@ -178,13 +179,18 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   logoBadge: {
-    width: 30,
-    height: 30,
-    borderRadius: borderRadius.md,
+    width: 32,
+    height: 32,
+    borderRadius: 8,
     backgroundColor: colors.primary,
     alignItems: "center",
     justifyContent: "center",
     marginRight: 8,
+    shadowColor: colors.primary,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.35,
+    shadowRadius: 5,
+    elevation: 4,
   },
   logoText: {
     color: "#FFFFFF",

@@ -20,6 +20,10 @@
     },
     "web": {
       "bundler": "metro"
-    }
+    },
+    "plugins": [
+      "expo-asset",
+      "expo-status-bar"
+    ]
   }
 }

@@ -6,9 +6,9 @@ import {
   ScrollView,
   TouchableOpacity,
   TextInput,
-  SafeAreaView,
   Alert,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { colors } from "../theme/colors";
 import { MOCK_INTAKES, PharmacyIntakeRecord } from "../data/intakes";
 import { MOCK_DOCTORS, Doctor } from "../data/doctors";

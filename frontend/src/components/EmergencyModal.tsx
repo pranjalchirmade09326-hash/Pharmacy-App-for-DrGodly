@@ -25,7 +25,7 @@ export function EmergencyModal({
   reason = "Acute crushing chest pain with radiation to arm and diaphoresis (ACS Red Flag)",
 }: EmergencyModalProps) {
   const dialAmbulance = () => {
-    Linking.openURL("tel:108");
+    Linking.openURL("tel:108").catch(() => {});
   };
 
   return (
