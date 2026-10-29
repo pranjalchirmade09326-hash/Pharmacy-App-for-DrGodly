@@ -5,7 +5,7 @@ import { borderRadius, shadows } from "../theme/spacing";
 
 export function EmergencyBanner() {
   const callEmergency = () => {
-    Linking.openURL("tel:108");
+    Linking.openURL("tel:108").catch(() => {});
   };
 
   return (

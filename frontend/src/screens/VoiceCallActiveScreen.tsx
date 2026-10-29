@@ -9,6 +9,8 @@ import {
 } from "react-native";
 import { colors } from "../theme/colors";
 import { borderRadius, shadows } from "../theme/spacing";
+import { A2UIRenderer, A2UISpec } from "../components/A2UIRenderer";
+import { AIAgentService, ClinicalAgentState } from "../services/aiAgentService";
 
 interface VoiceCallActiveScreenProps {
   onComplete?: (intakeData: any) => void;
@@ -29,21 +31,34 @@ export function VoiceCallActiveScreen({
   const [secondsElapsed, setSecondsElapsed] = useState<number>(0);
   const [isMuted, setIsMuted] = useState<boolean>(false);
   const [currentTurn, setCurrentTurn] = useState<number>(0);
+  const [showJsonInspector, setShowJsonInspector] = useState<boolean>(false);
+  const [emergencyTriggered, setEmergencyTriggered] = useState<string | null>(null);
+
+  const [clinicalState, setClinicalState] = useState<ClinicalAgentState>({
+    patientName: "Rajesh Kumar",
+    age: 42,
+    gender: "Male",
+    chiefComplaint: "Epigastric burning & dyspepsia",
+    duration: "2 Days",
+    severity: 5,
+    redFlagsCleared: ["No radiating chest/arm pain (ACS Rule-Out)"],
+    triageLevel: "YELLOW",
+  });
 
   const dialogueScript = [
     {
       ai: "Namaste! Main DrGodly AI clinical assistant hoon. Kripya apna naam aur umar bataiye.",
-      patient: "Mera naam Rajesh Kumar hai, meri umar 42 saal hai.",
+      patient: `Mera naam ${clinicalState.patientName} hai, meri umar ${clinicalState.age} saal hai.`,
       topic: "Demographics Verification",
     },
     {
       ai: "Dhanyawaad Rajesh ji. Aaj aapko kya takleef ho rahi hai aur ye kitne din se hai?",
-      patient: "Mujhe pet ke upar ke hisse me bohot jalan aur acidity hai, 2 din se chal raha hai.",
+      patient: `Mujhe ${clinicalState.chiefComplaint} hai, lagbhag ${clinicalState.duration} se chal raha hai.`,
       topic: "Chief Complaint & Duration",
     },
     {
       ai: "Samajh gaya. 1 se 10 ke paimane par dard kitna tez hai? Aur kya ye dard seene ya baayein haath me jaa raha hai?",
-      patient: "Dard lagbhag 5/10 hai. Haath me nahi jaa raha, sirf khane ke baad pet me jalan badhti hai.",
+      patient: `Dard lagbhag ${clinicalState.severity}/10 hai. Haath me dard nahi jaa raha, sirf khane ke baad pet me jalan hoti hai.`,
       topic: "Severity & Cardiac Red Flag Rule-Out",
     },
     {
@@ -66,30 +81,29 @@ export function VoiceCallActiveScreen({
     return `${m < 10 ? "0" : ""}${m}:${s < 10 ? "0" : ""}${s}`;
   };
 
+  const finishIntake = () => {
+    const intakeData = {
+      patientName: clinicalState.patientName,
+      age: clinicalState.age,
+      gender: clinicalState.gender,
+      chiefComplaint: clinicalState.chiefComplaint,
+      duration: clinicalState.duration,
+      severity: clinicalState.severity,
+      redFlagsCleared: clinicalState.redFlagsCleared,
+      triageLevel: clinicalState.triageLevel,
+    };
+    if (onComplete) {
+      onComplete(intakeData);
+    } else if (navigation?.navigate) {
+      navigation.navigate("IntakeCompleted", intakeData);
+    }
+  };
+
   const handleNextTurn = () => {
     if (currentTurn < dialogueScript.length - 1) {
       setCurrentTurn((prev) => prev + 1);
     } else {
-      // Intake complete
-      const intakeData = {
-        patientName: "Rajesh Kumar",
-        age: 42,
-        gender: "Male",
-        chiefComplaint: "Epigastric burning & dyspepsia",
-        duration: "2 Days",
-        severity: 5,
-        redFlagsCleared: [
-          "No radiating chest/arm pain (ACS Rule-Out)",
-          "No hematemesis or melena stool",
-          "No persistent vomiting",
-        ],
-        triageLevel: "YELLOW",
-      };
-      if (onComplete) {
-        onComplete(intakeData);
-      } else if (navigation?.navigate) {
-        navigation.navigate("IntakeCompleted", intakeData);
-      }
+      finishIntake();
     }
   };
 
@@ -104,7 +118,92 @@ export function VoiceCallActiveScreen({
     );
   };
 
-  const activeTurn = dialogueScript[currentTurn];
+  // A2UI Action Handler from Dynamic Components
+  const handleA2UIAction = (actionId: string, payload?: any) => {
+    switch (actionId) {
+      case "ACTION_SET_COMPLAINT":
+        if (payload?.complaint) {
+          setClinicalState((prev) => ({
+            ...prev,
+            chiefComplaint: payload.complaint,
+            duration: payload.duration || prev.duration,
+          }));
+        }
+        break;
+
+      case "ACTION_SET_SEVERITY":
+        if (payload?.severity) {
+          setClinicalState((prev) => ({
+            ...prev,
+            severity: payload.severity,
+          }));
+        }
+        break;
+
+      case "ACTION_TRIGGER_REDFLAG":
+        setEmergencyTriggered(payload?.redFlag || "Critical red-flag detected by AI triage.");
+        setClinicalState((prev) => ({
+          ...prev,
+          triageLevel: "RED",
+          activeRedFlag: payload?.redFlag,
+        }));
+        Alert.alert(
+          "🚨 Emergency Red Flag Triggered",
+          payload?.redFlag || "Cardiac or upper GI bleeding red flag detected.",
+          [
+            { text: "Dial 108 Now", style: "destructive", onPress: handleEmergencyHandoff },
+            { text: "Understood", style: "cancel" },
+          ]
+        );
+        break;
+
+      case "ACTION_CLEAR_REDFLAG":
+        if (payload?.flagCleared) {
+          setClinicalState((prev) => ({
+            ...prev,
+            redFlagsCleared: [...prev.redFlagsCleared, payload.flagCleared],
+          }));
+        }
+        break;
+
+      case "ACTION_PROCEED_NEXT":
+        handleNextTurn();
+        break;
+
+      case "ACTION_FINALIZE_INTAKE":
+        finishIntake();
+        break;
+
+      case "ACTION_DIAL_108":
+        handleEmergencyHandoff();
+        break;
+
+      case "ACTION_HANDOVER_PHARMACIST":
+        Alert.alert(
+          "Pharmacist Handover",
+          "Case transferred to Pharmacist Triage Console with RED STAT priority.",
+          [
+            {
+              text: "Open Triage Console",
+              onPress: () => {
+                if (navigation?.navigate) navigation.navigate("PharmacistTab");
+              },
+            },
+          ]
+        );
+        break;
+
+      default:
+        console.log("A2UI Action:", actionId, payload);
+    }
+  };
+
+  // Generate dynamic A2UI declarative specification from AI Agent Service
+  const a2uiSpec: A2UISpec = emergencyTriggered
+    ? AIAgentService.getEmergencyA2UISpec(emergencyTriggered, language)
+    : AIAgentService.getTurnA2UISpec(currentTurn, clinicalState, language);
+
+  const activeTurn = dialogueScript[Math.min(currentTurn, dialogueScript.length - 1)];
 
   return (
     <View style={styles.container}>
@@ -129,7 +228,7 @@ export function VoiceCallActiveScreen({
             <Text style={styles.avatarIcon}>🩺</Text>
           </View>
         </View>
-        
+
         <View style={styles.waveformRow}>
           {[40, 65, 90, 110, 80, 55, 75, 95, 60, 45].map((h, i) => (
             <View
@@ -142,13 +241,38 @@ export function VoiceCallActiveScreen({
           ))}
         </View>
 
-        <View style={styles.topicPill}>
-          <Text style={styles.topicPillText}>Current Focus: {activeTurn.topic}</Text>
+        <View style={styles.headerInfoRow}>
+          <View style={styles.topicPill}>
+            <Text style={styles.topicPillText}>Focus: {activeTurn.topic}</Text>
+          </View>
+          <TouchableOpacity
+            style={[styles.a2uiTogglePill, showJsonInspector && styles.a2uiTogglePillActive]}
+            onPress={() => setShowJsonInspector(!showJsonInspector)}
+            activeOpacity={0.8}
+          >
+            <Text style={[styles.a2uiTogglePillText, showJsonInspector && styles.a2uiTogglePillTextActive]}>
+              ⚡ A2UI {showJsonInspector ? "Hide JSON" : "Inspect JSON"}
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
 
-      {/* Real-time Bilingual Transcript */}
+      {/* Real-time Bilingual Transcript & Dynamic A2UI Content */}
       <ScrollView style={styles.transcriptBox} contentContainerStyle={styles.transcriptContent}>
+        {/* Raw A2UI JSON Inspector Panel (Collapsible for Developer/Demo Inspection) */}
+        {showJsonInspector && (
+          <View style={styles.jsonInspectorContainer}>
+            <View style={styles.jsonInspectorHeader}>
+              <Text style={styles.jsonInspectorTitle}>A2UI Declarative Protocol Stream</Text>
+              <Text style={styles.jsonInspectorSub}>Agent-to-User Interface JSON Spec</Text>
+            </View>
+            <Text style={styles.jsonCodeText}>
+              {JSON.stringify(a2uiSpec, null, 2)}
+            </Text>
+          </View>
+        )}
+
+        {/* AI Voice Bubble */}
         <View style={styles.bubbleAI}>
           <View style={styles.bubbleHeaderRow}>
             <Text style={styles.speakerLabel}>DrGodly Assistant ({language})</Text>
@@ -157,9 +281,19 @@ export function VoiceCallActiveScreen({
           <Text style={styles.bubbleTextAI}>{activeTurn.ai}</Text>
         </View>
 
+        {/* Dynamic A2UI Interactive Agent Response Card */}
+        <View style={styles.a2uiWrapper}>
+          <View style={styles.a2uiTagRow}>
+            <Text style={styles.a2uiTagIcon}>⚡</Text>
+            <Text style={styles.a2uiTagText}>A2UI DYNAMIC INTERACTIVE AGENT WIDGET</Text>
+          </View>
+          <A2UIRenderer spec={a2uiSpec} onAction={handleA2UIAction} />
+        </View>
+
+        {/* Patient Speech-to-Text Bubble */}
         <View style={styles.bubblePatient}>
           <View style={styles.bubbleHeaderRow}>
-            <Text style={styles.speakerLabelPatient}>Patient (Rajesh Kumar)</Text>
+            <Text style={styles.speakerLabelPatient}>Patient ({clinicalState.patientName})</Text>
             <Text style={styles.bubbleTimePatient}>Speech-to-Text</Text>
           </View>
           <Text style={styles.bubbleTextPatient}>{activeTurn.patient}</Text>
@@ -276,37 +410,37 @@ const styles = StyleSheet.create({
   },
   visualizerContainer: {
     alignItems: "center",
-    paddingVertical: 20,
+    paddingVertical: 16,
     backgroundColor: "#FFFFFF",
     borderBottomWidth: 1,
     borderBottomColor: colors.cardBorderLight,
   },
   avatarGlow: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
+    width: 72,
+    height: 72,
+    borderRadius: 36,
     backgroundColor: colors.primaryLight,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 14,
+    marginBottom: 10,
   },
   avatarCircle: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
+    width: 58,
+    height: 58,
+    borderRadius: 29,
     backgroundColor: colors.primary,
     alignItems: "center",
     justifyContent: "center",
     ...shadows.md,
   },
   avatarIcon: {
-    fontSize: 30,
+    fontSize: 26,
   },
   waveformRow: {
     flexDirection: "row",
     alignItems: "center",
-    height: 44,
-    marginBottom: 12,
+    height: 36,
+    marginBottom: 10,
     gap: 4,
   },
   waveformBar: {
@@ -314,36 +448,110 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
     borderRadius: 3,
   },
+  headerInfoRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
   topicPill: {
     backgroundColor: colors.surfaceMuted,
-    paddingHorizontal: 14,
-    paddingVertical: 5,
+    paddingHorizontal: 12,
+    paddingVertical: 4,
     borderRadius: borderRadius.full,
     borderWidth: 1,
     borderColor: colors.cardBorder,
   },
   topicPillText: {
-    fontSize: 11.5,
+    fontSize: 11,
     fontWeight: "700",
     color: colors.primaryDark,
+  },
+  a2uiTogglePill: {
+    backgroundColor: colors.primaryLight,
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: borderRadius.full,
+    borderWidth: 1,
+    borderColor: "#BFDBFE",
+  },
+  a2uiTogglePillActive: {
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
+  },
+  a2uiTogglePillText: {
+    fontSize: 11,
+    fontWeight: "800",
+    color: colors.primary,
+  },
+  a2uiTogglePillTextActive: {
+    color: "#FFFFFF",
   },
   transcriptBox: {
     flex: 1,
     paddingHorizontal: 16,
   },
   transcriptContent: {
-    paddingVertical: 16,
+    paddingVertical: 14,
+  },
+  jsonInspectorContainer: {
+    backgroundColor: "#0F172A",
+    borderRadius: 12,
+    padding: 12,
+    marginBottom: 14,
+    borderWidth: 1,
+    borderColor: "#334155",
+  },
+  jsonInspectorHeader: {
+    marginBottom: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: "#1E293B",
+    paddingBottom: 6,
+  },
+  jsonInspectorTitle: {
+    color: "#38BDF8",
+    fontSize: 12,
+    fontWeight: "800",
+    letterSpacing: 0.5,
+  },
+  jsonInspectorSub: {
+    color: "#94A3B8",
+    fontSize: 10,
+  },
+  jsonCodeText: {
+    fontFamily: "monospace",
+    color: "#E2E8F0",
+    fontSize: 10.5,
+    lineHeight: 15,
   },
   bubbleAI: {
     backgroundColor: "#FFFFFF",
     borderRadius: borderRadius.xl,
     borderBottomLeftRadius: 4,
     padding: 14,
-    marginBottom: 12,
-    maxWidth: "90%",
+    marginBottom: 8,
+    maxWidth: "92%",
     borderWidth: 1,
     borderColor: colors.cardBorder,
     ...shadows.sm,
+  },
+  a2uiWrapper: {
+    marginBottom: 12,
+    paddingLeft: 4,
+  },
+  a2uiTagRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 4,
+    gap: 4,
+  },
+  a2uiTagIcon: {
+    fontSize: 11,
+  },
+  a2uiTagText: {
+    fontSize: 10,
+    fontWeight: "800",
+    color: colors.primary,
+    letterSpacing: 0.5,
   },
   bubblePatient: {
     backgroundColor: colors.primaryLight,

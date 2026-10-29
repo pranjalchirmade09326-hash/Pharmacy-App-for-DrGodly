@@ -5,26 +5,35 @@
   "main": "index.js",
   "scripts": {
     "start": "expo start",
+    "start:clear": "expo start -c",
     "android": "expo start --android",
+    "android:emulator": "expo start --android --localhost",
+    "android:lan": "expo start --android --host lan",
     "ios": "expo start --ios",
     "web": "expo start --web",
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "@a2ui/react": "^0.14.0",
+    "@a2ui/web_core": "^0.14.0",
+    "@expo/metro-runtime": "~57.0.17",
     "@react-navigation/bottom-tabs": "^7.0.0",
     "@react-navigation/native": "^7.0.0",
     "@react-navigation/native-stack": "^7.0.0",
-    "expo": "~52.0.28",
-    "expo-asset": "^58.0.18",
-    "expo-status-bar": "~2.0.1",
-    "react": "18.3.1",
-    "react-native": "0.76.5",
-    "react-native-safe-area-context": "4.14.0",
-    "react-native-screens": "~4.4.0"
+    "expo": "^57.0.0",
+    "expo-asset": "~57.0.20",
+    "expo-status-bar": "~57.0.1",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "react-native": "0.86.3",
+    "react-native-safe-area-context": "~5.7.0",
+    "react-native-screens": "~4.26.0",
+    "react-native-web": "^0.21.2"
   },
   "devDependencies": {
-    "@types/react": "~18.3.12",
-    "typescript": "^5.7.0"
+    "@types/node": "^26.6.5",
+    "@types/react": "~19.2.4",
+    "typescript": "~6.0.3"
   },
   "private": true
 }

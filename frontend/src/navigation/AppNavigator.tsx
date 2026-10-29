@@ -4,10 +4,11 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  SafeAreaView,
   StatusBar,
   ScrollView,
+  useWindowDimensions,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { colors } from "../theme/colors";
 import { borderRadius, shadows } from "../theme/spacing";
 import { EmergencyBanner } from "../components/EmergencyBanner";
@@ -56,6 +57,8 @@ export function AppNavigator() {
   const [activeTab, setActiveTab] = useState<string>("HomeTab");
   const [stackHistory, setStackHistory] = useState<StackEntry[]>([]);
   const { cartCount } = useCart();
+  const { width } = useWindowDimensions();
+  const isWide = width > 520;
 
   const currentStack = stackHistory.length > 0 ? stackHistory[stackHistory.length - 1] : null;
 
@@ -319,7 +322,8 @@ export function AppNavigator() {
   const currentTabs = getTabsForCurrentRole();
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={[styles.safeArea, isWide && styles.safeAreaWide]}>
+      <View style={[styles.appShell, isWide && styles.appShellWide]}>
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
       <EmergencyBanner />
       <MobileHeader onOpenCart={() => navigation.navigate("CheckoutTab")} />
@@ -386,6 +390,7 @@ export function AppNavigator() {
           })}
         </View>
       )}
+      </View>
     </SafeAreaView>
   );
 }
@@ -394,6 +399,26 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: "#FFFFFF",
+  },
+  safeAreaWide: {
+    backgroundColor: "#0B1120",
+    alignItems: "center",
+  },
+  appShell: {
+    flex: 1,
+    width: "100%",
+  },
+  appShellWide: {
+    maxWidth: 500,
+    backgroundColor: "#FFFFFF",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.35,
+    shadowRadius: 30,
+    elevation: 10,
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
+    borderColor: "#1E293B",
   },
   roleBar: {
     backgroundColor: "#FFFFFF",

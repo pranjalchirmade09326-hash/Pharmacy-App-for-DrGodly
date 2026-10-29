@@ -26,3 +26,17 @@ yarn-debug.log*
 # OS Files
 .DS_Store
 Thumbs.db
+
+# Expo & React Native
+.expo/
+.expo-shared/
+web-build/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+env/

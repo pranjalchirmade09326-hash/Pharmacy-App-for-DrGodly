@@ -5,10 +5,10 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  SafeAreaView,
   Linking,
   Alert,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { colors } from "../theme/colors";
 import { MOCK_INTAKES, PharmacyIntakeRecord } from "../data/intakes";
 
@@ -145,7 +145,7 @@ export function SafetyEscalationScreen({ route, navigation }: SafetyEscalationSc
               </View>
               <TouchableOpacity
                 style={styles.callHospBtn}
-                onPress={() => Linking.openURL(`tel:${hospital.phone}`)}
+                onPress={() => Linking.openURL(`tel:${hospital.phone}`).catch(() => {})}
               >
                 <Text style={styles.callHospText}>Call ER</Text>
               </TouchableOpacity>
